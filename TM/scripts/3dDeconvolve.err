@@ -1,0 +1,50 @@
+*+ WARNING: Input censor time series file /clmnlab/TM/fMRI_data/preproc_data/KJW/preprocessed/motion_KJW_censor.1D is too long (1240 > 248)
+*+ WARNING: -stim_file 2: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 3: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 4: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 5: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 6: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 7: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: Smallest FDR q [2 VWM#0_Tstat] = 0.999899 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [4 VWM#1_Tstat] = 0.999896 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [6 VWM#2_Tstat] = 0.999885 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [10 VWM#4_Tstat] = 0.239077 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [12 VWM#5_Tstat] = 0.184254 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [14 VWM#6_Tstat] = 0.388387 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [16 VWM#7_Tstat] = 0.99989 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [18 VWM#8_Tstat] = 0.622892 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [20 VWM#9_Tstat] = 0.426309 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [22 VWM#10_Tstat] = 0.999892 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [24 VWM#11_Tstat] = 0.999898 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [26 VWM#12_Tstat] = 0.999894 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [28 VWM#13_Tstat] = 0.9999 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [36 VWM#17_Tstat] = 0.408852 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [38 VWM#18_Tstat] = 0.999894 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [40 VWM#19_Tstat] = 0.999899 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [42 VWM#20_Tstat] = 0.999899 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [44 VWM#21_Tstat] = 0.999887 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [46 VWM#22_Tstat] = 0.999889 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [48 VWM#23_Tstat] = 0.999897 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [52 VWM#25_Tstat] = 0.999894 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [54 VWM#26_Tstat] = 0.999898 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [56 VWM#27_Tstat] = 0.9999 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [66 VWM#32_Tstat] = 0.999888 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [68 VWM#33_Tstat] = 0.955097 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [74 VWM#36_Tstat] = 0.999896 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [76 VWM#37_Tstat] = 0.243321 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [106 VWM#52_Tstat] = 0.137081 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [124 VWM#61_Tstat] = 0.999898 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [126 VWM#62_Tstat] = 0.999845 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [130 VWM#64_Tstat] = 0.248639 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [136 VWM#67_Tstat] = 0.233187 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [160 VWM#79_Tstat] = 0.187281 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [162 VWM#80_Tstat] = 0.479045 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [166 VWM#82_Tstat] = 0.999898 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [170 VWM#84_Tstat] = 0.281459 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [176 VWM#87_Tstat] = 0.249966 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [180 VWM#89_Tstat] = 0.999895 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [182 VWM#90_Tstat] = 0.999895 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [184 VWM#91_Tstat] = 0.900992 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [186 VWM#92_Tstat] = 0.251044 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [190 VWM#94_Tstat] = 0.854836 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [192 VWM#95_Tstat] = 0.237077 ==> few true single voxel detections

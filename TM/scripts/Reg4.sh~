@@ -1,0 +1,18 @@
+#!/bin/tcsh
+
+sed -n '1,80p' $y1D > $stat_dir/y1Dtemp.txt
+set y1D_sed = $stat_dir/y1Dtemp.txt
+
+# univoxel analysis
+set whole_brain = $stat_dir/$run.stat.$subj+tlrc.HEAD
+if ("$run" == "r01") then
+	3dcalc -a $whole_brain'[1..159(2)]' -expr a -prefix "$run.$pname"
+else if ("$run" == "r02") then
+	3dcalc -a $whole_brain'[1..119(2)]' -expr a -prefix "$run.$pname"
+else if ("$run" == "r03") then
+	3dcalc -a $whole_brain'[1..119(2)]' -expr a -prefix "$run.$pname"
+endif
+3dTcorr1D -prefix "$run.$pname.Tcorr1D" -spearman -mask $subj_full_mask -float "$stat_dir/$run.$pname+tlrc.HEAD" $y1D_sed
+rm $stat_dir/$run.$pname+tlrc.*
+
+

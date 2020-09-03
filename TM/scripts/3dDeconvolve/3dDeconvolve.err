@@ -1,0 +1,9 @@
+*+ WARNING: Input censor time series file /clmnlab/TM/fMRI_data/preproc_data/KJW/preprocessed/motion_KJW_censor.1D is too long (1240 > 248)
+*+ WARNING: -stim_file 2: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 3: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 4: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 5: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 6: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: -stim_file 7: file length is 1240, longer than expected 248 (from dataset)
+*+ WARNING: Smallest FDR q [36 VWM#17_Tstat] = 0.122096 ==> few true single voxel detections
+*+ WARNING: Smallest FDR q [90 VWM#44_Tstat] = 0.138691 ==> few true single voxel detections
