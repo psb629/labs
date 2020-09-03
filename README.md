@@ -1,1 +1,1 @@
-# This is a virtual lab for Sungbeen Park!
+# This is an online lab for Sungbeen Park!
