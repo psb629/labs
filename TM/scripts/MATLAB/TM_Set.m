@@ -1,44 +1,52 @@
 %   Setting default parameters
-%   16. Jan . 2020 by Sungbeen Park
+%   20. March . 2020 by Sungbeen Park
 %%  Allocate main directory
 global TM_dir
-TM_dir = '/clmnlab/TM';
+TM_dir = pwd;
 %%	Define global variables
-global SampleRate
-global freq_interval
-global Freqs LowFreqPair HighFreqPair
+global Keys colors sizes
+global FreqPairs Ns
+%%  Numerical constants
+KbName('UnifyKeyNames');
+Keys(1).readyKey = KbName('r');
+Keys(1).startKey = KbName('s');
+Keys(1).pauseKey = KbName('p');
+Keys(1).escKey = KbName('ESCAPE');
+
+colors = struct([]);
+colors(1).gray = [127 127 127];
+colors(1).white = [255 255 255];
+colors(1).black = [0 0 0];
+colors(1).red = [250 128 114];
+colors(1).blue = [65 105 225];
+colors(1).green = [60 179 113];
+colors(1).yellow = [255 255 0];
+colors(1).khaki = [240 230 140];
+colors(1).backgrond = colors(1).black;
+colors(1).text = colors(1).white;
+
+sizes(1).text = 75;
 %%  Experimental parameters
-SampleRate = 11;            % frequency sample rate include a central freq.
-if mod(SampleRate,2)~=1     % it accepts only odd number
+Ns = struct([]);
+Ns(1).SampleRate = 10;            % frequency sample rate except a central freq.
+if mod(Ns.SampleRate,2)~=0     % it accepts only even number
     error('A SampleRate must be an odd number.');
 end
 l_mid = 15;    h_mid = 30;
-freq_interval = 1;
+Freq_interval = 1;
 %%	Frequency arrays
-l_min=l_mid-freq_interval*floor(SampleRate/2); l_max=l_mid+freq_interval*floor(SampleRate/2);
-l_freq=linspace(l_min,l_max,SampleRate);     % low frequency vector
-h_min=h_mid-freq_interval*floor(SampleRate/2); h_max=h_mid+freq_interval*floor(SampleRate/2);
-h_freq=linspace(h_min,h_max,SampleRate);    % high frequency vector
-%%	Set pairs with standard freq.
-LowFreqPair=zeros(SampleRate-1,2);
-HighFreqPair=zeros(SampleRate-1,2);
-for col1 = 1:(SampleRate-1)
-    LowFreqPair(col1,1)=l_mid;   
-    if l_freq(col1)<l_mid
-        LowFreqPair(col1,2)=l_freq(col1);
-    else
-        LowFreqPair(col1,2)=l_freq(col1)+freq_interval;
-    end
-    HighFreqPair(col1,1)=h_mid;
-    if h_freq(col1)<h_mid
-        HighFreqPair(col1,2)=h_freq(col1);
-    else
-        HighFreqPair(col1,2)=h_freq(col1)+freq_interval;
-    end
-end         % Note, the 1st columns of PairOfFreq only have a centeral frequency value.
-clear col1 l_freq h_freq
-%%  Memorize values of frequency
-Freqs=struct([]);
-Freqs(1).Low=l_min; Freqs(2).Low=l_mid; Freqs(3).Low=l_max;
-Freqs(1).High=h_min; Freqs(2).High=h_mid; Freqs(3).High=h_max;
-clear l_min l_mid l_max h_min h_mid h_max
+mids = [l_mid, h_mid]; count = 0;
+for mid = mids
+    count = count + 1;
+    min = mid - Freq_interval*Ns.SampleRate*0.5; max = mid + Freq_interval*Ns.SampleRate*0.5;
+    pairs(:,count) = linspace(min,max,Ns.SampleRate+1);
+end
+central_row = round(1+Ns.SampleRate*0.5);
+FreqPairs = struct([]);
+FreqPairs(1).Low(:,1) = pairs(central_row,1)*ones(Ns.SampleRate,1);
+FreqPairs(1).High(:,1) = pairs(central_row,2)*ones(Ns.SampleRate,1);
+pairs(central_row,:) = [];
+FreqPairs(1).Low(:,2) = pairs(:,1);
+FreqPairs(1).High(:,2) = pairs(:,2);
+%% clear useless variables
+clear central_row count Freq_interval h_mid l_mid max mid mids min pairs 
