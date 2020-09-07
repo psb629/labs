@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26)
+set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15)
 
 set root_dir = /Volumes/T7SSD1/GD
 set fMRI_dir = $root_dir/fMRI_data
