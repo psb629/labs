@@ -1,1 +1,9 @@
+# Mac OS files
 .DS_Store
+
+# Pycharm files
+.idea
+
+# jupyter files
+__pycache__
+.ipynb_checkpoints
