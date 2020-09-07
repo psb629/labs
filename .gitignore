@@ -7,3 +7,6 @@
 # jupyter files
 __pycache__
 .ipynb_checkpoints
+
+# matlab files
+.MATLABDriveTag
