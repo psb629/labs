@@ -1,6 +1,7 @@
 #!/bin/tcsh
 
 set root_dir = /Users/clmn/Desktop/Samsung_Hospital
+set dcm_dir = $root_dir/SMC-2020-03_200812_fmri
 set output_dir = $root_dir/SMC03
 
 set TR = 2
@@ -12,7 +13,7 @@ foreach t_ini ($set_time)
 	foreach n ($set_data)
 		@ cnt = $cnt + 1
 		set n_prime = `printf %05d $cnt`
-		cp $root_dir/SMC-2020-03_200812_fmri/SMC-2020-03.dcm$n.dcm $output_dir/temp$n_prime.dcm
+		cp $dcm_dir/SMC-2020-03.dcm$n.dcm $output_dir/temp$n_prime.dcm
 	end
 	set t = `printf %03d $t_ini`
 	dcm2niix_afni -o $output_dir -s y -z y -f "SMC03_func$t" $output_dir
