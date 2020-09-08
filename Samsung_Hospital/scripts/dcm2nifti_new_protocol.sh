@@ -20,3 +20,4 @@ foreach t_ini ($set_time)
 	rm $output_dir/*.json
 end
 3dTcat -tr $TR -prefix $output_dir/pb00.SMC03.tcat $output_dir/*.nii.gz
+3dAFNItoNIFTI -prefix $output_dir/SMC03_fMRI.nii.gz $output_dir/pb00.SMC03.tcat+orig.
