@@ -15,7 +15,14 @@ if ( ! -d $group_dir ) then
 endif
 cd $group_dir
 foreach subj ($subj_list)
+	## move run1to3.nii.gz to group directory
 	set temp = statsRWDtime.$subj.run1to3.SPMG2.nii.gz
+	if ( ! -e ./$temp ) then
+		echo "move the datum, $temp, to $group_dir"
+		mv $reg_dir/$subj/$temp ./
+	endif
+	## move run4to6.nii.gz to group directory
+	set temp = statsRWDtime.$subj.run4to6.SPMG2.nii.gz
 	if ( ! -e ./$temp ) then
 		echo "move the datum, $temp, to $group_dir"
 		mv $reg_dir/$subj/$temp ./
@@ -35,15 +42,29 @@ endif
 
 # ========================= 3dttest++ of Reg1 =========================
 cd group_dir
+
+## run1to3
 set temp = ()
 foreach subj ($subj_list)
 	set temp = ($temp ./statsRWDtime.$subj.run1to3.SPMG2.nii.gz)
 end
-set pname = group
+set pname = group.1to3
 if ( -e $pname+tlrc.HEAD ) then
 	rm $pname+tlrc.*
 endif
 3dttest++ -mask $gmask+tlrc.HEAD -prefix $pname -setA $temp
+
+## run4to6
+set temp = ()
+foreach subj ($subj_list)
+	set temp = ($temp ./statsRWDtime.$subj.run4to6.SPMG2.nii.gz)
+end
+set pname = group.4to6
+if ( -e $pname+tlrc.HEAD ) then
+	rm $pname+tlrc.*
+endif
+3dttest++ -mask $gmask+tlrc.HEAD -prefix $pname -setA $temp
+
 
 #3dttest++ -prefix statsRWDtime.groupA-B.run1to3.SPMG2 -mask /Volumes/clmnlab/GA/MVPA/fullmask_GAGB/full_mask_GAGB_n30+tlrc.HEAD -setA statsRWDtime.GA02.run1to3.SPMG2.nii.gz statsRWDtime.GA07.run1to3.SPMG2.nii.gz statsRWDtime.GA11.run1to3.SPMG2.nii.gz statsRWDtime.GA30.run1to3.SPMG2.nii.gz -Clustsim
 
