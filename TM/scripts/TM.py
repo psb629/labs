@@ -52,7 +52,8 @@ def curve_fit(subj, ptype):
         }
         return switcher.get(letter, "Error : Invalid letter")
 
-    root_dir = '/Users/clmn/Desktop/GitHub/labs/TM'
+#     root_dir = '/Users/clmn/Desktop/GitHub/labs/TM'
+    root_dir = '../'
     behav_dir = root_dir + '/behav_data'
 
     f_ini, f_mid, f_fin = switch_freq(subj)
