@@ -10,3 +10,7 @@ __pycache__
 
 # matlab files
 .MATLABDriveTag
+
+# Ransomware
+README_FOR_DECRYPT.txt
+.encrypt
