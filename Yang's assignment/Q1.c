@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 int judge_prime(int a);
 
@@ -9,12 +10,14 @@ int main(void) {
 	for(int n=2;n<=N_max;n++)
 		if(judge_prime(n))
 			printf("%d ",n);
+	printf("\n");
 	return 0;
 }
 
 int judge_prime(int a)
 {
-	for(int n=2;n<a;n++)
+	double a_p = sqrt(a);
+	for(int n=2;n<=a_p;n++)
 		if(a % n == 0)
 			return 0;
 	return 1;
