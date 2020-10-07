@@ -37,33 +37,3 @@ export PS1="\$(date +%Y-%m-%d-%a) \$(date +%T) \u \w/"
 export CLICOLOR=1
 export LSCOLORS=DxFxBxDxCxegedabagacad
 
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-ahdir=`apsearch -afni_help_dir`
-if [ -f "$ahdir/all_progs.COMP.bash" ]
-then
-   . $ahdir/all_progs.COMP.bash
-fi
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/X11/lib/flat_namespace
-
-
-# FSL Setup
-FSLDIR=/usr/local/fsl
-PATH=${FSLDIR}/bin:${PATH}
-export FSLDIR PATH
-. ${FSLDIR}/etc/fslconf/fsl.sh
-
