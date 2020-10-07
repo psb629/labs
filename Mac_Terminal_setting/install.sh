@@ -3,15 +3,22 @@
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
+#### Git ####
+brew install git
+mkdir ~/Github
+cd ~/Github
+git clone https://github.com/psb629/labs.git
+git remote remove origin
+git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
+
 #### python ####
 #brew install python
 
 #### Anaconda ####
-# RECOMMENDED: Verify data integrity with SHA-256. For more information on hash verification, see cryptographic hash validation
-shasum -a 256 ~/SHA-256
-# Install for Python 3.7 or 2.7
-bash ~/Downloads/Anaconda3-2020.02-MacOSX-x86_64.sh
-bash ~/Downloads/Anaconda2-2019.10-MacOSX-x86_64.sh
+brew cask install anaconda
+# add anaconda3 folder to our shell path
+echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
+source ~/.zshrc
 # make environment
 conda create --name sampark python=3.7
 # update pip
@@ -25,7 +32,6 @@ pip install sklearn
 pip install nilearn
 pip install matplotlib 
 pip install seaborn
-pip install jupyter
 
-#### Git ####
-brew install git
+#### gcc ####
+brew install gcc
