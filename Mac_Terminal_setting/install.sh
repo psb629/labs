@@ -8,3 +8,9 @@ bash ~/Downloads/Anaconda3-2020.02-MacOSX-x86_64.sh
 bash ~/Downloads/Anaconda2-2019.10-MacOSX-x86_64.sh
 # make environment
 # install packages
+
+##### Homebrew #####
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+##### Git #####
+brew install git
