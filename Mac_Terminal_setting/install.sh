@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#### gcc and Xcode ####
-brew install gcc
-
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+#### gcc and Xcode ####
+brew install gcc
 
 #### Git ####
 brew install git
@@ -38,4 +38,7 @@ pip install nilearn
 pip install matplotlib 
 pip install seaborn
 
+#### XQuartz ####
+cd ~/Downloads
+curl -O https://raw.githubusercontent.com/Homebrew/install/master/XQuartz-2.7.11.dmg
 
