@@ -11,6 +11,8 @@ brew install git
 mkdir ~/Github
 cd ~/Github
 git clone https://github.com/psb629/labs.git
+git config --global user.name "psb629"
+git config --global user.email "psb629@gmail.com"
 git remote remove origin
 git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
 
