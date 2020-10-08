@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#### gcc and Xcode ####
+brew install gcc
+
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
@@ -33,5 +36,3 @@ pip install nilearn
 pip install matplotlib 
 pip install seaborn
 
-#### gcc ####
-brew install gcc
