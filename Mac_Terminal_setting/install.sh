@@ -39,6 +39,11 @@ pip install matplotlib
 pip install seaborn
 
 #### XQuartz ####
-cd ~/Downloads
-curl -O https://raw.githubusercontent.com/Homebrew/install/master/XQuartz-2.7.11.dmg
+brew cask install xquartz
+
+#### afni ####
+cd
+curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
+tcsh @update.afni.binaries -local_package PATH_TO_FILE/macos_10.12_local.tgz -do_extras
+cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
 
