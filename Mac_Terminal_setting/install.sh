@@ -42,8 +42,10 @@ pip install seaborn
 brew cask install xquartz
 
 #### afni ####
-cd
+cd ~
 curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
 tcsh @update.afni.binaries -local_package PATH_TO_FILE/macos_10.12_local.tgz -do_extras
 cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
+rm ~/@update.afni.binaries
+#mv $HOME/.afni/help/all_progs.COMP.bash $HOME/.afni/help/all_progs.COMP.bash~
 
