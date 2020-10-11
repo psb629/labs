@@ -54,6 +54,7 @@ if ( -e $pname+tlrc.HEAD ) then
 	rm $pname+tlrc.*
 endif
 3dttest++ -mask $gmask+tlrc.HEAD -prefix $pname -setA $temp
+3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc.
 
 ## run4to6
 set temp = ()
@@ -65,6 +66,7 @@ if ( -e $pname+tlrc.HEAD ) then
 	rm $pname+tlrc.*
 endif
 3dttest++ -mask $gmask+tlrc.HEAD -prefix $pname -setA $temp
+3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc.
 
 
 #3dttest++ -prefix statsRWDtime.groupA-B.run1to3.SPMG2 -mask /Volumes/clmnlab/GA/MVPA/fullmask_GAGB/full_mask_GAGB_n30+tlrc.HEAD -setA statsRWDtime.GA02.run1to3.SPMG2.nii.gz statsRWDtime.GA07.run1to3.SPMG2.nii.gz statsRWDtime.GA11.run1to3.SPMG2.nii.gz statsRWDtime.GA30.run1to3.SPMG2.nii.gz -Clustsim
