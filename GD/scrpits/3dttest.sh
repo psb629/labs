@@ -2,11 +2,13 @@
 
 # set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15)
 set subj_list = (GD11 GD07 GD30 GD02 GD32 GD23 GD01 GD33 GD20 GD44 GD26 GD15)
-
+# outliers : GD29, GD31
+# No data : GD19
 set root_dir = /Volumes/T7SSD1/GD
 set fMRI_dir = $root_dir/fMRI_data
 set preproc_dir = $fMRI_dir/preproc_data
-set reg_dir = $fMRI_dir/stats/Reg1_{*}
+#set reg_dir = $fMRI_dir/stats/Reg1_{*}
+set reg_dir = $fMRI_dir/stats/Reg2_{*}
 set group_dir = $reg_dir/group
 
 # ========================= make the group directory and move NIFTI data to the directory =========================
