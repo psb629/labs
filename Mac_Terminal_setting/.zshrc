@@ -10,8 +10,6 @@ alias mv='mv -i'
 alias la='ls -al'
 alias ll='ls -l -tr'
 alias cl='clear'
-alias cdGDp='cd /Volumes/T7SSD1/GD'
-alias cdGDr='cd ~/Desktop/GD'
 alias cnt='echo "# of directories : "; ll | grep ^d | wc -l ; echo "# of files : "; ll | grep ^- | wc -l'
 alias dush='du -sh ./*'
 
