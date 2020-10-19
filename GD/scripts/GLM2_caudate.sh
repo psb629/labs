@@ -15,7 +15,7 @@ set preproc_dir = $fMRI_dir/preproc_data
 set runs = (r01 r02 r03 r04 r05 r06 r07)
 # ============================================================
 foreach subj ($subj_list)
-
+	
 	set subj_preproc_dir = $preproc_dir/$subj
 	if (! -d $subj_preproc_dir) then
 		echo "need to preprocess $subj's data first!"
