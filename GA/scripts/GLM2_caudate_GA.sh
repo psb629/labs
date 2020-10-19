@@ -1,16 +1,16 @@
 #!/bin/tcsh
 
- #set subj_list = ( GA01 GA02 GA05 GA07 GA08 \
- #				  GA11 GA12 GA13 GA14 GA15 \
- #				  GA18 GA19 GA20 GA21 GA23 \
- #				  GA26 GA27 GA28 GA29 GA30 \
- #				  GA31 GA32 GA33 GA34 GA35 \
- #				  GA36 GA37 GA38 GA42 GA44 )
-set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15)
+set subj_list = ( GA01 GA02 GA05 GA07 GA08 \
+				  GA11 GA12 GA13 GA14 GA15 \
+				  GA18 GA19 GA20 GA21 GA23 \
+				  GA26 GA27 GA28 GA29 GA30 \
+				  GA31 GA32 GA33 GA34 GA35 \
+				  GA36 GA37 GA38 GA42 GA44 )
+# set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15)
 # outliers : GD29, GD31
 # No data : GD19
-set output_reg_num = Reg2
-set dname = {$output_reg_num}_GLM_caudate
+set output_reg_num = Reg3
+set dname = {$output_reg_num}_GLM_caudate_Late
 # ============================================================
 set root_dir = /Volumes/T7SSD1/GA
 set behav_dir = $root_dir/behav_data
@@ -18,17 +18,19 @@ set reg_dir = $behav_dir/regressors
 set fMRI_dir = $root_dir/fMRI_data
 set stats_dir = $fMRI_dir/stats
 set preproc_dir = /Volumes/clmnlab/GA/fmri_data/preproc_data
-set runs = (r01 r02 r03 r04 r05 r06 r07)
+#set runs = (r01 r02 r03 r04 r05 r06 r07)
+set runs = (r01 r02 r03 r04 r05 r06)
 # ============================================================
-foreach temp ($subj_list)
-	
-	set subj = `echo $temp | sed "s/D/A/g"`
+foreach subj ($subj_list)
+ 	set temp = `echo $subj | sed "s/A/B/g"`
+
 	set subj_preproc_dir = $preproc_dir/$subj
 	if (! -d $subj_preproc_dir) then
 		echo "need to preprocess $subj's data first!"
 		continue
 	endif
-	set subj_reg_dir = $reg_dir/$subj
+ #	set subj_reg_dir = $reg_dir/$subj
+	set subj_reg_dir = $reg_dir/$temp
 	if (! -d $subj_reg_dir) then
 		echo "need to make $subj's regressors first!"
 		continue
@@ -42,12 +44,14 @@ foreach temp ($subj_list)
 	# ============================================================
     # caudate mask
 	set mask_dir = $fMRI_dir/masks/GA_caudate_roi/slicer_2/tlrc_resam_fullmask
-	set temp = `echo $subj | sed "s/D/A/g"`
-	3dcalc \
-		-a $mask_dir/${temp}_1_caudate_head_resam+tlrc \
-		-b $mask_dir/${temp}_2_caudate_body_resam+tlrc \
-		-c $mask_dir/${temp}_3_caudate_tail_resam+tlrc \
-		-expr 'ispositive(a+b+c)' -prefix $mask_dir/${subj}_caudate.nii.gz
+	set pname = $mask_dir/${subj}_caudate.nii.gz
+	if (! -e $pname ) then
+		3dcalc \
+			-a $mask_dir/${subj}_1_caudate_head_resam+tlrc \
+			-b $mask_dir/${subj}_2_caudate_body_resam+tlrc \
+			-c $mask_dir/${subj}_3_caudate_tail_resam+tlrc \
+			-expr 'ispositive(a+b+c)' -prefix $pname
+	endif
 	# ============================================================
 	cd $preproc_dir/$subj
 
@@ -60,7 +64,8 @@ foreach temp ($subj_list)
 			-polort A -float \
 			-allzero_OK \
 			-num_stimts 7 \
-			-stim_times_AM2 1 $subj_reg_dir/$subj.${run}rew1000.GAM.1D 'SPMG2' \
+ #			-stim_times_AM2 1 $subj_reg_dir/$subj.${run}rew1000.GAM.1D 'SPMG2' \
+ 			-stim_times_AM2 1 $subj_reg_dir/$temp.${run}rew1000.GAM.1D 'SPMG2' \
 			-stim_label 1 rwdtm \
 			-stim_file 2 "motion_demean.$subj.$run.1D[0]" -stim_base 2 -stim_label 2 roll \
 			-stim_file 3 "motion_demean.$subj.$run.1D[1]" -stim_base 3 -stim_label 3 pitch \
