@@ -28,3 +28,17 @@ set obj_dir = /Volumes/T7SSD1/GA/behav_data
  #	set pname = /Volumes/T7SSD1/GA/fMRI_data/masks/full/full_mask.{$subj}.nii.gz
  #	3dAFNItoNIFTI -prefix $pname $full_mask_file
  #end
+
+# ============================================================
+set ori_dir = /Volumes/clmnlab/GA/fmri_data/glm_results/am_reg_SPMG2/stats
+set early_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/early
+set late_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/late
+
+foreach subj ($subj_list)
+ #	3dAFNItoNIFTI -prefix $early_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz $ori_dir/statsRWDtime.$subj.run1to3.SPMG2+tlrc.
+	3dAFNItoNIFTI -prefix $early_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz $ori_dir/statsRWDtime.$subj.run4to6.SPMG2+tlrc.
+	set temp = `echo $subj | sed "s/A/B/g"`
+ #	3dAFNItoNIFTI -prefix $late_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz $ori_dir/statsRWDtime.$temp.run1to3.SPMG2+tlrc.
+	3dAFNItoNIFTI -prefix $late_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz $ori_dir/statsRWDtime.$temp.run4to6.SPMG2+tlrc.
+end
+# ============================================================
