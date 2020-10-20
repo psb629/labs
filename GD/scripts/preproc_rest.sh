@@ -19,14 +19,14 @@ foreach subj ($subj_list)
 	if (! -d $root_dir ) then
     	mkdir $root_dir
 	endif
-    cd $root_dir
 
-    Dimon -infile_pat "$raw_dir/$subj/rest/*.IMA" -gert_create_dataset -gert_to3d_prefix temp \
+   cd $raw_dir/$subj/rest
+    Dimon -infile_pat "*.IMA" -gert_create_dataset -gert_to3d_prefix temp \
         -gert_outdir $root_dir -gert_quit_on_err
     3dWarp -deoblique -prefix $root_dir/func.$subj.rest $root_dir/temp+orig
     rm  $root_dir/temp*
 	
-	cd ./preprocessed
+	cd $root_dir/preprocessed
 
     ## run tcat tshift ##
     3dTcat -prefix pb00.$subj.rest.tcat $root_dir/func.$subj.rest+orig'[0..$]'
@@ -52,7 +52,7 @@ foreach subj ($subj_list)
 
     ## align to volume registration (volreg) ##
     # register each volume to the base
-    3dvolreg -verbose -zpad 1 -cubic -base SBREF.$subj.r04+orig'[0]' \
+    3dvolreg -verbose -zpad 1 -cubic -base $root_dir/SBREF.$subj.r04+orig'[0]' \
         -1Dfile dfile.$subj.rest.1D -prefix rm.epi.volreg.$subj.rest \
         -1Dmatrix_save mat.rest.vr.aff12.1D \
         pb01.$subj.rest.blip+orig
@@ -90,8 +90,7 @@ foreach subj ($subj_list)
         -expr 'a*b' -prefix pb02.$subj.rest.volreg
 
     ## blur and scale ##
-    3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.rest.blur \
-        pb02.$subj.rest.volreg+tlrc
+    3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.rest.blur pb02.$subj.rest.volreg+tlrc
 
     # 3dAutomask -dilate 1 -prefix rm.mask_rest pb03.$subj.rest.blur+tlrc
     # 3dmask_tool -inputs rm.mask_rest+tlrc.HEAD -union -prefix rest_mask.$subj
@@ -100,33 +99,33 @@ foreach subj ($subj_list)
 
     3dTstat -prefix rm.mean_rest pb03.$subj.rest.blur+tlrc
     3dcalc -float -a pb03.$subj.rest.blur+tlrc -b rm.mean_rest+tlrc \
-        -c mask_epi_extents.$subj+tlrc \
-        -expr 'c * min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.rest.scale
+		-c mask_epi_extents.$subj+tlrc \
+		-expr 'c * min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.rest.scale
 
     ## motion ##
     # -demean : demean each run (new mean of each run = 0.0)
     # -derivative : take the temporal derivative of each vector (done as first backward difference)
     # compute de-meaned motion parameters (for use in regression)
     1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
-        -demean -write motion_demean.1D
+		-demean -write motion_demean.1D
 
     # compute motion parameter derivatives (just to have)
     1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
-        -derivative -write motion_derev.1D
+		-derivative -write motion_derev.1D
 
     # create censor file motion_${subj}_censor.1D, for censoring motion
     1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
-        -show_censor_count -censor_prev_TR -censor_motion $thresh_motion motion_$subj.rest
+		-show_censor_count -censor_prev_TR -censor_motion $thresh_motion motion_$subj.rest
 
     # compute motion magnitude time series: the Euclidean norm
     # (sqrt(sum squares)) of the motion parameter derivatives
     1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
-        -derivative -collapse_cols euclidean_norm \
-        -write motion_$subj.rest.eucl_norm.1D
+		-derivative -collapse_cols euclidean_norm \
+		-write motion_$subj.rest.eucl_norm.1D
 	
 	# ==================================================================
-	# ================== delect p00 and p01 ===================
-	# delect useless files such as p00 and p01
+	# ================== delect p00, p01, and rm ===================
+	# delect useless files such as p00, p01, and rm
 	rm ./pb00.*.HEAD ./pb00.*.BRIK
 	rm ./pb01.*.HEAD ./pb01.*.BRIK
 	rm ./rm.*
