@@ -1,11 +1,12 @@
 #!/bin/tcsh
 
-set raw_dir = /Users/clmn/Desktop/GD/fMRI_data/raw_data
+#set raw_dir = /Users/clmn/Desktop/GD/fMRI_data/raw_data
+set raw_dir = /Volumes/T7SSD1/GD/fMRI_data/raw_data
 set proc_dir = /Volumes/T7SSD1/GD/connectivity/data/rest_preproc
 set preproc_dir = /Volumes/T7SSD1/GD/fMRI_data/preproc_data
 
 # set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15)
-set subj_list = (GD11)
+set subj_list = (GD07)
 
 ## variables for tcat tshift ##
 set res = 2.683 # Using minimum spacing of 2.682927 mm for new grid spacing
