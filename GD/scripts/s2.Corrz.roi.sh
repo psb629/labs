@@ -24,6 +24,6 @@ foreach n (`count -digit 1 1 $#roi`)
 		3dcalc -prefix $pname -a "$output_dir/CorrZ.caudate.$subj.rest.WM+tlrc.HEAD[$b]" -expr a
 		set temp = ($temp $pname+tlrc)
 	end
-	3dbucket $temp -prefix $output_dir/CorrZ.$roi[$n].GA.n$#subj_list.rest.WM
+	3dbucket $temp -prefix $output_dir/CorrZ.$roi[$n].GD.n$#subj_list.rest.WM
 end
 
