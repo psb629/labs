@@ -1,24 +1,31 @@
 #!/bin/tcsh
 
-set subj = Sub1
-# there are 5 runs
-set nruns = 5
+set root_dir = /Volumes/T7SSD1/GL
+set output_dir = $root_dir/ppi
+set fan_dir = $root_dir/roi/fan280
+set mask_list = (M1 S1)
+set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 26 27 29)
+
+# there are 3 runs
+set runs = `count -digits 2 1 3`
 # number of time points per run in TR
 set n_tp = 480
 set TR = 2
 # up-sample the data because of stimulus duration of 3s
 set sub_TR = 1
-# seed label
-set sd = amygdala
 # three conditions
 set condList = (A B C)
 
+set subj = GL$subj_list[1]
+# seed label
+set sd = $
 # create Gamma impulse response function
-waver -dt ${sub_TR} -GAM -peak 1 -inline 1@1 > GammaHR.1D
+waver -dt ${sub_TR} -GAM -peak 1 -inline 1@1 > /$root_dir/GammaHR.1D
 
+set pb04_dir = $root_dir/fMRI_data/pb04
 # for each run, extract seed time series, run deconvolution, and create interaction regressor
-foreach cc (`count -digits 1 1 $nruns`)
-	3dmaskave -mask ROI+orig -quiet pb04.$subj.r0${cc}.scale+tlrc > Seed${cc}${sd}.1D
+foreach cc ($runs)
+	3dmaskave -mask ROI+orig -quiet $pb04_dir/pb04.$subj.r${cc}.scale+tlrc > $output_dir/Seed${cc}${sd}.1D
 	# 2| Remove the trend from the seed time series. Note: 3dDetrend only takes rows as input, 
 	# so if you have an input file with a column in Seed.1D, add \' to "Seed.1D":
 	# 3dDetrend -polort ? -prefix SeedR Seed.1D\'
