@@ -20,7 +20,7 @@ foreach cc (`count -digits 2 1 3`)
 	3dDetrend -polort 5 -prefix SeedR.$subj.r$cc.$sd.1D temp1.1D
 	1dtranspose SeedR.$subj.r$cc.$sd.1D >temp2.1D
 	1dUpsample 2 temp2.1D >Seed_ts.$subj.r$cc.$sd.1D
-	# -FALTUNG fset prefix pen fac
+	# -FALTUNG fset prefix penalty factor
 	3dTfitter -RHS Seed_ts.$subj.r$cc.$sd.1D -FALTUNG $root_dir/GammaHR.1D temp3.1D 012 -1
 	1dtranspose temp3.1D Seed_neur.$subj.r$cc.$sd.1D
 	#head -$cc $reg_dir/${subj}_onsettime_r$cc.txt | tail -1 >temp.1D
