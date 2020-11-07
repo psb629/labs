@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#### oh-my-zsh ###
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# my favorite theme is amuse
+
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
@@ -11,10 +15,13 @@ brew install git
 mkdir ~/Github
 cd ~/Github
 git clone https://github.com/psb629/labs.git
+#git clone https://github.com/clmnlab/labs.git
+cd ~/Github/labs
 git config --global user.name "psb629"
 git config --global user.email "psb629@gmail.com"
 git remote remove origin
 git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
+
 
 #### python ####
 #brew install python
