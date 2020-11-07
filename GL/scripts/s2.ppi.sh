@@ -18,14 +18,14 @@ set condList = (A B C)
 
 set subj = GL$subj_list[1]
 # seed label
-set sd = $
+set sd = $mask_list[1]
 # create Gamma impulse response function
-waver -dt ${sub_TR} -GAM -peak 1 -inline 1@1 > /$root_dir/GammaHR.1D
+waver -dt $TR -GAM -peak 1 -inline 1@1 > $root_dir/GammaHR.1D
 
-set pb04_dir = $root_dir/fMRI_data/pb04
+set data_dir = $root_dir/fMRI_data/$subj
 # for each run, extract seed time series, run deconvolution, and create interaction regressor
 foreach cc ($runs)
-	3dmaskave -mask ROI+orig -quiet $pb04_dir/pb04.$subj.r${cc}.scale+tlrc > $output_dir/Seed${cc}${sd}.1D
+	3dmaskave -mask ROI+orig -quiet $data_dir/pb04.$subj.r${cc}.scale+tlrc > $output_dir/Seed${cc}${sd}.1D
 	# 2| Remove the trend from the seed time series. Note: 3dDetrend only takes rows as input, 
 	# so if you have an input file with a column in Seed.1D, add \' to "Seed.1D":
 	# 3dDetrend -polort ? -prefix SeedR Seed.1D\'
