@@ -7,8 +7,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 #### vim ####
 cd ~
 curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vimrc
-mkdir -p .vim/colors
-cd ~/.vim/colors
+theme_dir=~/.vim/colors
+if [ ! -d $theme_dir ]; then
+	mkdir -p $theme_dir
+fi
+cd $theme_dir
 curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vim/colors/jellybeans.vim
 source ~/.vimrc
 
