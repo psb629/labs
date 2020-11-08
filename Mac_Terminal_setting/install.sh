@@ -1,8 +1,16 @@
 #!/bin/bash
 
-#### oh-my-zsh ###
+#### oh-my-zsh ####
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 # my favorite theme is amuse
+
+#### vim ####
+cd ~
+curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vimrc
+mkdir -p .vim/colors
+cd ~/.vim/colors
+curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vim/colors/jellybeans.vim
+source ~/.vimrc
 
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -21,7 +29,6 @@ git config --global user.name "psb629"
 git config --global user.email "psb629@gmail.com"
 git remote remove origin
 git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
-
 
 #### python ####
 #brew install python
