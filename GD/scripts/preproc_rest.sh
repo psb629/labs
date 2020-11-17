@@ -113,7 +113,7 @@ foreach subj ($subj_list)
 
     # compute motion parameter derivatives (just to have)
     1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
-		-derivative -write motion_derev.1D
+		-derivative -write motion_deriv.1D
 
     # create censor file motion_${subj}_censor.1D, for censoring motion
     1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
