@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
-set subj = S17
-set date = 201013
+set subj = S19
+set date = 201102
 
 set root_dir = /Users/clmn/Desktop/Samsung_Hospital
 set data_dir = $root_dir/${subj}_${date}_MRI
@@ -13,12 +13,14 @@ endif
 set epi = $output_dir/${subj}_fMRI.nii.gz
 set t1 = $output_dir/${subj}_T1.nii.gz
 #########################################################
-## convert dcm files into NIFTI files by Sungbeen Park
+## convert dcm files into NIFTI files, written by Sungbeen Park
 
 ## T1 data : 366 files
 set raw_T1 = $data_dir/${subj}_${date}_t1
 dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_T1" $raw_T1
 rm $output_dir/*.json
+# added the line since S19, because of the unexpected suffix "_real"
+mv $output_dir/${subj}_T1*.nii.gz $t1
 
 ## fMRI data : 18001 files
 set raw_fMRI = $data_dir/${subj}_${date}_fMRI
@@ -41,6 +43,8 @@ end
 rm $output_dir/${subj}_func*.nii.gz
 3dAFNItoNIFTI -prefix $epi $output_dir/preprocessed/pb00.$subj.tcat+orig.
 rm $output_dir/*.json
+# added the line since S19, because of the unexpected suffix "_real"
+ #mv $output_dir/${subj}_fMRI*.nii.gz $epi
 
 ## DTI data : 3221 files
 set raw_DTI = $data_dir/${subj}_${date}_dti
@@ -172,6 +176,18 @@ align_epi_anat.py -epi2anat -anat $subj.anat.Unifize+orig -anat_has_skull no \
 1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
            -demean -write motion_demean.1D
 1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
-           -derivative -write motion_derev.1D
+           -derivative -write motion_deriv.1D
 
 #########################################################
+#### additional preprocessing after pb02 ####
+3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.rest.blur pb02.$subj.rest.volreg+orig
+
+3dTstat -prefix rm.mean_rest pb03.$subj.rest.blur+orig
+3dcalc -float -a pb03.$subj.rest.blur+orig -b rm.mean_rest+orig \
+		   -c rm.$subj.epi.all1+orig \
+		   -expr 'c * min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.rest.scale
+
+gzip -1v $output_dir/preprocessed/*.BRIK
+# ==================================================================
+echo "subject $subj completed!"
+
