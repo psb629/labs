@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#### zsh ####
+# which zsh
+# chsh -s /usr/bin/zsh
+# chsh -s /bin/zsh
+
 #### oh-my-zsh ####
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 # my favorite theme is amuse
