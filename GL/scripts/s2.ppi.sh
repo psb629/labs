@@ -77,10 +77,7 @@ end
 cat Seed_ts.$subj.r??.$sd.1D >Seed_ts.$subj.$sd.1D
 cat Seed_neur.$subj.r??.$sd.1D >Seed_neur.$subj.$sd.1D
 foreach cond ($cond_list)
-	cat Inter_ts.$subj.r??.$cond.$sd.1D > Inter_ts.$subj.$cond.$sd.1D
-	foreach run ($runs)
-		head -$run $reg_dir/${subj}_${cond}.txt |tail -1 >tmp.$subj.$cond.r$run.1D
-	end
+	cat Inter_ts.$subj.r??.$cond.$sd.1D >Inter_ts.$subj.$cond.$sd.1D
 end
 # remove temporal files
 rm Seed.$subj.r??.$sd.1D \
@@ -92,11 +89,12 @@ foreach cond ($cond_list)
 		Inter_neur.$subj.r??.$cond.$sd.1D
 end
 # re-run regression analysis by adding the two new regressors:
-3dDeconvolve -input $fmri_dir/$subj/pb04.$subj.r??.scale+tlrc.HEAD \
+cd $fmri_dir/$subj
+3dDeconvolve -input pb04.$subj.r02.scale+tlrc.HEAD pb04.$subj.r03.scale+tlrc.HEAD pb04.$subj.r04.scale+tlrc.HEAD pb04.$subj.r05.scale+tlrc.HEAD\
 				 -polort A -mask $roi_dir/full/full_mask.$subj.nii.gz \
 				 -num_stimts 11 \
-				 -stim_times 1 $output_dir/tmp.$subj.FB.r??.1D 'dmBLOCK(1)' -stim_label 1 FB \
-				 -stim_times 2 $output_dir/tmp.$subj.nFB.r??.1D 'dmBLOCK(1)' -stim_label 2 nFB \
+				 -stim_times_AM1 1 $reg_dir/${subj}_FB.txt 'dmBLOCK(1)' -stim_label 1 FB \
+				 -stim_times_AM1 2 $reg_dir/${subj}_nFB.txt 'dmBLOCK(1)' -stim_label 2 nFB \
 				 -stim_file 3 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[0]" -stim_base 3 -stim_label 3 roll \
 				 -stim_file 4 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[1]" -stim_base 4 -stim_label 4 pitch \
 				 -stim_file 5 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[2]" -stim_base 5 -stim_label 5 yaw \
