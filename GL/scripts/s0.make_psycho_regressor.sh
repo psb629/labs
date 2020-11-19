@@ -5,6 +5,10 @@ set TR = 2
 set root_dir = /Volumes/T7SSD1/GL
 set reg_dir = $root_dir/behav_data/regressors
 set ppi_dir = $root_dir/ppi
+set output_dir = $ppi_dir/reg
+if ( ! -d $output_dir ) then
+	mkdir $output_dir
+endif
 
 set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 26 27 29)
 
@@ -23,7 +27,7 @@ foreach ss ($subj_list)
 	## then make temporal text files
 	foreach cond ($cond_list)
 		set reg_data = $reg_dir/${subj}_${cond}.txt
-		set output = $ppi_dir/onset.$subj.split.$cond.txt
+		set output = $output_dir/onset.$subj.split.$cond.txt
 		if ( -e $output ) then
 			rm $output
 		endif
@@ -44,12 +48,12 @@ foreach ss ($subj_list)
 	end
 	##==============================================================================================
 	## combine onsets(FB and nFB) each run separately 
-	set FB_data = $ppi_dir/onset.$subj.split.FB.txt
-	set nFB_data = $ppi_dir/onset.$subj.split.nFB.txt
+	set FB_data = $output_dir/onset.$subj.split.FB.txt
+	set nFB_data = $output_dir/onset.$subj.split.nFB.txt
 	foreach run ($runs)
 		set FB = `head -${run} $FB_data | tail -1`
 		set nFB = `head -${run} $nFB_data | tail -1`
-		set output = $ppi_dir/onset.$subj.r$run.all_cond.1D
+		set output = $output_dir/onset.$subj.r$run.all_cond.1D
 		if ( -e $output ) then
 			rm $output
 		endif
@@ -63,11 +67,11 @@ foreach ss ($subj_list)
 	## round the values which mean onset-time in the files
 	cd $root_dir
 	foreach run ($runs)
-		set output = $ppi_dir/onset.$subj.rnd.r$run.all_cond.1D
+		set output = $output_dir/onset.$subj.rnd.r$run.all_cond.1D
 		if ( -e $output ) then
 			rm $output
 		endif
-		head -${run} $ppi_dir/onset.$subj.r$run.all_cond.1D | tail -1 >a.1D
+		head -${run} $output_dir/onset.$subj.r$run.all_cond.1D | tail -1 >a.1D
 		1dtranspose a.1D >b.1D
 		1deval -a b.1D -expr 'int(a)+1-isnegative(10*(a-int(a))-5)' >c.1D
 		1dtranspose c.1D >d.1D
@@ -80,8 +84,8 @@ foreach ss ($subj_list)
 	foreach cond ($cond_list)
 		set val = `cat $root_dir/val_$cond.1D`
 		foreach run ($runs)
-			set onset = `cat $ppi_dir/onset.$subj.rnd.r$run.all_cond.1D`
-			set output = $ppi_dir/psych.$subj.r$run.$cond.1D
+			set onset = `cat $output_dir/onset.$subj.rnd.r$run.all_cond.1D`
+			set output = $output_dir/psych.$subj.r$run.$cond.1D
 			if ( -e $output ) then
 				rm $output
 			endif
@@ -119,5 +123,5 @@ foreach ss ($subj_list)
 	end
 	##==============================================================================================
 	## remove all temporal files
-	rm $ppi_dir/onset.$subj.*
+	rm $output_dir/onset.$subj.*
 end
