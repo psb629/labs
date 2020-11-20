@@ -38,8 +38,8 @@ git config --global user.email "psb629@gmail.com"
 git remote remove origin
 git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
 
-#### python ####
-#brew install python
+#### python 3 ####
+brew install python
 
 #### Anaconda ####
 brew cask install anaconda
