@@ -1,44 +1,48 @@
 #!/bin/tcsh
 
-set temp = (GD11 GD07 GD30 GD02 GD32 GD23 GD01 GD33 GD20 GD44 GD26 GD15)
-set subj_list = `echo $temp | sed "s/D/A/g"`
-echo $subj_list
-
-set subj_list = ( GA01 GA02 GA05 GA07 GA08 \
-				  GA11 GA12 GA13 GA14 GA15 \
-				  GA18 GA19 GA20 GA21 GA23 \
-				  GA26 GA27 GA28 GA29 GA30 \
-				  GA31 GA32 GA33 GA34 GA35 \
-				  GA36 GA37 GA38 GA42 GA44 )
-set ori_dir = /Volumes/clmnlab/GA/behavior_data
-set obj_dir = /Volumes/T7SSD1/GA/behav_data
-
- #foreach a ($subj_list)
- #	cp $ori_dir/$subj/$subj-fmri.mat $obj_dir/
- #	cp $ori_dir/$subj/$subj-refmri.mat $obj_dir/
- #	set subj = `echo $a | sed "s/A/B/g"`
- #	set temp = $obj_dir/regressors/$subj
- #	mkdir $temp
- #	foreach run (r01 r02 r03 r04 r05 r06 r07)
- #	 	cp $ori_dir/$subj/$subj.${run}rew1000.GAM.1D $temp
- #	end
- #end
- #foreach subj ($subj_list)
- #	set full_mask_file = /Volumes/clmnlab/GA/fmri_data/preproc_data/$subj/full_mask.{$subj}+tlrc.
- #	set pname = /Volumes/T7SSD1/GA/fMRI_data/masks/full/full_mask.{$subj}.nii.gz
- #	3dAFNItoNIFTI -prefix $pname $full_mask_file
- #end
-
+ #set temp = (GD11 GD07 GD30 GD02 GD32 GD23 GD01 GD33 GD20 GD44 GD26 GD15)
+ #set subj_list = `echo $temp | sed "s/D/A/g"`
+ #echo $subj_list
 # ============================================================
-set ori_dir = /Volumes/clmnlab/GA/fmri_data/glm_results/am_reg_SPMG2/stats
-set early_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/early
-set late_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/late
+set subj_list = ( 01 02 05 07 08 \
+				  11 12 13 14 15 \
+				  18 19 20 21 23 \
+				  26 27 28 29 30 \
+				  31 32 33 34 35 \
+				  36 37 38 42 44 )
+set from_dir = /Volumes/clmnlab/GA/fmri_data/preproc_data
+set to_dir = /Volumes/T7SSD1/GA/fMRI_data/preproc_data
 
-foreach subj ($subj_list)
- #	3dAFNItoNIFTI -prefix $early_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz $ori_dir/statsRWDtime.$subj.run1to3.SPMG2+tlrc.
-	3dAFNItoNIFTI -prefix $early_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz $ori_dir/statsRWDtime.$subj.run4to6.SPMG2+tlrc.
-	set temp = `echo $subj | sed "s/A/B/g"`
- #	3dAFNItoNIFTI -prefix $late_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz $ori_dir/statsRWDtime.$temp.run1to3.SPMG2+tlrc.
-	3dAFNItoNIFTI -prefix $late_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz $ori_dir/statsRWDtime.$temp.run4to6.SPMG2+tlrc.
+foreach id (GA GB)
+	foreach n ($subj_list)
+		set subj = ${id}${n}
+		echo "Processing $subj..."
+		if ( ! -d $to_dir/$subj ) then
+			mkdir $to_dir/$subj
+		endif
+		## anat_final
+ #		set from = $from_dir/$subj/anat_final.$subj+tlrc.
+ #		set to = $to_dir/$subj/anat_final.$subj.nii.gz
+ #		3dAFNItoNIFTI -prefix $to $from
+		foreach run (`count -digits 2 1 6`)
+			## pb02
+			set from = $from_dir/$subj/pb02.$subj.r$run.volreg+tlrc.*
+			set to = $to_dir/$subj
+			cp $from $to
+		end
+		gzip -1v $to/*.BRIK
+	end
 end
+# ============================================================
+ #set ori_dir = /Volumes/clmnlab/GA/fmri_data/glm_results/am_reg_SPMG2/stats
+ #set early_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/early
+ #set late_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/late
+ #
+ #foreach subj ($subj_list)
+ # #	3dAFNItoNIFTI -prefix $early_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz $ori_dir/statsRWDtime.$subj.run1to3.SPMG2+tlrc.
+ #	3dAFNItoNIFTI -prefix $early_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz $ori_dir/statsRWDtime.$subj.run4to6.SPMG2+tlrc.
+ #	set temp = `echo $subj | sed "s/A/B/g"`
+ # #	3dAFNItoNIFTI -prefix $late_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz $ori_dir/statsRWDtime.$temp.run1to3.SPMG2+tlrc.
+ #	3dAFNItoNIFTI -prefix $late_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz $ori_dir/statsRWDtime.$temp.run4to6.SPMG2+tlrc.
+ #end
 # ============================================================

@@ -43,7 +43,7 @@ endif
 3dMean -mask_inter -prefix $group_dir/$gmask $temp
 
 # ========================= 3dttest++ of Reg1 =========================
-cd group_dir
+cd $group_dir
 
 ## run1to3
 set temp = ()
