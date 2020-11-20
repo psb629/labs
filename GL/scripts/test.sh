@@ -24,40 +24,14 @@ set cc = 2
 echo $xx
 printf '%02d\n' $xx
 # ============================================================
-set root_dir = /Volumes/T7SSD1/GL
-set ppi_dir = $root_dir/ppi
-set TR = 2
-set subj = GL03
-#set cond_list = (FB nFB)
-set cond_list = (FB)
-#set runs = (01 02 03 04)
-set runs = (01)
- #foreach cond ($cond_list)
- #	set val = `cat $root_dir/val_$cond.1D`
- #	echo "val : $val"
- #	foreach run ($runs)
- #		set onset = `cat $ppi_dir/onset.$subj.r$run.$cond.1D`
- #		echo "onset : $onset"
- #		foreach i (`count -digits 1 1 300`)
- #			@ tt = $i * $TR
- #			if ( $tt <= $onset[1] ) then
- #				echo "$tt <= $onset[1] : $val[2]"
- #			else if ( $tt < $onset[2] ) then
- #				echo "$tt < $onset[2] : $val[1]"
- #			else if ( $tt < $onset[3] ) then
- #				echo "$tt < $onset[3] : $val[2]"
- #			else if ( $tt < $onset[4] ) then
- #				echo "$tt < $onset[4] : $val[1]"
- #			else if ( $tt < $onset[5] ) then
- #				echo "$tt < $onset[5] : $val[2]"
- #			else if ( $tt < $onset[6] ) then
- #				echo "$tt < $onset[6] : $val[1]"
- #			else	# $tt >= $onset[6]
- #				echo "$tt >= $onset[6] : $val[2]"
- #			endif
- #		end
- #	end
- #end
-# ============================================================
-echo "1deval"
-1deval -a $ppi_dir/psych.$subj.r01.FB.1D -b $ppi_dir/psych.$subj.r01.nFB.1D -expr 'a+b'
+set from_dir = /Volumes/clmnlab/GL/fmri_data
+set to_dir = /Volumes/T7SSD1/GL/fMRI_data
+
+set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 26 27 29)
+
+foreach ss ($subj_list)
+	set subj = GL$ss
+	set from = $from_dir/$subj/preprocessed/anat_final.{$subj}+tlrc.
+	set to = $to_dir/$subj/anat_final.{$subj}.nii.gz
+	3dAFNItoNIFTI -prefix $to $from
+end
