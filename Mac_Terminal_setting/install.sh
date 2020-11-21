@@ -5,21 +5,6 @@
 # chsh -s /usr/bin/zsh
 # chsh -s /bin/zsh
 
-#### oh-my-zsh ####
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# my favorite theme is amuse
-
-#### vim ####
-cd ~
-curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vimrc
-theme_dir=~/.vim/colors
-if [ ! -d $theme_dir ]; then
-	mkdir -p $theme_dir
-fi
-cd $theme_dir
-curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vim/colors/jellybeans.vim
-source ~/.vimrc
-
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
@@ -37,6 +22,22 @@ git config --global user.name "psb629"
 git config --global user.email "psb629@gmail.com"
 git remote remove origin
 git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
+
+#### vim ####
+cd ~
+curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vimrc
+theme_dir=~/.vim/colors
+if [ ! -d $theme_dir ]; then
+	mkdir -p $theme_dir
+fi
+cd $theme_dir
+curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vim/colors/jellybeans.vim
+source ~/.vimrc
+
+#### oh-my-zsh ####
+# Xcode is absolutely necessary
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+cat ~/Github/labs/Mac_Terminal_setting/.zshrc >>~/.zshrc
 
 #### python 3 ####
 brew install python
@@ -65,10 +66,13 @@ pip install statsmodels
 brew cask install xquartz
 
 #### afni ####
+# XQuartz is absolutely necessary
 cd ~
-curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
-tcsh @update.afni.binaries -local_package PATH_TO_FILE/macos_10.12_local.tgz -do_extras
+update=@update.afni.binaries
+pack=macos_10.12_local
+curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/$update
+tcsh $update -package $pack -do_extras
 cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
-rm ~/@update.afni.binaries
+rm ~/$update
 #mv $HOME/.afni/help/all_progs.COMP.bash $HOME/.afni/help/all_progs.COMP.bash~
 
