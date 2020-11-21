@@ -1,10 +1,7 @@
 #!/bin/bash
 
-#### afni ####
-cd ~
-update=@update.afni.binaries
-pack=macos_10.12_local
-curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/$update
-tcsh $update -package $pack -do_extras
-cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
-rm ~/$update
+git config --global user.name "psb629"
+git config --global user.email "psb629@gmail.com"
+git remote remove origin
+git remote add origin https://’psb629’:’na6607!!MS’@github.com/psb629/labs.git
+

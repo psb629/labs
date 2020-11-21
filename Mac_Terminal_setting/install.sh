@@ -74,5 +74,4 @@ curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/$update
 tcsh $update -package $pack -do_extras
 cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
 rm ~/$update
-#mv $HOME/.afni/help/all_progs.COMP.bash $HOME/.afni/help/all_progs.COMP.bash~
 
