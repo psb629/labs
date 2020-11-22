@@ -4,9 +4,7 @@ set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 
 #set subj = GL${subj_list[1]}
 
 set root_dir = /Volumes/T7SSD1/GL
-set fmri_dir = $root_dir/fMRI_data
 set roi_dir = $root_dir/roi
-set reg_dir = $root_dir/behav_data/regressors
 set ppi_dir = $root_dir/ppi
 set reg_psych_dir = $ppi_dir/reg
 set group_dir = $ppi_dir/group
@@ -18,6 +16,8 @@ set runs = `count -digits 2 1 4`
 set roi_list = (M1 S1)
 # two conditions
 set cond_list = (FB nFB)
+# sub-brick of interesting
+set nn = 17 # ppiFB_ppinFB_GLT#0_Coef
 
 # ========================= make the group directory =========================
 if ( ! -d $group_dir ) then
@@ -28,13 +28,16 @@ endif
 set gmask = $roi_dir/full/full_mask.group.nii.gz
 # ========================= 3dttest++ =========================
 foreach sd ($roi_list)
-	set temp = ()
+	set setA = ()
 	foreach ss ($subj_list)
 		set subj = GL$ss
-		set temp = ($temp $ppi_dir/PPIstat.$subj.$sd+tlrc)
+		set pname = $output_dir/temp.$subj.$sd
+		3dcalc -a "$ppi_dir/PPIstat.$subj.$sd+tlrc[$nn]" -expr 'a' -prefix $pname
+		set setA = ($setA $pname+tlrc)
 	end
-	set pname = $output_dir/PPIstat.group.$sd
-	3dttest++ -mask $gmask -prefix $pname -setA $temp
+	set pname = $output_dir/PPIstat.$nn.group.$sd
+	3dttest++ -mask $gmask -prefix $pname -setA $setA
 	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
-	rm $pname+tlrc.*
+	rm $pname+tlrc.*\
+		$output_dir/temp.GL??.*
 end

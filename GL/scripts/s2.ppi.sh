@@ -5,6 +5,7 @@ set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 
 
 set root_dir = /Volumes/T7SSD1/GL
 set fmri_dir = $root_dir/fMRI_data
+set preproc_dir = $fmri_dir/preproc_data
 set roi_dir = $root_dir/roi
 set reg_dir = $root_dir/behav_data/regressors
 set ppi_dir = $root_dir/ppi
@@ -41,7 +42,7 @@ foreach sd ($roi_list)
 			@ xx = $cc + 1
 			set xx = `printf '%02d' $xx`
 			# Extract BOLD corresponding to the ROI
-			3dmaskave -mask $roi_dir/mask.$sd.nii.gz -quiet $fmri_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
+			3dmaskave -mask $roi_dir/mask.$sd.nii.gz -quiet $preproc_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
 			1dtranspose $output_dir/Seed.$subj.r$cc.$sd.1D >$output_dir/temp1.1D # Transpose
 			# Remove the trend from the seed time series
 			3dDetrend -polort 5 -prefix $output_dir/SeedR.$subj.r$cc.$sd.1D $output_dir/temp1.1D
@@ -92,20 +93,20 @@ foreach sd ($roi_list)
 		end
 		# re-run regression analysis by adding the two new regressors:
 		cd 
-		3dDeconvolve -input $fmri_dir/$subj/pb04.$subj.r02.scale+tlrc.HEAD\
-							$fmri_dir/$subj/pb04.$subj.r03.scale+tlrc.HEAD\
-							$fmri_dir/$subj/pb04.$subj.r04.scale+tlrc.HEAD\
-							$fmri_dir/$subj/pb04.$subj.r05.scale+tlrc.HEAD\
+		3dDeconvolve -input $preproc_dir/$subj/pb04.$subj.r02.scale+tlrc.HEAD\
+							$preproc_dir/$subj/pb04.$subj.r03.scale+tlrc.HEAD\
+							$preproc_dir/$subj/pb04.$subj.r04.scale+tlrc.HEAD\
+							$preproc_dir/$subj/pb04.$subj.r05.scale+tlrc.HEAD\
 						 -polort A -mask $roi_dir/full/full_mask.$subj.nii.gz \
 						 -num_stimts 11 \
 						 -stim_times_AM1 1 $reg_dir/${subj}_FB.txt 'dmBLOCK(1)' -stim_label 1 FB \
 						 -stim_times_AM1 2 $reg_dir/${subj}_nFB.txt 'dmBLOCK(1)' -stim_label 2 nFB \
-						 -stim_file 3 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[0]" -stim_base 3 -stim_label 3 roll \
-						 -stim_file 4 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[1]" -stim_base 4 -stim_label 4 pitch \
-						 -stim_file 5 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[2]" -stim_base 5 -stim_label 5 yaw \
-						 -stim_file 6 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[3]" -stim_base 6 -stim_label 6 dS \
-						 -stim_file 7 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[4]" -stim_base 7 -stim_label 7 dL \
-						 -stim_file 8 $fmri_dir/$subj/"motion_demean.$subj.r02_05.1D[5]" -stim_base 8 -stim_label 8 dP \
+						 -stim_file 3 $preproc_dir/$subj/"motion_demean.$subj.r02_05.1D[0]" -stim_base 3 -stim_label 3 roll \
+						 -stim_file 4 $preproc_dir/$subj/"motion_demean.$subj.r02_05.1D[1]" -stim_base 4 -stim_label 4 pitch \
+						 -stim_file 5 $preproc_dir/$subj/"motion_demean.$subj.r02_05.1D[2]" -stim_base 5 -stim_label 5 yaw \
+						 -stim_file 6 $preproc_dir/$subj/"motion_demean.$subj.r02_05.1D[3]" -stim_base 6 -stim_label 6 dS \
+						 -stim_file 7 $preproc_dir/$subj/"motion_demean.$subj.r02_05.1D[4]" -stim_base 7 -stim_label 7 dL \
+						 -stim_file 8 $preproc_dir/$subj/"motion_demean.$subj.r02_05.1D[5]" -stim_base 8 -stim_label 8 dP \
 						 -stim_file 9 $output_dir/Seed_ts.$subj.$sd.1D -stim_label 9 seed \
 						 -stim_file 10 $output_dir/Inter_ts.$subj.FB.$sd.1D -stim_label 10 ppi_FB\
 						 -stim_file 11 $output_dir/Inter_ts.$subj.nFB.$sd.1D -stim_label 11 ppi_nFB \
