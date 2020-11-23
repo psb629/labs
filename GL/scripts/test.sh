@@ -36,4 +36,11 @@ set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 
  #	3dAFNItoNIFTI -prefix $to $from
  #end
 # ============================================================
+set root_dir = /Volumes/T7SSD1/GL
+set fmri_dir = $root_dir/fMRI_data
+set preproc_dir = $fmri_dir/preproc_data
 
+foreach ss ($subj_list)
+	set subj = GL$ss
+	gzip -1v $preproc_dir/$subj/*.BRIK
+end
