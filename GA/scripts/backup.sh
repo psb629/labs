@@ -15,13 +15,22 @@ if ( ! -d $to_dir ) then
 endif
 
 ## behav_data
-set output_dir = $to_dir/behav_data
-if ( ! -d $output_dir ) then
-	mkdir -m 755 $output_dir
-endif
-cp -r $from_dir/behav_data $output_dir
+ #echo "Copying behav_data..."
+ #set output_dir = $to_dir/behav_data
+ #if ( ! -d $output_dir ) then
+ #	mkdir -m 755 $output_dir
+ #endif
+ #cp -r $from_dir/behavior_data/* $output_dir
 
- #foreach id (GA GB)
+## revision_data
+ #echo "Copying revision_data..."
+ #set output_dir = $to_dir/revision
+ #if ( ! -d $output_dir ) then
+ #	mkdir -m 755 $output_dir
+ #endif
+ #cp -r $from_dir/Revision/* $output_dir
+
+#foreach id (GA GB)
  #	foreach ss ($subj_list)
  #		echo "processing $subj..."
  #		## raw dicom
