@@ -4,10 +4,10 @@ set root_dir = /Volumes/T7SSD1/GL
 set output_dir = $root_dir/roi
 
 set mask_list = (M1 S1)
-#set M1 = (055 057 059)
-set M1 = (057)
-#set S1 = (155 159 161)
-set S1 = (155)
+set M1 = (055 057 059)
+#set M1 = (057)
+set S1 = (155 159 161)
+#set S1 = (155)
 
 set fan_dir = $root_dir/roi/fan280
 set lower_case = (a b c d e f g h i j k l m n o p q r s t u v w x y z)
@@ -32,4 +32,5 @@ foreach roi ($mask_list)
 	3dcalc `echo "$aa -expr ispositive($bb) -prefix $pname"`
 	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
 	rm $pname+tlrc.*
+	echo " # of voxels in $pname.nii.gz = `3dBrickStat -count -positive $pname.nii.gz`"
 end

@@ -29,9 +29,11 @@ set to_dir = /Volumes/T7SSD1/GL/fMRI_data
 
 set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 26 27 29)
 
-foreach ss ($subj_list)
-	set subj = GL$ss
-	set from = $from_dir/$subj/preprocessed/anat_final.{$subj}+tlrc.
-	set to = $to_dir/$subj/anat_final.{$subj}.nii.gz
-	3dAFNItoNIFTI -prefix $to $from
-end
+ #foreach ss ($subj_list)
+ #	set subj = GL$ss
+ #	set from = $from_dir/$subj/preprocessed/anat_final.{$subj}+tlrc.
+ #	set to = $to_dir/$subj/anat_final.{$subj}.nii.gz
+ #	3dAFNItoNIFTI -prefix $to $from
+ #end
+# ============================================================
+
