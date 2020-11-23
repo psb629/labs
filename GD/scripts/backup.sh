@@ -13,16 +13,21 @@ endif
 foreach subj ($subj_list)
 	echo "processing $subj..."
 	## behav_data
-	set output_dir = $to_dir/behav_data
+ #	set output_dir = $to_dir/behav_data
  #	if ( ! -d $output_dir ) then
  #		mkdir -p -m 755 $output_dir
  #	endif
  #	cp $from_dir/behav_data/$subj-refmri.mat $output_dir
 	## raw dicom
-	set output_dir = $to_dir/fmri_data/raw_data/$subj
+ #	set output_dir = $to_dir/fmri_data/raw_data/$subj
+ #	if ( ! -d $output_dir ) then
+ #		mkdir -p -m 755 $output_dir
+ #	endif
+ #	cp -r $from_dir/fMRI_data/raw_data/$subj/* $output_dir
+	## basic preprocessed-fmri_data
+	set output_dir = $to_dir/fmri_data/preproc_data/$subj
 	if ( ! -d $output_dir ) then
 		mkdir -p -m 755 $output_dir
 	endif
-	cp -r $from_dir/fMRI_data/raw_data/$subj/* $output_dir
-	## raw fmri_data
+	cp $from_dir/fMRI_data/preproc_data/$subj/*+orig.* $output_dir
 end
