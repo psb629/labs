@@ -13,26 +13,37 @@ set subj_list = ( 01 02 05 07 08 \
 set from_dir = /Volumes/clmnlab/GA/fmri_data/preproc_data
 set to_dir = /Volumes/T7SSD1/GA/fMRI_data/preproc_data
 
-foreach id (GA GB)
-	foreach n ($subj_list)
-		set subj = ${id}${n}
+set id = GA
+#foreach id (GA GB)
+	foreach nn ($subj_list)
+		set subj = ${id}${nn}
 		echo "Processing $subj..."
-		if ( ! -d $to_dir/$subj ) then
-			mkdir $to_dir/$subj
+		if ( ! -d $to_dir/$nn ) then
+			mkdir $to_dir/$nn
 		endif
 		## anat_final
  #		set from = $from_dir/$subj/anat_final.$subj+tlrc.
- #		set to = $to_dir/$subj/anat_final.$subj.nii.gz
+ #		set to = $to_dir/$nn/anat_final.$subj.nii.gz
  #		3dAFNItoNIFTI -prefix $to $from
+ #		rm $to_dir/$nn/anat_final.$subj+tlrc.*
+		## motion.1D
+ #		foreach run (`count -digits 2 0 7`)
+ #			set from = $from_dir/$subj/motion_demean.$subj.r$run.1D
+ #			set to = $to_dir/$nn/motion_demean.$subj.r$run.1D
+ #			cp $from $to
+ #			set from = $from_dir/$subj/motion_$subj.r${run}_censor.1D
+ #			set to = $to_dir/$nn/motion_censor.$subj.r$run.1D
+ #			cp $from $to
+ #		end
 		foreach run (`count -digits 2 1 6`)
 			## pb02
-			set from = $from_dir/$subj/pb02.$subj.r$run.volreg+tlrc.*
-			set to = $to_dir/$subj
-			cp $from $to
+			set from = $from_dir/$subj/pb02.$subj.r$run.volreg+tlrc.
+			set to = $to_dir/$nn/pb02.volreg.$subj.r$run.nii.gz
+			3dAFNItoNIFTI -prefix $to $from
 		end
-		gzip -1v $to/*.BRIK
+		#gzip -1v $to_dir/$nn/*.BRIK
 	end
-end
+#end
 # ============================================================
  #set ori_dir = /Volumes/clmnlab/GA/fmri_data/glm_results/am_reg_SPMG2/stats
  #set early_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/early
