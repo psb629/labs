@@ -25,7 +25,7 @@ echo `date` >$log_preproc
 foreach id (GA GB GC)
 	foreach ss ($subj_list)
 		set subj = ${id}${ss}
-		echo "processing $subj..." >>$log_preproc
+		echo "## processing $subj..." >>$log_preproc
 		du -sh $from_dir/fMRI_data/preproc_data/$subj/* >>$log_preproc
 		foreach leaf ($leaf_list)
 			## raw dicom

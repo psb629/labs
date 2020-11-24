@@ -41,7 +41,7 @@ echo `date` >$log_raw
 foreach id (GA GB GC)
 	foreach ss ($subj_list)
 		set subj = ${id}${ss}
-		echo "processing $subj..." >>$log_raw
+		echo "## processing $subj..." >>$log_raw
 		du -sh $from_dir/fMRI_data/raw_data/$subj/* >>$log_raw
 		foreach leaf ($leaf_list)
 			## raw dicom
@@ -51,7 +51,7 @@ foreach id (GA GB GC)
 				if ( ! -d $to ) then
 					mkdir -p -m 755 $to
 				endif
-				cp -r $from/* $to
+				cp -r $from/*.IMA $to
 			else
 				echo " $from doesn't exist!" >>$log_raw
 			endif
