@@ -14,36 +14,31 @@ if ( ! -d $to_dir ) then
 	mkdir -m 755 $to_dir
 endif
 
-## behav_data
- #echo "Copying behav_data..."
- #set output_dir = $to_dir/behav_data
- #if ( ! -d $output_dir ) then
- #	mkdir -m 755 $output_dir
- #endif
- #cp -r $from_dir/behavior_data/* $output_dir
+## log_preproc file
+set leaf_list = (anat_final )
+set log_preproc = $to_dir/fmri_data/preproc_data/backup_log.txt
+if ( -e $log_preproc ) then
+	rm $log_preproc
+endif
+echo `date` >$log_preproc
 
-## revision_data
- #echo "Copying revision_data..."
- #set output_dir = $to_dir/revision
- #if ( ! -d $output_dir ) then
- #	mkdir -m 755 $output_dir
- #endif
- #cp -r $from_dir/Revision/* $output_dir
-
-#foreach id (GA GB)
- #	foreach ss ($subj_list)
- #		echo "processing $subj..."
- #		## raw dicom
- #		set output_dir = $to_dir/fmri_data/raw_data/$subj
- #		if ( ! -d $output_dir ) then
- #			mkdir -p -m 755 $output_dir
- #		endif
- #		cp -r $from_dir/fMRI_data/raw_data/$subj/* $output_dir
- #		## basic preprocessed-fmri_data
- #		set output_dir = $to_dir/fmri_data/preproc_data/$subj
- #		if ( ! -d $output_dir ) then
- #			mkdir -p -m 755 $output_dir
- #		endif
- #		cp $from_dir/fMRI_data/preproc_data/$subj/*+orig.* $output_dir
- #	end
- #end
+foreach id (GA GB GC)
+	foreach ss ($subj_list)
+		set subj = ${id}${ss}
+		echo "processing $subj..." >>$log_preproc
+		du -sh $from_dir/fMRI_data/preproc_data/$subj/* >>$log_preproc
+		foreach leaf ($leaf_list)
+			## raw dicom
+			set from = $from_dir/fMRI_data/preproc_data/$subj/$leaf
+			if ( -d $from ) then
+				set to = $to_dir/fmri_data/preproc_data/$subj/$leaf
+				if ( ! -d $to ) then
+					mkdir -p -m 755 $to
+				endif
+				cp -r $from/* $to
+			else
+				echo " $from doesn't exist!" >>$log_preproc
+			endif
+		end
+	end
+end
