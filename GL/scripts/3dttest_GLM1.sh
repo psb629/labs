@@ -10,8 +10,6 @@ set roi_dir = $root_dir/roi
 set group_dir = $stats_dir/group
 set output_dir = $group_dir
 
-# sub-brick of interesting
-set nn = 7 # diff_GLT#0_Coef
 # ========================= make the group directory =========================
 if ( ! -d $group_dir ) then
 	echo "make the group directory at $stats_dir"
@@ -25,17 +23,33 @@ set to = $output_dir/anat_final.GL04.nii.gz
 if ( ! -e $to ) then
 	cp $from $to
 endif
-# ========================= 3dttest++ =========================
+# ========================= setA =========================
+# sub-brick of interesting
+set nn = 1 # FB#0_Coef
+
 set setA = ()
 foreach ss ($subj_list)
 	set subj = GL$ss
 	cp $stats_dir/$subj/stats.$subj.nii.gz $output_dir
-	set pname = $output_dir/temp.$subj
+	set pname = $output_dir/tempA.$subj
 	3dcalc -a "$stats_dir/$subj/stats.$subj.nii.gz[$nn]" -expr 'a' -prefix $pname
 	set setA = ($setA $pname+tlrc)
 end
-set pname = $output_dir/stats.$nn.group
-3dttest++ -mask $gmask -prefix $pname -setA $setA
+# ========================= setB =========================
+# sub-brick of interesting
+set nn = 4 # nFB#0_Coef
+
+set setB = ()
+foreach ss ($subj_list)
+	set subj = GL$ss
+	cp $stats_dir/$subj/stats.$subj.nii.gz $output_dir
+	set pname = $output_dir/tempB.$subj
+	3dcalc -a "$stats_dir/$subj/stats.$subj.nii.gz[$nn]" -expr 'a' -prefix $pname
+	set setB = ($setB $pname+tlrc)
+end
+# ========================= 3dttest++ =========================
+set pname = $output_dir/stats.group
+3dttest++ -mask $gmask -setA $setA -setB $setB -prefix $pname -paired
 3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
 rm $pname+tlrc.*\
-	$output_dir/temp.GL??+tlrc.*
+	$output_dir/temp?.GL??+tlrc.*
