@@ -17,7 +17,7 @@ if ( ! -d $group_dir ) then
 	mkdir -m 755 $group_dir
 endif
 # ========================= group full-mask =========================
-set gmask = $roi_dir/full/full_mask.group.nii.gz
+set gmask = $roi_dir/full/full_mask.group.n$nsubj.nii.gz
 # ========================= copy anat_final.GL04.nii.gz to group_dir =========================
 set from = $preproc_dir/GL04/anat_final.GL04.nii.gz
 set to = $output_dir/anat_final.GL04.nii.gz
