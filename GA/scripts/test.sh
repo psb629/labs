@@ -10,11 +10,14 @@ set subj_list = ( 01 02 05 07 08 \
 				  26 27 28 29 30 \
 				  31 32 33 34 35 \
 				  36 37 38 42 44 )
-set from_dir = /Volumes/clmnlab/GA/fmri_data/preproc_data
+set root_dir = /Volumes/clmnlab/GA
+set from_dir = $root_dir/fmri_data/preproc_data
+set betasLSS_dir = $root_dir/MVPA/LSS_pb02_MO_short_duration/data
+set mask_dir = $root_dir/fmri_data/masks
+
 set to_dir = /Volumes/T7SSD1/GA/fMRI_data/preproc_data
 
-set id = GA
-#foreach id (GA GB)
+foreach id (GA GB)
 	foreach nn ($subj_list)
 		set subj = ${id}${nn}
 		echo "Processing $subj..."
@@ -35,15 +38,20 @@ set id = GA
  #			set to = $to_dir/$nn/motion_censor.$subj.r$run.1D
  #			cp $from $to
  #		end
-		foreach run (`count -digits 2 1 6`)
-			## pb02
-			set from = $from_dir/$subj/pb02.$subj.r$run.volreg+tlrc.
-			set to = $to_dir/$nn/pb02.volreg.$subj.r$run.nii.gz
-			3dAFNItoNIFTI -prefix $to $from
-		end
-		#gzip -1v $to_dir/$nn/*.BRIK
+		## betasLSS
+ #		foreach run (`count -digits 2 1 6`)
+ #			set from = $betasLSS_dir/betasLSS.MO.shortdur.$subj.r$run+tlrc
+ #			set to = $to_dir/$nn/betasLSS.$subj.r$run.nii.gz
+ #			if ( ! -e $from.HEAD ) then
+ #				echo " $from doesn't exist!"
+ #			else
+ #				3dAFNItoNIFTI -prefix $to $from
+ #			endif
+ #		end
+
+		gzip -1v $to_dir/$nn/*.BRIK
 	end
-#end
+end
 # ============================================================
  #set ori_dir = /Volumes/clmnlab/GA/fmri_data/glm_results/am_reg_SPMG2/stats
  #set early_dir = /Volumes/T7SSD1/GA/fMRI_data/stats/fig4/early
