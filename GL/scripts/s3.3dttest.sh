@@ -17,7 +17,7 @@ set roi_list = (M1 S1)
 # two conditions
 set cond_list = (FB nFB)
 # sub-brick of interesting
-set nn = 17 # ppiFB_ppinFB_GLT#0_Coef
+# set nn = 17 # ppiFB_ppinFB_GLT#0_Coef
 
 # ========================= make the group directory =========================
 if ( ! -d $group_dir ) then
@@ -25,19 +25,37 @@ if ( ! -d $group_dir ) then
 	mkdir -m 755 $group_dir
 endif
 # ========================= group full-mask =========================
-set gmask = $roi_dir/full/full_mask.group.nii.gz
+set gmask = $roi_dir/full/full_mask.group.n$nsubj.nii.gz
 # ========================= 3dttest++ =========================
 foreach sd ($roi_list)
+	# ========================= setA =========================
+	# sub-brick of interesting
+	set nn = 11 # ppi_FB#0_Coef
+
 	set setA = ()
 	foreach ss ($subj_list)
 		set subj = GL$ss
-		set pname = $output_dir/temp.$subj.$sd
+		cp $stats_dir/$subj/stats.$subj.nii.gz $output_dir
+		set pname = $output_dir/tempA.$subj.$sd
 		3dcalc -a "$ppi_dir/PPIstat.$subj.$sd+tlrc[$nn]" -expr 'a' -prefix $pname
 		set setA = ($setA $pname+tlrc)
 	end
+	# ========================= setB =========================
+	# sub-brick of interesting
+	set nn = 14 # ppi_nFB#0_Coef
+
+	set setB = ()
+	foreach ss ($subj_list)
+		set subj = GL$ss
+		cp $stats_dir/$subj/stats.$subj.nii.gz $output_dir
+		set pname = $output_dir/tempB.$subj.$sd
+		3dcalc -a "$ppi_dir/PPIstat.$subj.$sd+tlrc[$nn]" -expr 'a' -prefix $pname
+		set setB = ($setB $pname+tlrc)
+	end
+	# ========================= 3dttest++ =========================
 	set pname = $output_dir/PPIstat.group.n$nsubj.$sd
-	3dttest++ -mask $gmask -prefix $pname -setA $setA
+	3dttest++ -mask $gmask -setA $setA -setB $setB -prefix $pname -paired
 	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
 	rm $pname+tlrc.*\
-		$output_dir/temp.GL??.*
+		$output_dir/temp?.GL??.*
 end
