@@ -42,7 +42,7 @@ foreach sd ($roi_list)
 			@ xx = $cc + 1
 			set xx = `printf '%02d' $xx`
 			# Extract BOLD corresponding to the ROI
-			3dmaskave -mask $roi_dir/mask.$sd.nii.gz -quiet $preproc_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
+			3dmaskave -mask $roi_dir/inter.$sd.nii.gz -quiet $preproc_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
 			1dtranspose $output_dir/Seed.$subj.r$cc.$sd.1D >$output_dir/temp1.1D # Transpose
 			# Remove the trend from the seed time series
 			3dDetrend -polort 5 -prefix $output_dir/SeedR.$subj.r$cc.$sd.1D $output_dir/temp1.1D

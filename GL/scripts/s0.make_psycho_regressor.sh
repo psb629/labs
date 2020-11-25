@@ -65,20 +65,19 @@ foreach ss ($subj_list)
 	end
 	##==============================================================================================
 	## round the values which mean onset-time in the files
-	cd $root_dir
 	foreach run ($runs)
 		set output = $output_dir/onset.$subj.rnd.r$run.all_cond.1D
 		if ( -e $output ) then
 			rm $output
 		endif
-		head -${run} $output_dir/onset.$subj.r$run.all_cond.1D | tail -1 >a.1D
-		1dtranspose a.1D >b.1D
-		1deval -a b.1D -expr 'int(a)+1-isnegative(10*(a-int(a))-5)' >c.1D
-		1dtranspose c.1D >d.1D
-		set temp = `cat d.1D`
+		head -${run} $output_dir/onset.$subj.r$run.all_cond.1D | tail -1 >$root_dir/a.1D
+		1dtranspose $root_dir/a.1D >$root_dir/b.1D
+		1deval -a $root_dir/b.1D -expr 'int(a)+1-isnegative(10*(a-int(a))-5)' >$root_dir/c.1D
+		1dtranspose $root_dir/c.1D >$root_dir/d.1D
+		set temp = `cat $root_dir/d.1D`
 		echo $temp >$output
 	end
-	rm ./?.1D
+	rm $root_dir/?.1D
 	##==============================================================================================
 	## make psych-regressor
 	foreach cond ($cond_list)
