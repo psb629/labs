@@ -1,6 +1,7 @@
 #!/bin/tcsh
 
 set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 26 27 29)
+set nsubj = $#subj_list
 
 set root_dir = /Volumes/T7SSD1/GL
 set fmri_dir = $root_dir/fMRI_data
@@ -48,7 +49,7 @@ foreach ss ($subj_list)
 	set setB = ($setB $pname+tlrc)
 end
 # ========================= 3dttest++ =========================
-set pname = $output_dir/stats.group
+set pname = $output_dir/stats.group.n$nsubj
 3dttest++ -mask $gmask -setA $setA -setB $setB -prefix $pname -paired
 3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
 rm $pname+tlrc.*\
