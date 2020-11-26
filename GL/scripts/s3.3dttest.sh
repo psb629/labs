@@ -4,6 +4,8 @@ set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 
 set nsubj = $#subj_list
 
 set root_dir = /Volumes/T7SSD1/GL
+set fmri_dir = $root_dir/fMRI_data
+set preproc_dir = $fmri_dir/preproc_data
 set roi_dir = $root_dir/roi
 set ppi_dir = $root_dir/ppi
 set reg_psych_dir = $ppi_dir/reg
@@ -24,6 +26,12 @@ if ( ! -d $group_dir ) then
 	echo "make the group directory at $ppi_dir"
 	mkdir -m 755 $group_dir
 endif
+# ========================= copy an anat_final.GL04 to the group directory =========================
+set from = $preproc_dir/GL04/anat_final.GL04.nii.gz
+set to = $group_dir/anat_final.GL04.nii.gz
+if ( ! -e $to ) then
+	cp $from $to
+endif
 # ========================= group full-mask =========================
 set gmask = $roi_dir/full/full_mask.group.n$nsubj.nii.gz
 # ========================= 3dttest++ =========================
@@ -35,7 +43,6 @@ foreach sd ($roi_list)
 	set setA = ()
 	foreach ss ($subj_list)
 		set subj = GL$ss
-		cp $stats_dir/$subj/stats.$subj.nii.gz $output_dir
 		set pname = $output_dir/tempA.$subj.$sd
 		3dcalc -a "$ppi_dir/PPIstat.$subj.$sd+tlrc[$nn]" -expr 'a' -prefix $pname
 		set setA = ($setA $pname+tlrc)
@@ -47,7 +54,6 @@ foreach sd ($roi_list)
 	set setB = ()
 	foreach ss ($subj_list)
 		set subj = GL$ss
-		cp $stats_dir/$subj/stats.$subj.nii.gz $output_dir
 		set pname = $output_dir/tempB.$subj.$sd
 		3dcalc -a "$ppi_dir/PPIstat.$subj.$sd+tlrc[$nn]" -expr 'a' -prefix $pname
 		set setB = ($setB $pname+tlrc)

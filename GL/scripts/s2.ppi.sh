@@ -116,5 +116,6 @@ foreach sd ($roi_list)
 						 -rout -tout -x1D $output_dir/X.xmat.$subj.$sd.1D -xjpeg $output_dir/X.$subj.$sd.jpg \
 						 -x1D_uncensored $output_dir/Xuc.xmat.$subj.$sd.1D \
 						 -bucket $output_dir/PPIstat.$subj.$sd
+ #		3dAFNItoNIFTI -prefix $output_dir/PPIstat.$subj.$sd.nii.gz $output_dir/PPIstat.$subj.$sd
 	end
 end
