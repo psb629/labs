@@ -22,7 +22,7 @@ foreach id (GA GB)
 		set subj = ${id}${nn}
 		echo "Processing $subj..."
 		if ( ! -d $to_dir/$nn ) then
-			mkdir $to_dir/$nn
+			mkdir -p -m 755 $to_dir/$nn
 		endif
 		## anat_final
  #		set from = $from_dir/$subj/anat_final.$subj+tlrc.
@@ -39,16 +39,16 @@ foreach id (GA GB)
  #			cp $from $to
  #		end
 		## betasLSS
- #		foreach run (`count -digits 2 1 6`)
- #			set from = $betasLSS_dir/betasLSS.MO.shortdur.$subj.r$run+tlrc
- #			set to = $to_dir/$nn/betasLSS.$subj.r$run.nii.gz
- #			if ( ! -e $from.HEAD ) then
- #				echo " $from doesn't exist!"
- #			else
- #				3dAFNItoNIFTI -prefix $to $from
- #			endif
- #		end
-
+		foreach run (`count -digits 2 1 6`)
+			set from = $betasLSS_dir/betasLSS.MO.shortdur.$subj.r$run+tlrc
+			set to = $to_dir/$nn/betasLSS.$subj.r$run.nii.gz
+			if ( ! -e $from.HEAD ) then
+				echo " $from doesn't exist!"
+			else
+				3dAFNItoNIFTI -prefix $to $from
+			endif
+		end
+		## compressing
 		gzip -1v $to_dir/$nn/*.BRIK
 	end
 end
