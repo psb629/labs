@@ -1,0 +1,365 @@
+
+
+*******************************************************************************
+Wed Jun  3 12:53:32 2015
+
+
+FIT:    data read from "./L2X12M2965_energy.dat" u 6:8
+        format = x:z
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 5.9360059558e-12   0.00e+00  6.83e-07    1.000000e+00
+   4 5.8568884447e-18  -1.81e-08  6.83e-11    1.118093e-02
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 5.85689e-18
+rel. change during last iteration : -1.80857e-13
+
+degrees of freedom    (FIT_NDF)                        : 12
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 6.98623e-10
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.88074e-19
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0111809        +/- 0.0002835    (2.536%)
+
+
+*******************************************************************************
+Wed Jun  3 12:56:08 2015
+
+
+FIT:    data read from "./L2X12M2964_energy.dat" u 6:8
+        format = x:z
+        #datapoints = 14
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 4.2880779513e-17   0.00e+00  8.93e-09    1.118093e-02
+   3 9.5101264668e-18  -7.95e-04  8.93e-12    9.247506e-03
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 9.51013e-18
+rel. change during last iteration : -7.94547e-09
+
+degrees of freedom    (FIT_NDF)                        : 13
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 8.55306e-10
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.31548e-19
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00924751       +/- 0.0002863    (3.096%)
+
+
+*******************************************************************************
+Wed Jun  3 12:56:18 2015
+
+
+FIT:    data read from "./L2X12M2965_energy.dat" u 6:8
+        format = x:z
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x)=b*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   b            
+   0 5.9360059558e-12   0.00e+00  6.83e-07    1.000000e+00
+   4 5.8568884447e-18  -1.81e-08  6.83e-11    1.118093e-02
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 5.85689e-18
+rel. change during last iteration : -1.80857e-13
+
+degrees of freedom    (FIT_NDF)                        : 12
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 6.98623e-10
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.88074e-19
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+b               = 0.0111809        +/- 0.0002835    (2.536%)
+
+
+*******************************************************************************
+Wed Jun  3 12:56:24 2015
+
+
+FIT:    data read from "./L2X12M2966_energy.dat" u 6:8
+        format = x:z
+        #datapoints = 14
+        residuals are weighted equally (unit weight)
+
+function used for fitting: h(x)
+	h(x)=c*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   c            
+   0 8.7231331095e-12   0.00e+00  7.99e-07    1.000000e+00
+   4 5.9350491743e-18  -1.71e-08  7.99e-11    1.149038e-02
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 5.93505e-18
+rel. change during last iteration : -1.70817e-13
+
+degrees of freedom    (FIT_NDF)                        : 13
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 6.75679e-10
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.56542e-19
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+c               = 0.0114904        +/- 0.0002261    (1.968%)
+
+
+*******************************************************************************
+Mon Jun  8 13:08:41 2015
+
+
+FIT:    data read from "./L2X18M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 18
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 2.3211079789e-11   0.00e+00  1.35e-06    1.000000e+00
+   3 3.7095341859e-15  -5.34e-01  1.35e-09    1.580347e-01
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 3.70953e-15
+rel. change during last iteration : -5.34284e-06
+
+degrees of freedom    (FIT_NDF)                        : 17
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.47719e-08
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.18208e-16
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.158035         +/- 0.002582     (1.634%)
+
+
+*******************************************************************************
+Mon Jun  8 13:08:48 2015
+
+
+FIT:    data read from "./L2X20M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x)=b*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   b            
+   0 4.4133116418e-12   0.00e+00  6.83e-07    1.000000e+00
+   3 1.6685413195e-14  -7.94e-02  6.83e-10    1.489998e-01
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 1.66854e-14
+rel. change during last iteration : -7.94277e-07
+
+degrees of freedom    (FIT_NDF)                        : 12
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 3.72888e-08
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.39045e-15
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+b               = 0.149            +/- 0.01513      (10.16%)
+
+
+*******************************************************************************
+Mon Jun  8 13:15:08 2015
+
+
+FIT:    data read from "./L2X18M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 18
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=f1*x*x+f2*x+f3
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   f1            f2            f3           
+   0 1.8030647856e+01   0.00e+00  5.77e-01    1.000000e+00   1.000000e+00   1.000000e+00
+  10 3.4445673089e-15  -1.30e-08  5.77e-11    1.520186e-01   5.453580e-06   3.881504e-09
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 3.44457e-15
+rel. change during last iteration : -1.29509e-13
+
+degrees of freedom    (FIT_NDF)                        : 15
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.51538e-08
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.29638e-16
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+f1              = 0.152019         +/- 0.01491      (9.805%)
+f2              = 5.45358e-06      +/- 2.626e-05    (481.5%)
+f3              = 3.8815e-09       +/- 9.626e-09    (248%)
+
+correlation matrix of the fit parameters:
+                f1     f2     f3     
+f1              1.000 
+f2             -0.965  1.000 
+f3              0.702 -0.837  1.000 
+
+
+*******************************************************************************
+Mon Jun  8 13:15:18 2015
+
+
+FIT:    data read from "./L2X20M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x)=g1*x*x+g2*x+g3
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   g1            g2            g3           
+   0 1.3015617904e+01   0.00e+00  5.77e-01    1.000000e+00   1.000000e+00   1.000000e+00
+  10 1.0158482351e-14  -2.96e-06  5.77e-11    2.749351e-01  -1.248658e-04  -7.491708e-10
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 1.01585e-14
+rel. change during last iteration : -2.96002e-11
+
+degrees of freedom    (FIT_NDF)                        : 10
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 3.18724e-08
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.01585e-15
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+g1              = 0.274935         +/- 0.07123      (25.91%)
+g2              = -0.000124866     +/- 8.868e-05    (71.02%)
+g3              = -7.49171e-10     +/- 2.291e-08    (3057%)
+
+correlation matrix of the fit parameters:
+                g1     g2     g3     
+g1              1.000 
+g2             -0.964  1.000 
+g3              0.684 -0.824  1.000 
+
+
+*******************************************************************************
+Mon Jun  8 13:17:35 2015
+
+
+FIT:    data read from "./L2X18M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 18
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=f1*x*x+f2*x+f3
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   f1            f2            f3           
+   0 1.8030647856e+01   0.00e+00  5.77e-01    1.000000e+00   1.000000e+00   1.000000e+00
+  10 3.4445673089e-15  -1.30e-08  5.77e-11    1.520186e-01   5.453580e-06   3.881504e-09
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 3.44457e-15
+rel. change during last iteration : -1.29509e-13
+
+degrees of freedom    (FIT_NDF)                        : 15
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.51538e-08
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.29638e-16
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+f1              = 0.152019         +/- 0.01491      (9.805%)
+f2              = 5.45358e-06      +/- 2.626e-05    (481.5%)
+f3              = 3.8815e-09       +/- 9.626e-09    (248%)
+
+correlation matrix of the fit parameters:
+                f1     f2     f3     
+f1              1.000 
+f2             -0.965  1.000 
+f3              0.702 -0.837  1.000 
+
+
+*******************************************************************************
+Mon Jun  8 13:17:40 2015
+
+
+FIT:    data read from "./L2X20M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x)=g1*x*x+g2*x+g3
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   g1            g2            g3           
+   0 1.3015617904e+01   0.00e+00  5.77e-01    1.000000e+00   1.000000e+00   1.000000e+00
+  10 1.0158482351e-14  -2.96e-06  5.77e-11    2.749351e-01  -1.248658e-04  -7.491708e-10
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 1.01585e-14
+rel. change during last iteration : -2.96002e-11
+
+degrees of freedom    (FIT_NDF)                        : 10
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 3.18724e-08
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.01585e-15
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+g1              = 0.274935         +/- 0.07123      (25.91%)
+g2              = -0.000124866     +/- 8.868e-05    (71.02%)
+g3              = -7.49171e-10     +/- 2.291e-08    (3057%)
+
+correlation matrix of the fit parameters:
+                g1     g2     g3     
+g1              1.000 
+g2             -0.964  1.000 
+g3              0.684 -0.824  1.000 
+
+
+*******************************************************************************
+Mon Jun  8 13:17:53 2015
+
+
+FIT:    data read from "./L2X22M2966_energy.dat" u 6:($8*$2)
+        format = x:z
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: h(x)
+	h(x)=h1*x*x+h2*x+h3
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   h1            h2            h3           
+   0 3.0006003462e+00   0.00e+00  5.77e-01    1.000000e+00   1.000000e+00   1.000000e+00
+  15 4.3790577010e-47   0.00e+00  5.77e-16    4.751982e+00  -1.118989e-03   3.003256e-35
+
+After 15 iterations the fit converged.
+final sum of squares of residuals : 4.37906e-47
+abs. change during last iteration : 0
+
+
+Exactly as many data points as there are parameters.
+In this degenerate case, all errors are zero by definition.
+
+Final set of parameters 
+======================= 
+
+h1              = 4.75198        
+h2              = -0.00111899    
+h3              = 3.00326e-35    
