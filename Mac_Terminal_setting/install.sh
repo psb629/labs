@@ -68,6 +68,7 @@ pip install nilearn
 pip install matplotlib 
 pip install seaborn
 pip install statsmodels
+pip install plotly
 
 #### XQuartz ####
 brew cask install xquartz
