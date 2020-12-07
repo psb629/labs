@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "R.h"
 
 double **data, *x, n;
 unsigned int row, column;
@@ -19,17 +20,7 @@ void answer(){
 		printf("\n");
 	}
 }
-void R2(int i, int j, double a){
-	/* j행 = j행 - i행.*a */
-	for(int k=0;k<column;k++)
-		data[j][k] = data[j][k] - data[i][k]*a;
-}
-void R1(int i){
-	/* i행 normalize */
-	double a = data[i][i];
-	for(int k=i;k<column;k++)
-		data[i][k] /= a;
-}
+
 void f1(){
 	/* 행렬을 입력받고, 확대행렬을 구성한다. */
 	int i, j;
@@ -70,7 +61,7 @@ int f2(){
 	for(i=0;i<row-1;i++)
 		for(j=i+1;j<row;j++){
 			temp = data[j][i]/data[i][i];
-			R2(i,j,temp);
+			R2(data,i,j,temp);
 		}
 	if(data[row-1][row-1]==0){
 		printf("유일해 없음\n");
@@ -80,10 +71,10 @@ int f2(){
  	for(j=0;j<row-1;j++)
 		for(i=j+1;i<row;i++){
 			temp = data[j][i]/data[i][i];
-			R2(i,j,temp);
+			R2(data,i,j,temp);
 		}
 	for(i=0;i<row;i++)
-		R1(i);
+		R1(data,i);
 	return 0;
 }
 int main()
