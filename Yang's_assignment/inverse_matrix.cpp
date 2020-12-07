@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-double **data, *x, n;
-unsigned int row, column;
+double **data;
+int row, column;
 
 void view_data(){
 	int i, j;
@@ -32,6 +32,10 @@ void R1(int i){
 }
 void f1(){
 	/* 행렬을 입력받고, 확대행렬을 구성한다. */
+//	FILE *mat;
+//	sprintf(fname,"matrix.txt\0");
+//	mat = fopen(fname,"r");
+//	fclose(mat);
 	int i, j;
 	row = 1;
 	printf("행렬의 크기 n\n");
@@ -40,6 +44,7 @@ void f1(){
 		scanf("%d", &row);
 	}
 	column = row*2;
+	/* 동적메모리 할당 */
 	data = new double *[row];
 	for(i=0;i<row;i++)
 		data[i] = new double [column];
@@ -86,11 +91,18 @@ int f2(){
 		R1(i);
 	return 0;
 }
+void f3(){
+	/* 동적메모리 제거 */
+	for(int i=0;i<row;i++)
+		delete [] data[i];
+	delete [] data;
+}
 int main()
 {
 	f1();
 	f2();
 	view_data();
 	answer();
+	f3();
 	return 0;
 }
