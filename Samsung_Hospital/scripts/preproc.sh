@@ -1,14 +1,13 @@
 #!/bin/tcsh
 
-set subj = S19
-set date = 201102
+set subj = S20
+set date = 201124
 
-set root_dir = /Users/clmn/Desktop/Samsung_Hospital
-set data_dir = $root_dir/${subj}_${date}_MRI
-set output_dir = $root_dir/preproc_data/$subj
+set root_dir = /Volumes/T7SSD1/samsung_hospital/
+set data_dir = /Users/clmn/Desktop/Samsung_Hospital/fmri_data/raw_data/first_scan/${subj}_${date}_MRI
+set output_dir = $root_dir/fmri_data/preproc_data/$subj
 if ( ! -d $output_dir ) then
-	mkdir $output_dir
-	mkdir $output_dir/preprocessed
+	mkdir -p -m 755 $output_dir/preprocessed
 endif
 set epi = $output_dir/${subj}_fMRI.nii.gz
 set t1 = $output_dir/${subj}_T1.nii.gz
@@ -16,14 +15,14 @@ set t1 = $output_dir/${subj}_T1.nii.gz
 ## convert dcm files into NIFTI files, written by Sungbeen Park
 
 ## T1 data : 366 files
-set raw_T1 = $data_dir/${subj}_${date}_t1
+set raw_T1 = $data_dir/${subj}_${date}_T1
 dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_T1" $raw_T1
 rm $output_dir/*.json
 # added the line since S19, because of the unexpected suffix "_real"
 mv $output_dir/${subj}_T1*.nii.gz $t1
 
 ## fMRI data : 18001 files
-set raw_fMRI = $data_dir/${subj}_${date}_fMRI
+set raw_fMRI = $data_dir/${subj}_${date}_FMRI
 set TR = 2
 
 set cnt = 0
