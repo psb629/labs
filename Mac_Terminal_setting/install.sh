@@ -42,7 +42,7 @@ curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_settin
 source ~/.vimrc
 
 #### oh-my-zsh ####
-# Xcode is absolutely necessary
+# Xcode required
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 cat ~/Github/labs/Mac_Terminal_setting/.zshrc >>~/.zshrc
 
@@ -74,7 +74,7 @@ pip install plotly
 brew cask install xquartz
 
 #### afni ####
-# XQuartz is absolutely necessary
+# XQuartz required
 cd ~
 update=@update.afni.binaries
 pack=macos_10.12_local
