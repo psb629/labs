@@ -20,7 +20,7 @@ echo $M1 >$output_dir/M1.peak.xyz.1D
 set S1 = (-59 -17 55)
 echo $S1 >$output_dir/S1.peak.xyz.1D
 # =======================================================================
-set radius = 6		# unit: mm
+set radius = 3		# unit: mm
 foreach roi ($roi_list)
 	set pname = $output_dir/3dUndump.$roi.group.rd$radius
 	if (-e $pname+tlrc.HEAD) then
