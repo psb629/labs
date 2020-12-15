@@ -25,6 +25,8 @@ set nn = 1	# nn = TR/sub_TR
 set n_tp = 300
 # two conditions
 set cond_list = (FB nFB)
+# roi radius
+set srad = 3
 
 # create Gamma impulse response function
 if ( ! -e $root_dir/GammaHR_TR$sub_TR.1D ) then
@@ -42,7 +44,8 @@ foreach sd ($roi_list)
 			@ xx = $cc + 1
 			set xx = `printf '%02d' $xx`
 			# Extract BOLD corresponding to the ROI
-			3dmaskave -mask $roi_dir/inter.$sd.nii.gz -quiet $preproc_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
+ #			3dmaskave -mask $roi_dir/inter.$sd.nii.gz -quiet $preproc_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
+			3dmaskave -mask $roi_dir/3dUndump.$sd.group.rd$srad.nii.gz -quiet $preproc_dir/$subj/pb04.$subj.r$xx.scale+tlrc >$output_dir/Seed.$subj.r$cc.$sd.1D
 			1dtranspose $output_dir/Seed.$subj.r$cc.$sd.1D >$output_dir/temp1.1D # Transpose
 			# Remove the trend from the seed time series
 			3dDetrend -polort 5 -prefix $output_dir/SeedR.$subj.r$cc.$sd.1D $output_dir/temp1.1D

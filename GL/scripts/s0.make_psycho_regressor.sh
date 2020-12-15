@@ -6,8 +6,12 @@ set root_dir = /Volumes/T7SSD1/GL
 set reg_dir = $root_dir/behav_data/regressors
 set ppi_dir = $root_dir/ppi
 set output_dir = $ppi_dir/reg
+
+if ( ! -d $ppi_dir ) then
+	mkdir -p -m 755 $ppi_dir
+endif
 if ( ! -d $output_dir ) then
-	mkdir $output_dir
+	mkdir -p -m 755 $output_dir
 endif
 
 set subj_list = (03 04 05 06 07 08 09 10 11 12 14 15 16 17 18 19 20 21 22 24 25 26 27 29)
@@ -70,14 +74,14 @@ foreach ss ($subj_list)
 		if ( -e $output ) then
 			rm $output
 		endif
-		head -${run} $output_dir/onset.$subj.r$run.all_cond.1D | tail -1 >$root_dir/a.1D
-		1dtranspose $root_dir/a.1D >$root_dir/b.1D
-		1deval -a $root_dir/b.1D -expr 'int(a)+1-isnegative(10*(a-int(a))-5)' >$root_dir/c.1D
-		1dtranspose $root_dir/c.1D >$root_dir/d.1D
-		set temp = `cat $root_dir/d.1D`
+		head -${run} $output_dir/onset.$subj.r$run.all_cond.1D | tail -1 >$output_dir/a.1D
+		1dtranspose $output_dir/a.1D >$output_dir/b.1D
+		1deval -a $output_dir/b.1D -expr 'int(a)+1-isnegative(10*(a-int(a))-5)' >$output_dir/c.1D
+		1dtranspose $output_dir/c.1D >$output_dir/d.1D
+		set temp = `cat $output_dir/d.1D`
 		echo $temp >$output
 	end
-	rm $root_dir/?.1D
+	rm $output_dir/?.1D
 	##==============================================================================================
 	## make psych-regressor
 	foreach cond ($cond_list)
