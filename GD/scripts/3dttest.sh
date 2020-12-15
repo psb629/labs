@@ -36,9 +36,9 @@ set temp = ()
 foreach subj ($subj_list)
 	set temp = ($temp $preproc_dir/$subj/preprocessed/full_mask.$subj+tlrc.HEAD)
 end
-set gmask = $output_dir/full_mask.GDs
+set gmask = $output_dir/full_mask.GDs.n$#subj_list
 if ( -e $gmask+tlrc.HEAD ) then
-	rm $gmask+tlrc.*
+	rm $gmask+tlrc.* $gmask.nii.gz
 endif
 3dMean -mask_inter -prefix $gmask $temp
 3dAFNItoNIFTI -prefix $gmask.nii.gz $gmask+tlrc.
