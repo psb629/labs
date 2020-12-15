@@ -430,7 +430,7 @@ foreach subj ($subj_list)
 	rm ./rm.*
 	# ================== full mask is converted to .nii.gz file ================== #
 	set subj_fullmask = $subj_preproc_dir/preprocessed/full_mask.{$subj}+tlrc.
-	set full_mask_dir = $out_dir/masks/full_masks
+	set full_mask_dir = $out_dir/roi/full
 	if (! -d $full_mask_dir) then
 		mkdir -m 777 -p $full_mask_dir
 	endif
