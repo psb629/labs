@@ -1,33 +1,33 @@
 #!/bin/tcsh
 
-set subj_list = (GD11 GD07 GD30 GD02 GD32 GD23 GD01 GD33 GD20 GD44 GD26 GD15 GD38)
+set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15 GD38)
 # outliers : GD29, GD31
 # No data : GD19
 set root_dir = /Volumes/T7SSD1/GD
 set fMRI_dir = $root_dir/fMRI_data
 set preproc_dir = $fMRI_dir/preproc_data
-#set reg_dir = $fMRI_dir/stats/Reg1_{*}
-set reg_dir = $fMRI_dir/stats/Reg2_{*}
+set reg_dir = $fMRI_dir/stats/Reg1_{*}
+#set reg_dir = $fMRI_dir/stats/Reg2_{*}
 set group_dir = $reg_dir/group
+set output_dir = $group_dir
 
 # ========================= make the group directory and move NIFTI data to the directory =========================
 if ( ! -d $group_dir ) then
 	echo "make the group directory at $reg_dir"
-	mkdir -m 777 $group_dir
+	mkdir -p -m 755 $group_dir
 endif
-cd $group_dir
 foreach subj ($subj_list)
-	## move run1to3.nii.gz to group directory
-	set temp = statsRWDtime.$subj.run1to3.SPMG2.nii.gz
-	if ( ! -e ./$temp ) then
-		echo "move the datum, $temp, to $group_dir"
-		mv $reg_dir/$subj/$temp ./
+	## make run1to3.nii.gz to group directory
+	set from = $reg_dir/$subj/statsRWDtime.$subj.run1to3.SPMG2+tlrc
+	set to = $output_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz
+	if ( ! -e $from ) then
+		3dAFNItoNIFTI -prefix $to $from
 	endif
-	## move run4to6.nii.gz to group directory
-	set temp = statsRWDtime.$subj.run4to6.SPMG2.nii.gz
-	if ( ! -e ./$temp ) then
-		echo "move the datum, $temp, to $group_dir"
-		mv $reg_dir/$subj/$temp ./
+	## make run4to6.nii.gz to group directory
+	set from = $reg_dir/$subj/statsRWDtime.$subj.run4to6.SPMG2+tlrc
+	set to = $output_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz
+	if ( ! -e $from ) then
+		3dAFNItoNIFTI -prefix $to $from
 	endif
 end
 
@@ -36,39 +36,40 @@ set temp = ()
 foreach subj ($subj_list)
 	set temp = ($temp $preproc_dir/$subj/preprocessed/full_mask.$subj+tlrc.HEAD)
 end
-set gmask = full_mask.GDs
-if ( -e $group_dir/$gmask+tlrc.HEAD ) then
-	rm $group_dir/$gmask+tlrc.*
+set gmask = $output_dir/full_mask.GDs
+if ( -e $gmask+tlrc.HEAD ) then
+	rm $gmask+tlrc.*
 endif
-3dMean -mask_inter -prefix $group_dir/$gmask $temp
+3dMean -mask_inter -prefix $gmask $temp
+3dAFNItoNIFTI -prefix $gmask.nii.gz $gmask+tlrc.
+rm $gmask+tlrc.*
 
 # ========================= 3dttest++ of Reg1 =========================
-cd $group_dir
-
 ## run1to3
 set temp = ()
 foreach subj ($subj_list)
-	set temp = ($temp ./statsRWDtime.$subj.run1to3.SPMG2.nii.gz)
+	set temp = ($temp $output_dir/statsRWDtime.$subj.run1to3.SPMG2.nii.gz)
 end
-set pname = group.1to3
+set pname = $output_dir/group.1to3
 if ( -e $pname+tlrc.HEAD ) then
 	rm $pname+tlrc.*
 endif
-3dttest++ -mask $gmask+tlrc.HEAD -prefix $pname -setA $temp
+3dttest++ -mask $gmask.nii.gz -prefix $pname -setA $temp
 3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc.
+rm $pname+tlrc.*
 
 ## run4to6
 set temp = ()
 foreach subj ($subj_list)
-	set temp = ($temp ./statsRWDtime.$subj.run4to6.SPMG2.nii.gz)
+	set temp = ($temp $output_dir/statsRWDtime.$subj.run4to6.SPMG2.nii.gz)
 end
-set pname = group.4to6
+set pname = $output_dir/group.4to6
 if ( -e $pname+tlrc.HEAD ) then
 	rm $pname+tlrc.*
 endif
-3dttest++ -mask $gmask+tlrc.HEAD -prefix $pname -setA $temp
+3dttest++ -mask $gmask.nii.gz -prefix $pname -setA $temp
 3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc.
-
+rm $pname+tlrc.*
 
 #3dttest++ -prefix statsRWDtime.groupA-B.run1to3.SPMG2 -mask /Volumes/clmnlab/GA/MVPA/fullmask_GAGB/full_mask_GAGB_n30+tlrc.HEAD -setA statsRWDtime.GA02.run1to3.SPMG2.nii.gz statsRWDtime.GA07.run1to3.SPMG2.nii.gz statsRWDtime.GA11.run1to3.SPMG2.nii.gz statsRWDtime.GA30.run1to3.SPMG2.nii.gz -Clustsim
 
