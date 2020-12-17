@@ -6,6 +6,7 @@ set root_dir = /Volumes/T7SSD1/GD
 set reg_dir = $root_dir/behav_data/regressors
 set data_dir = $root_dir/connectivity/rest_WM_Vent_BP/CorrZ.caudate
 set full_mask = $root_dir/fMRI_data/masks/full/full_mask.GDs_n$#subj_list.nii.gz
+#set gmask = $output_dir/full_mask.GDs.n$#subj_list.nii.gz
 set output_dir = $data_dir/Corr.caudate
 
 set roi_list = (caudate_head_R caudate_body_R caudate_tail_R caudate_head_L caudate_body_L caudate_tail_L)

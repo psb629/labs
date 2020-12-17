@@ -3,17 +3,21 @@
 set subj_list = (11 07 30 02 29 32 23 01 31 33 20 44 26 15 38)
 
 set root_dir = /Volumes/T7SSD1
-set caud_mask_dir = $root_dir/GA/fMRI_data/roi/GA_caudate_roi/slicer_2/tlrc_resam_fullmask/hem_sep
-set mask_dir = $root_dir/GA/FreeSurfer/03_resam_masks
-set output_dir = $root_dir/GD/connectivity/rest_WM_Vent_BP
+set GA_dir = $root_dir/GA
+set GD_dir = $root_dir/GD
+set caud_mask_dir = $GA_dir/fMRI_data/roi/GA_caudate_roi/slicer_2/tlrc_resam_fullmask/hem_sep
+set mask_dir = $GA_dir/FreeSurfer/03_resam_masks
+set output_dir = $GD_dir/connectivity/rest_WM_Vent_BP
 # ==========================================================================
 if ( ! -d $output_dir ) then
 	mkdir -p -m 755 $output_dir
 endif
+# ==========================================================================
+set caudate_list = (head body tail)
 # ========================= make the group full-mask =========================
 set temp = ()
 foreach nn ($subj_list)
-	set temp = ($temp $root_dir/GD/fMRI_data/preproc_data/GD$nn/preprocessed/full_mask.GD$nn+tlrc.HEAD)
+	set temp = ($temp $GD_dir/fMRI_data/preproc_data/GD$nn/preprocessed/full_mask.GD$nn+tlrc)
 end
 set gmask = $output_dir/full_mask.GDs.n$#subj_list
 if ( -e $gmask.nii.gz ) then
@@ -24,7 +28,7 @@ endif
 rm $gmask+tlrc.*
 # ==========================================================================
 foreach nn ($subj_list)
-	set data_dir = $root_dir/GD/fMRI_data/preproc_data/GD$nn/preprocessed
+	set data_dir = $GD_dir/fMRI_data/preproc_data/GD$nn/preprocessed
 
 	## 
 	set fin_output = $data_dir/roi_pc_Vent_WM.rest
@@ -39,37 +43,28 @@ foreach nn ($subj_list)
 	endif
 
 	##
-	3dTproject -input $data_dir/pb04.GD$nn.rest.scale+tlrc -prefix $output_dir/errts.GD$nn.rest+tlrc \
-		-mask $gmask.nii.gz -ort $data_dir/roi_pc_Vent_WM.rest  -ort $root_dir/GD/bandpass_regs.1D
+	set pname = $output_dir/errts.GD$nn.rest
+	3dTproject -input $data_dir/pb04.GD$nn.rest.scale+tlrc -prefix $pname+tlrc \
+		-mask $gmask.nii.gz -ort $data_dir/roi_pc_Vent_WM.rest -ort $GD_dir/bandpass_regs.1D
+	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
 
 	## Calculating seed signals
-	3dmaskave -mask $caud_mask_dir/GA${nn}_1_caudate_head_resam_R+tlrc -quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_head_R.GD$nn.rest.1D
-	3dmaskave -mask $caud_mask_dir/GA${nn}_2_caudate_body_resam_R+tlrc -quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_body_R.GD$nn.rest.1D
-	3dmaskave -mask $caud_mask_dir/GA${nn}_3_caudate_tail_resam_R+tlrc -quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_tail_R.GD$nn.rest.1D
-	3dmaskave -mask $caud_mask_dir/GA${nn}_1_caudate_head_resam_L+tlrc -quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_head_L.GD$nn.rest.1D
-	3dmaskave -mask $caud_mask_dir/GA${nn}_2_caudate_body_resam_L+tlrc -quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_body_L.GD$nn.rest.1D
-	3dmaskave -mask $caud_mask_dir/GA${nn}_3_caudate_tail_resam_L+tlrc -quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_tail_L.GD$nn.rest.1D
+	foreach cc (`count -digits 1 1 $#caudate_list`)
+		set roi = $caudate_list[$cc]
+		foreach ss (R L)
+			3dmaskave -mask $caud_mask_dir/GA${nn}_${cc}_caudate_${roi}_resam_${ss}+tlrc \
+				-quiet $output_dir/errts.GD$nn.rest+tlrc >$output_dir/errts.caudate_${roi}_${ss}.GD$nn.rest.1D
+		end
+	end
+	rm $pname+tlrc.*
 
- #	3dmaskave -mask $output_dir/cdh_L_GB-GA+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdh_L_GB-GA.GA$nn.rest.1D
- #	3dmaskave -mask $output_dir/cdt_L_GB-GA+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdt_L_GB-GA.GA$nn.rest.1D
- #	3dmaskave -mask $output_dir/cdh_R_GB-GA+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdh_R_GB-GA.GA$nn.rest.1D
- #	3dmaskave -mask $output_dir/cdt_R_GB-GA+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdt_R_GB-GA.GA$nn.rest.1D
- #	3dmaskave -mask $output_dir/cdh_L_GA+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdh_L_GA.GA$nn.rest.1D
- #	3dmaskave -mask $output_dir/cdt_L_GB+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdt_L_GB.GA$nn.rest.1D
- #	3dmaskave -mask $output_dir/cdt_R_GB+tlrc -quiet errts.GA$nn.rest+tlrc > errts.cdt_R_GB.GA$nn.rest.1D
-	1dcat $output_dir/errts.caudate_head_R.GD$nn.rest.1D \
-		$output_dir/errts.caudate_body_R.GD$nn.rest.1D \
-		$output_dir/errts.caudate_tail_R.GD$nn.rest.1D \
-		$output_dir/errts.caudate_head_L.GD$nn.rest.1D \
-		$output_dir/errts.caudate_body_L.GD$nn.rest.1D \
-		$output_dir/errts.caudate_tail_L.GD$nn.rest.1D \
- #		errts.cdh_L_GB-GA.GA$nn.rest.1D \
- #		errts.cdt_L_GB-GA.GA$nn.rest.1D \
- #		errts.cdh_R_GB-GA.GA$nn.rest.1D \
- #		errts.cdt_R_GB-GA.GA$nn.rest.1D \
- #		errts.cdh_L_GA.GA$nn.rest.1D \
- #		errts.cdt_L_GB.GA$nn.rest.1D \
- #		errts.cdt_R_GB.GA$nn.rest.1D \
-		>$output_dir/errts.caudate.GD$nn.rest.2D
+	## catenate its to 2D
+	set temp = ()
+	foreach ss (R L)
+		foreach roi ($caudate_list)
+			set temp = ($temp $output_dir/errts.caudate_${roi}_${ss}.GD$nn.rest.1D)
+		end
+	end
+	1dcat $temp >$output_dir/errts.caudate.GD$nn.rest.2D
 end
-gzip -1v $output_dir/*.BRIK
+#gzip -1v $output_dir/*.BRIK

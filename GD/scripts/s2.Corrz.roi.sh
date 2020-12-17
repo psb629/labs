@@ -18,14 +18,19 @@ foreach aa (`count -digits 1 1 $#roi`)
 		if ( ! -e $pname+tlrc.HEAD ) then
 			3dTcorr1D -pearson -Fisher -mask $roi_dir/full/full_mask.$subj.nii.gz \
 				-prefix $pname \
-				$data_dir/errts.$subj.rest+tlrc \
+ #				$data_dir/errts.$subj.rest+tlrc \
+				$data_dir/errts.$subj.rest.nii.gz \
 				$data_dir/errts.caudate.$subj.rest.2D
 		endif
+		3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
     	## head_R, body_R, tail_R, head_L, body_L, tail_L
 		set pname = $output_dir/CorrZ.$roi[$aa].$subj.rest.WM
-		3dcalc -prefix $pname -a "$output_dir/CorrZ.caudate.$subj.rest.WM+tlrc.HEAD[$bb]" -expr a
+		3dcalc -prefix $pname -a "$output_dir/CorrZ.caudate.$subj.rest.WM+tlrc[$bb]" -expr a
 		set temp = ($temp $pname+tlrc)
 	end
-	3dbucket $temp -prefix $output_dir/CorrZ.$roi[$aa].GDs.n$#subj_list.rest.WM
+	set pname = $output_dir/CorrZ.$roi[$aa].GDs.n$#subj_list.rest.WM
+	3dbucket $temp -prefix $pname
+	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
+	rm $output_dir/CorrZ.$roi[$aa].GD*.rest.WM+tlrc.*
 end
-
+rm $output_dir/CorrZ.caudate.GD*.rest.WM+tlrc.*
