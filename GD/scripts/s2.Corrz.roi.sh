@@ -8,29 +8,35 @@ set data_dir = $root_dir/connectivity/rest_WM_Vent_BP
 set output_dir = $data_dir/CorrZ.caudate
 
 set roi = (caudate_head_R caudate_body_R caudate_tail_R caudate_head_L caudate_body_L caudate_tail_L)
-
+# ====================================================
 foreach aa (`count -digits 1 1 $#roi`)
 	@ bb = $aa - 1
 	set temp = ()
 	foreach nn ($subj_list)
 		set subj = GD$nn
+		# ====================================================
+		## calculate correlation for each ROI
+    	## An order of ROIs : head_R, body_R, tail_R, head_L, body_L, tail_L
 		set pname = $output_dir/CorrZ.caudate.$subj.rest.WM
-		if ( ! -e $pname+tlrc.HEAD ) then
-			3dTcorr1D -pearson -Fisher -mask $roi_dir/full/full_mask.$subj.nii.gz \
-				-prefix $pname \
- #				$data_dir/errts.$subj.rest+tlrc \
-				$data_dir/errts.$subj.rest.nii.gz \
-				$data_dir/errts.caudate.$subj.rest.2D
-		endif
+		3dTcorr1D -pearson -Fisher -mask $roi_dir/full/full_mask.$subj.nii.gz \
+			-prefix $pname \
+ #			$data_dir/errts.$subj.rest+tlrc \
+			$data_dir/errts.$subj.rest.nii.gz \
+			$data_dir/errts.caudate.$subj.rest.2D
 		3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
-    	## head_R, body_R, tail_R, head_L, body_L, tail_L
+		# ====================================================
+		## prepare to make a bucket
 		set pname = $output_dir/CorrZ.$roi[$aa].$subj.rest.WM
 		3dcalc -prefix $pname -a "$output_dir/CorrZ.caudate.$subj.rest.WM+tlrc[$bb]" -expr a
 		set temp = ($temp $pname+tlrc)
 	end
+	# ====================================================
+	## make a 3dbucket of subject's dataset by ROI
 	set pname = $output_dir/CorrZ.$roi[$aa].GDs.n$#subj_list.rest.WM
 	3dbucket $temp -prefix $pname
 	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
+	# ====================================================
+	## clean temporal files
 	rm $output_dir/CorrZ.$roi[$aa].GD*.rest.WM+tlrc.*
 end
 rm $output_dir/CorrZ.caudate.GD*.rest.WM+tlrc.*
