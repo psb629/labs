@@ -30,7 +30,7 @@ rm $gmask+tlrc.*
 foreach nn ($subj_list)
 	set data_dir = $GD_dir/fMRI_data/preproc_data/GD$nn/preprocessed
 
-	## 
+	## pincipal component analysis
 	set fin_output = $data_dir/roi_pc_Vent_WM.rest
 	if (! -e $fin_output) then
 		3dDetrend -polort 4 -prefix $data_dir/rm.det_pcin_rest $data_dir/pb04.GD$nn.rest.scale+tlrc
@@ -42,7 +42,7 @@ foreach nn ($subj_list)
 		1dcat $data_dir/roi_pc_Ventricles_noc.rest $data_dir/roi_pc_WM_subcud_noc.rest >$data_dir/roi_pc_Vent_WM.rest
 	endif
 
-	##
+	## bandpass filtering
 	set pname = $output_dir/errts.GD$nn.rest
 	3dTproject -input $data_dir/pb04.GD$nn.rest.scale+tlrc -prefix $pname+tlrc \
 		-mask $gmask.nii.gz -ort $data_dir/roi_pc_Vent_WM.rest -ort $GD_dir/bandpass_regs.1D
