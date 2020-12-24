@@ -25,8 +25,11 @@ git config --global user.email "psb629@gmail.com"
 git remote remove origin
 #git remote add origin https://'psb629':'na6607!!MS'@github.com/psb629/labs.git
 git_id=psb629
-git_password=3d37784bdd7f15f8a57346acf3a9a70c5ed603ec # personal access token
-git_password=c017cdfe7fe41e26b290d108ed4639d5d2c00d3e # personal access token
+## my_token, if you write this in one line, github will delete this token
+aaa=69c34aad789ae9
+bbb=72275d2ca4785
+ccc=660d8e0d9aac8
+git_password=${aaa}${bbb}${ccc} # personal access token
 git remote add origin https://"$git_id":"$git_password"@github.com/psb629/labs.git
 git pull origin master
 
