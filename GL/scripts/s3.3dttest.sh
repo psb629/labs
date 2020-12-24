@@ -60,7 +60,7 @@ foreach sd ($roi_list)
 	end
 	# ========================= 3dttest++ =========================
 	set pname = $output_dir/PPIstat.group.n$nsubj.$sd
-	3dttest++ -mask $gmask -setA $setA -setB $setB -prefix $pname -paired
+	3dttest++ -mask $gmask -setA $setA -setB $setB -prefix $pname -paired -Clustsim
 	3dAFNItoNIFTI -prefix $pname.nii.gz $pname+tlrc
 	rm $pname+tlrc.*\
 		$output_dir/temp?.GL??.*
