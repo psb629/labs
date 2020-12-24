@@ -12,6 +12,7 @@ aaa=3d37784bdd7f15
 bbb=f8a57346acf3a
 ccc=9a70c5ed603ec
 git_password=${aaa}${bbb}${ccc} # personal access token
+echo $git_password
 git remote add origin https://"$git_id":"$git_password"@github.com/psb629/labs.git
 git pull origin master
 
