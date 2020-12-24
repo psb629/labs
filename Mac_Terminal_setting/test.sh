@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git_dir=~/Desktop/Github/labs
+git_dir=~/Github/labs
 cd $git_dir
 git init
 git config --global user.name "psb629"
