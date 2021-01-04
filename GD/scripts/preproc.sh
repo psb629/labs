@@ -5,6 +5,8 @@ set fwhm = 4
 set thresh_motion = 0.4
 
 #set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15 GD38)
+# outliers : GD29, GD31
+# No data : GD19
 set subj_list = (GD38)
 
 set root_dir = /Volumes/clmnlab/GD

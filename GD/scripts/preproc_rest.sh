@@ -4,6 +4,8 @@ set raw_dir = /Volumes/clmnlab/GD/fMRI_data/raw_data
 set preproc_dir = /Volumes/T7SSD1/GD/fMRI_data/preproc_data
 
 #set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15 GD38)
+# outliers : GD29, GD31
+# No data : GD19
 set subj_list = (GD38)
 
 ## variables for tcat tshift ##
