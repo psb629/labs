@@ -16,7 +16,7 @@ then
 		&& source $HOME/.afni/help/all_progs.COMP.zsh
 fi
 # =======================================================
-
+## installation logs
 2020년 11월 21일 토요일 18시 50분 10초 JST
 2020년 11월 23일 월요일 15시 41분 03초 KST
 Fri Dec 4 12:25:12 2020
