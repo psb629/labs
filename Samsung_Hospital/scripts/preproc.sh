@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
-set subj = S20
-set date = 201124
+set subj = S21
+set date = 210112
 
 set root_dir = /Volumes/T7SSD1/samsung_hospital/
 set data_dir = /Users/clmn/Desktop/Samsung_Hospital/fmri_data/raw_data/first_scan/${subj}_${date}_MRI
