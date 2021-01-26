@@ -90,7 +90,7 @@ cat_matvec $subj.anat.Unifize+tlrc::WARP_DATA -I > warp.anat.Xat.1D
 ## output : warp.anat.Xat.1D
 
 # create an anat_final dataset, aligned with stats
-3dcopy $subj.anat.Unifize+tlrc anat_final.$subj
+#3dcopy $subj.anat.Unifize+tlrc anat_final.$subj
 3dcopy $subj.anat.Unifize+orig anat_final.$subj
 
 ########
