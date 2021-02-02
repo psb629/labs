@@ -1,9 +1,10 @@
 #!/bin/tcsh
 
-set subj = S21
-set date = 210112
+set subj = S22
+set date = 210121
 
-set root_dir = /Volumes/T7SSD1/samsung_hospital/
+#set root_dir = /Volumes/T7SSD1/samsung_hospital/
+set root_dir = /Users/clmn/Desktop/Samsung_Hospital/
 set data_dir = /Users/clmn/Desktop/Samsung_Hospital/fmri_data/raw_data/first_scan/${subj}_${date}_MRI
 set output_dir = $root_dir/fmri_data/preproc_data/$subj
 if ( ! -d $output_dir ) then
