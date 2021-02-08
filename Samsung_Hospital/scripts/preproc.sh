@@ -102,8 +102,9 @@ cat_matvec $output_dir/$subj.anat.ss+tlrc::WARP_DATA -I > $output_dir/warp.$subj
 	-1Dmatrix_save $output_dir/mat.$subj.rest.volreg.aff12.1D $output_dir/pb01.$subj.rest.tshift+orig
 # ================================== Align EPI with Anatomy ==================================
 ## align EPI to anatomical datasets or vice versa:
-align_epi_anat.py -epi2anat -anat $output_dir/$subj.anat.ss+orig -anat_has_skull no \
-	-epi $output_dir/pb01.$subj.rest.tshift+orig   -epi_base 3 \
+cd $output_dir
+align_epi_anat.py -epi2anat -anat $subj.anat.ss+orig -anat_has_skull no \
+	-epi pb01.$subj.rest.tshift+orig   -epi_base 3 \
 	-epi_strip 3dAutomask                                      \
 	-suffix _al_junk                     -check_flip           \
 	-volreg off    -tshift off           -ginormous_move       \
@@ -115,15 +116,17 @@ align_epi_anat.py -epi2anat -anat $output_dir/$subj.anat.ss+orig -anat_has_skull
 	-expr 'a*b' -prefix $output_dir/pb02.$subj.rest.volreg
 # ================================== Extract Tissue Based Regressors ==================================
 ## Calculation of motion regressors:
-1d_tool.py -infile $output_dir/dfile.$subj.rest.1D -set_nruns 1 \
+cd $output_dir
+1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
 		-derivative -collapse_cols euclidean_norm \
-		-write $output_dir/$subj.motion_enorm.1D
-1d_tool.py -infile $output_dir/dfile.$subj.rest.1D -set_nruns 1 \
-		-demean -write $output_dir/$subj.motion_demean.1D
-1d_tool.py -infile $output_dir/dfile.$subj.rest.1D -set_nruns 1 \
-		-derivative -write $output_dir/$subj.motion_derev.1D
+		-write $subj.motion_enorm.1D
+1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
+		-demean -write $subj.motion_demean.1D
+1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
+		-derivative -write $subj.motion_derev.1D
 ## Transforming the function (“follower datasets”), setting the resolution at 1.719 mm:
-@auto_tlrc -apar $output_dir/$subj.anat.ss+tlrc -input $output_dir/pb02.$subj.rest.volreg+orig -suffix NONE -dxyz 1.719
+cd $output_dir
+@auto_tlrc -apar $subj.anat.ss+tlrc -input pb02.$subj.rest.volreg+orig -suffix NONE -dxyz 1.719
 # ================================== Spatial Blurring ==================================
 ## Important: blur after tissue based signal extraction
 ## Otherwise, will get unintended signals in WM and CSF extractions that were blurred in from nearby GM (gray matter)
