@@ -8,19 +8,33 @@ set nn_list = ( 01 02 05 07 08 \
 				31 32 33 34 35 \
 				36 37 38 42 44 )
 
-set from_dir = /Volumes/clmnlab/GA/fmri_data/preproc_data
-set to_dir = /Volumes/T7SSD1/GA/fMRI_data/roi/full
+ #set from_dir = /Volumes/clmnlab/GA/fmri_data/preproc_data
+ #set to_dir = /Volumes/T7SSD1/GA/fMRI_data/roi/full
  #set to_dir = /Volumes/T7SSD1/WinterCamp2021/masks/full
-if (! -d $to_dir) then
-	mkdir -p -m 755 $to_dir
-endif
-
+ #if (! -d $to_dir) then
+ #	mkdir -p -m 755 $to_dir
+ #endif
+ #foreach ii ($ii_list)
+ #	foreach nn ($nn_list)
+ #		set subj = $ii$nn
+ #		set to = $to_dir/full_mask.$subj.nii.gz
+ #		if (! -e $to) then
+ #			3dAFNItoNIFTI -prefix $to $from_dir/$subj/full_mask.$subj+tlrc
+ #		endif
+ #	end
+ #end
+# ========================= make the group full-mask =========================
+set root_dir = ~/Desktop/root_dir
+set output_dir = $root_dir/masks/full
+set temp = ()
 foreach ii ($ii_list)
 	foreach nn ($nn_list)
 		set subj = $ii$nn
-		set to = $to_dir/full_mask.$subj.nii.gz
-		if (! -e $to) then
-			3dAFNItoNIFTI -prefix $to $from_dir/$subj/full_mask.$subj+tlrc
-		endif
+		set temp = ($temp $root_dir/masks/full/full_mask.$subj.nii.gz)
 	end
+	set gmask = $output_dir/full_mask.${ii}s.nii.gz
+	if ( -e $gmask ) then
+		rm $gmask
+	endif
+	3dMean -mask_inter -prefix $gmask $temp
 end

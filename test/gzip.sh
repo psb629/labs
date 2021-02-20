@@ -7,8 +7,8 @@ nn_list=( 01 02 05 07 08 \
 		  31 32 33 34 35 \
 		  36 37 38 42 44 )
 
-root_dir=/Volumes/T7SSD1/WinterCamp2021/preproc_data
-output_dir=~/Desktop/WinterCamp2021/preproc_data
+root_dir=~/Desktop/WinterCamp2021/preproc_data
+output_dir=~/Desktop/betas
 if [ ! -d $output_dir ]; then
 	mkdir -p -m 755 $output_dir
 fi
