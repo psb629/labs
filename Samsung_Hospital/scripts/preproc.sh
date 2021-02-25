@@ -4,50 +4,50 @@ set subj = S23
 set date = 210204
 
  #set root_dir = /Volumes/T7SSD1/samsung_hospital/
-set root_dir = /Users/clmnlab/Desktop
- #set data_dir = /Users/clmn/Desktop/Samsung_Hospital/fmri_data/raw_data/first_scan/${subj}_${date}_MRI
-set data_dir = /Users/clmnlab/Desktop/${subj}_${date}_MRI
-set output_dir = $root_dir/fmri_data/preproc_data/$subj
-if ( ! -d $output_dir ) then
+set root_dir = /Users/clmn/Desktop/Samsung_Hospital/fmri_data
+set data_dir = $root_dir/raw_data/first_scan/${subj}_${date}_MRI
+ #set data_dir = /Users/clmnlab/Desktop/${subj}_${date}_MRI
+set output_dir = $root_dir/preproc_data/$subj
+if ( ! -d $output_dir/preprocessed ) then
 	mkdir -p -m 755 $output_dir/preprocessed
 endif
 set epi = $output_dir/${subj}_fMRI.nii.gz
 set t1 = $output_dir/${subj}_T1.nii.gz
 #########################################################
-## convert dcm files into NIFTI files, written by Sungbeen Park
-
-# ========================= T1 data : 366 files =========================
-set raw_T1 = $data_dir/${subj}_${date}_T1
-dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_T1" $raw_T1
-rm $output_dir/*.json
-# added the line since S19, because of the unexpected suffix "_real"
-mv $output_dir/${subj}_T1*.nii.gz $t1
-
-# ========================= fMRI data : 18001 files =========================
-set raw_fMRI = $data_dir/${subj}_${date}_FMRI
-set TR = 2
-
-set cnt = 0
-set set_time = `count -digit 1 1 300`
-foreach t_ini ($set_time)
-	set set_data = `count -digit 4 $t_ini 18001 300`
-	foreach n ($set_data)
-		@ cnt = $cnt + 1
-		set n_prime = `printf %05d $cnt`
-		cp $raw_fMRI/$subj.dcm$n.dcm $output_dir/temp$n_prime.dcm
-	end
-	set t = `printf %03d $t_ini`
-	dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_func$t" $output_dir
-	rm $output_dir/*.dcm
-end
-3dTcat -tr $TR -prefix $output_dir/temp $output_dir/${subj}_func*.nii.gz
-rm $output_dir/${subj}_func*.nii.gz
-3dAFNItoNIFTI -prefix $epi $output_dir/temp+orig
-rm $output_dir/*.json $output_dir/temp+orig.*
-## added the line since S19, because of the unexpected suffix "_real"
-
-# ========================= DTI data : 3221 files =========================
-set raw_DTI = $data_dir/${subj}_${date}_dti
+ ### convert dcm files into NIFTI files, written by Sungbeen Park
+ #
+ ## ========================= T1 data : 366 files =========================
+ #set raw_T1 = $data_dir/${subj}_${date}_T1
+ #dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_T1" $raw_T1
+ #rm $output_dir/*.json
+ ## added the line since S19, because of the unexpected suffix "_real"
+ #mv $output_dir/${subj}_T1*.nii.gz $t1
+ #
+ ## ========================= fMRI data : 18001 files =========================
+ #set raw_fMRI = $data_dir/${subj}_${date}_FMRI
+ #set TR = 2
+ #
+ #set cnt = 0
+ #set set_time = `count -digit 1 1 300`
+ #foreach t_ini ($set_time)
+ #	set set_data = `count -digit 4 $t_ini 18001 300`
+ #	foreach n ($set_data)
+ #		@ cnt = $cnt + 1
+ #		set n_prime = `printf %05d $cnt`
+ #		cp $raw_fMRI/$subj.dcm$n.dcm $output_dir/temp$n_prime.dcm
+ #	end
+ #	set t = `printf %03d $t_ini`
+ #	dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_func$t" $output_dir
+ #	rm $output_dir/*.dcm
+ #end
+ #3dTcat -tr $TR -prefix $output_dir/temp $output_dir/${subj}_func*.nii.gz
+ #rm $output_dir/${subj}_func*.nii.gz
+ #3dAFNItoNIFTI -prefix $epi $output_dir/temp+orig
+ #rm $output_dir/*.json $output_dir/temp+orig.*
+ ### added the line since S19, because of the unexpected suffix "_real"
+ #
+ ## ========================= DTI data : 3221 files =========================
+ #set raw_DTI = $data_dir/${subj}_${date}_dti
 
 #########################################################
 set thresh_motion = 0.4
@@ -61,31 +61,27 @@ set output_dir = $output_dir/preprocessed
 cd $output_dir
 
 3dcopy $t1 $subj.anat+orig
-3dWarp -deoblique -prefix $subj.anat.deoblique $subj.anat+orig > deoblique.aff.2D
+ #3dWarp -deoblique -prefix $subj.anat.deoblique $subj.anat+orig > deoblique.$subj.aff.2D
 
 # ================ change the orientation of a dataset ================
 ## 'LPI' means an one of the 'neurcoscience' orientation, where the x-axis is Left-to-Right, the y-axis is Posterior-to-Anterior, and the z-axis is Inferior-to-Superior:
-3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat.deoblique+orig
+ #3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat.deoblique+orig
+3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat+orig
 
- ## ================================= skull-striping =================================
- #3dSkullStrip -input $subj.anat.lpi+orig -prefix $subj.anat.ss -orig_vol
- ## ================================= unifize =================================
- ### this program can be a useful step to take BEFORE 3dSkullStrip, since the latter program can fail if the input volume is strongly shaded -- 3dUnifize will (mostly) remove such shading artifacts.
- #3dUnifize -input $subj.anat.ss+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
-
+# ================================= skull-striping =================================
+## unifize -> ss : S23 has a problem with cutting brain
+3dSkullStrip -input $subj.anat.lpi+orig -prefix $subj.anat.ss -orig_vol
 # ================================= unifize =================================
 ## this program can be a useful step to take BEFORE 3dSkullStrip, since the latter program can fail if the input volume is strongly shaded -- 3dUnifize will (mostly) remove such shading artifacts.
-3dUnifize -input $subj.anat.lpi+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
-# ================================= skull-striping =================================
-3dSkullStrip -input $subj.anat.unifize+orig -prefix $subj.anat.ss -orig_vol
+3dUnifize -input $subj.anat.ss+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
 
+cd $output_dir
 # ================================= tlrc coordinate ==================================
-## warp anatomy to standard space:
-@auto_tlrc -base ~/abin/MNI152_T1_2009c+tlrc.HEAD -input $subj.anat.ss+orig \
-	-no_ss -init_xform AUTO_CENTER
-cat_matvec $subj.anat.ss+tlrc::WARP_DATA -I > warp.$subj.anat.Xat.1D
-
-3dAFNItoNIFTI -prefix anat_final.$subj.nii.gz $subj.anat.ss+tlrc
+## warp anatomy to standard space, input dataset must be in the current directory:
+@auto_tlrc -base ~/abin/MNI152_T1_2009c+tlrc.HEAD -input $subj.anat.unifize+orig -no_ss -init_xform AUTO_CENTER
+## find attribute WARP_DATA in dataset; -I, invert the transformation:
+cat_matvec $subj.anat.unifize+tlrc::WARP_DATA -I > warp.$subj.anat.Xat.1D
+3dAFNItoNIFTI -prefix anat_final.$subj.nii.gz $subj.anat.unifize+tlrc
 
 ########
 # Func # : Despiking (3dDespike) -> Slice Timing Correction (3dTshift) -> Motion Correct EPI (3dvolreg)
@@ -122,9 +118,10 @@ cd $output_dir
     -1Dmatrix_save mat.$subj.rest.volreg.aff12.1D \
     pb01.$subj.rest.tshift+orig
 
+cd $output_dir
 # ================================== Align EPI with Anatomy ==================================
 ## align EPI to anatomical datasets or vice versa:
-align_epi_anat.py -epi2anat -anat $subj.anat.ss+orig -anat_has_skull no \
+align_epi_anat.py -epi2anat -anat $subj.anat.unifize+orig -anat_has_skull no \
     -epi pb01.$subj.rest.tshift+orig   -epi_base 3 \
     -epi_strip 3dAutomask                                      \
     -suffix _al_junk                     -check_flip           \
@@ -147,8 +144,9 @@ align_epi_anat.py -epi2anat -anat $subj.anat.ss+orig -anat_has_skull no \
 1d_tool.py -infile dfile.$subj.rest.1D -set_nruns 1 \
            -derivative -write $subj.motion_derev.1D
 
+cd $output_dir
 ## Transforming the function (“follower datasets”), setting the resolution at 1.719 mm:
-@auto_tlrc -apar $subj.anat.ss+tlrc -input pb02.$subj.rest.volreg+orig -suffix NONE -dxyz 1.719
+@auto_tlrc -apar $subj.anat.unifize+tlrc -input pb02.$subj.rest.volreg+orig -suffix NONE -dxyz 1.719
 
 # ================================== Spatial Blurring ==================================
 ## Important: blur after tissue based signal extraction
