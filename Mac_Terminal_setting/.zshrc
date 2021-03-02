@@ -1,9 +1,10 @@
-# Source bashrc
-#if [ -f ~/.bashrc ]; then
-#    . ~/.bashrc
-#fi
+## show $SHELL
+echo $SHELL
 
-# aliases go here 
+## set zsh to be the default shell
+chsh -s /bin/zsh
+
+## aliases go here 
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
