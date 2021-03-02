@@ -21,6 +21,12 @@ au BufReadPost *
 \ exe "norm g`\"" |
 \ endif
 
+" Show the current location of cursor
+set ruler
+
+" Highlight all search pattern matches
+set hlsearch
+
 " Always mark the status bar
 set laststatus=2
 set statusline=\ %<%l:%v\ [%P]%=%a\ %h%m%r\ %F\
