@@ -24,13 +24,13 @@ set nn_list = ( 01 02 05 07 08 \
  #	end
  #end
 # ========================= make the group full-mask =========================
-set root_dir = ~/Desktop/root_dir
-set output_dir = $root_dir/masks/full
+set root_dir = /Volumes/T7SSD1/GA/fMRI_data/roi
+set output_dir = $root_dir
 set temp = ()
 foreach ii ($ii_list)
 	foreach nn ($nn_list)
 		set subj = $ii$nn
-		set temp = ($temp $root_dir/masks/full/full_mask.$subj.nii.gz)
+		set temp = ($temp $root_dir/full/full_mask.$subj.nii.gz)
 	end
 	set gmask = $output_dir/full_mask.${ii}s.nii.gz
 	if ( -e $gmask ) then
