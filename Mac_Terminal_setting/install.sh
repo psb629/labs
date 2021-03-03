@@ -55,6 +55,8 @@ cat ~/Github/labs/Mac_Terminal_setting/.zshrc >>~/.zshrc
 
 #### python 3 ####
 brew install python
+# python --version -> Python 2.x
+# python3 --version -> Python -> 3.x
 
 #### Anaconda ####
 brew cask install anaconda
@@ -63,10 +65,12 @@ echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
 source ~/.zshrc
 # make environment
 conda create --name sampark python=3.7
+conda info --env
 # update pip
 pip install --upgrade pip
 # install packages
-conda activate sampark
+#conda activate sampark
+source activate sampark
 pip install numpy
 pip install pandas
 pip install scipy
@@ -76,6 +80,10 @@ pip install matplotlib
 pip install seaborn
 pip install statsmodels
 pip install plotly
+pip install psutil
+pip install pympler
+# check the package installing
+pip freeze
 
 #### XQuartz ####
 brew cask install xquartz

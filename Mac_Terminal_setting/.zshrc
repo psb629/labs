@@ -13,4 +13,4 @@ alias ll='ls -l -tr'
 alias cl='clear'
 alias cnt='echo "# of directories : "; ll | grep ^d | wc -l ; echo "# of files : "; ll | grep ^- | wc -l'
 alias dush='du -sh ./*'
-
+alias top='top -o mem -O cpu'

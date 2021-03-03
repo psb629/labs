@@ -18,13 +18,15 @@ set uu3 = 0
 set uu5 = 1
 set uu = $uu5
 # =========================================================
-## voxel values at uu5 (right left region)
-set vv_list = (94 294 BA17)
-set vv_list = (95 295 BA18)
-set vv_list = (96 296 BA19)
-set vv_list = (97 297 BA20)
-set vv_list = (113 313 BA37)
-set vv_list = (114 314 BA38)
+## voxel values from uu3 (right left region)
+# =========================================================
+## voxel values from uu5 (right left region)
+ #set vv_list = (94 294 BA17)
+ #set vv_list = (95 295 BA18)
+ #set vv_list = (96 296 BA19)
+ #set vv_list = (97 297 BA20)
+ #set vv_list = (113 313 BA37)
+ #set vv_list = (114 314 BA38)
 # =========================================================
 set vv1 = $vv_list[1]
 set vv2 = $vv_list[2]
