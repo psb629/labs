@@ -59,7 +59,7 @@ brew install python
 # python3 --version -> Python -> 3.x
 
 #### Anaconda ####
-brew cask install anaconda
+brew install anaconda
 # add anaconda3 folder to our shell path
 echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
 source ~/.zshrc
@@ -86,7 +86,7 @@ pip install pympler
 pip freeze
 
 #### XQuartz ####
-brew cask install xquartz
+brew install xquartz
 
 #### afni ####
 # XQuartz required
