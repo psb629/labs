@@ -2,7 +2,7 @@
 echo $SHELL
 
 ## set zsh to be the default shell
-chsh -s /bin/zsh
+# chsh -s $(which zsh)
 
 ## aliases go here 
 alias rm='rm -i'
