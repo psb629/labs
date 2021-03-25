@@ -7,6 +7,21 @@ nn_list=( 01 02 05 07 08 \
 		  31 32 33 34 35 \
 		  36 37 38 42 44 )
 # ==================================================================
+x=1
+let x+=1
+echo 1:$x
+((x+=1))
+echo 2:$x
+x=$[$x+1]
+echo 3:$x
+x=`expr $x + 1`
+echo 4:$x
+x=`echo "$x+1"|bc`
+echo 5:$x
+x=3.14
+x=`echo "scale=2;$x*2"|bc`
+echo 6:$x
+# ==================================================================
 ## copy ANOVA data
  #from_dir=/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/data_4target/run1to3/group
  #to_dir=/Volumes/T7SSD1/GA/fMRI_data/stats/ANOVA
@@ -51,24 +66,24 @@ nn_list=( 01 02 05 07 08 \
  #end
 # ==================================================================
 ## GLM results about 4 targets
- #from_dir=/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/data_4target/run1to3/stats
- #to_dir=/Volumes/T7SSD1/GA/fMRI_data/stats/Reg4_GLM_4targets
- #if [ ! -d $to_dir ]; then
- #	mkdir -p -m 755 $to_dir
- #fi
- #
- #foreach ii (GA GB)
- #	foreach nn ($nn_list)
- #		subj=$ii$nn
- #		from=$from_dir/stats.MO.shortdur.4target.$subj.run1to3+tlrc
- #		pname=$to_dir/stats.MO.shotrdur.4target.$subj.run1to3.nii.gz
- #		3dAFNItoNIFTI -prefix $pname $from
- #		if [ ! -e $to ]; then
- #			echo " $from doesn't exist!"
- #			continue
- #		fi
- #	end
- #end
+from_dir=/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/data_4target/run1to3/stats
+to_dir=/Volumes/T7SSD1/GA/fMRI_data/stats/Reg4_GLM_4targets
+if [ ! -d $to_dir ]; then
+	mkdir -p -m 755 $to_dir
+fi
+
+foreach ii (GA GB)
+	foreach nn ($nn_list)
+		subj=$ii$nn
+		from=$from_dir/stats.MO.shortdur.4target.$subj.run1to3+tlrc
+		pname=$to_dir/stats.MO.shortdur.4target.$subj.run1to3.nii.gz
+		3dAFNItoNIFTI -prefix $pname $from
+		if [ ! -e $to ]; then
+			echo " $from doesn't exist!"
+			continue
+		fi
+	end
+end
 # ==================================================================
 ## copy displacement_regressor for MO
  #from_dir=/Volumes/clmnlab/GA/regressors/reg_onset_displacement/AM1_reg_disp_convolve/
