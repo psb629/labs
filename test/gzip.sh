@@ -32,3 +32,5 @@ foreach target ($target_list)
 	rm -r $root_dir/$target
 end
 #===================================================
+## decompress
+ #gzip -d *.gz
