@@ -1,33 +1,41 @@
 #!/bin/tcsh
 
 
-set subj_list = (GD11 GD07 GD30 GD02 GD29 GD32 GD23 GD01 GD31 GD33 GD20 GD44 GD26 GD15 GD38)
+set subj_list = (11 07 30 02 29 32 23 01 31 33 20 44 26 15 38)
 
-set from_dir = /Volumes/clmnlab/GD
-set to_dir = /Volumes/WD_HDD1/GD
-
+#===========================================================================
+set to_dir = ~/Desktop/GD/fmri_data/preproc_data
 if ( ! -d $to_dir ) then
-	mkdir -m 755 $to_dir
+	mkdir -p -m 755 $to_dir
 endif
 
-foreach subj ($subj_list)
-	echo "processing $subj..."
-	## behav_data
- #	set output_dir = $to_dir/behav_data
- #	if ( ! -d $output_dir ) then
- #		mkdir -p -m 755 $output_dir
- #	endif
- #	cp $from_dir/behav_data/$subj-refmri.mat $output_dir
-	## raw dicom
- #	set output_dir = $to_dir/fmri_data/raw_data/$subj
- #	if ( ! -d $output_dir ) then
- #		mkdir -p -m 755 $output_dir
- #	endif
- #	cp -r $from_dir/fMRI_data/raw_data/$subj/* $output_dir
-	## basic preprocessed-fmri_data
-	set output_dir = $to_dir/fmri_data/preproc_data/$subj
-	if ( ! -d $output_dir ) then
-		mkdir -p -m 755 $output_dir
+## log file
+set log = $to_dir/backup_log.txt
+echo "## `users`: `date`" >>$log
+
+## backup the raw data
+foreach nn ($subj_list)
+	set subj = GD$nn
+	echo "## ============================================== ##" >>$log
+	echo "processing $subj..." >>$log
+
+	set from_dir = /Volumes/clmnlab/GD/fMRI_data/preproc_data/$subj
+	cd $from_dir
+
+	## count regular files
+	echo "# of files : `ls -l | grep ^- | wc -l`" >>$log
+
+	## creates a list of files, excluding directories at the current location.
+	ls -p | grep -v / >>$log
+ #	ls -a -tr | grep -v '^\.' >>$backup_log
+
+	set from = `ls -p | grep -v /`
+
+	set to = $to_dir/$subj
+	if ( ! -d $to ) then
+		mkdir -p -m 755 $to
 	endif
-	cp $from_dir/fMRI_data/preproc_data/$subj/*+orig.* $output_dir
+
+	cp $from $to/
 end
+#===========================================================================
