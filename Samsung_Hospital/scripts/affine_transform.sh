@@ -21,11 +21,9 @@ set affine_matrix = $data_dir/warp.$subj.anat.Xat.1D
 echo "Mt="
 cat $affine_matrix
 # ===================================================
-## A coordinate of the target
-set target = (-49.154 -63.342 22.470)
-set hippo = (-29.333 -17.344 -3.750)
-set Xo = (-16.599 -24.297 -8.661)
-set Xt = (-25 -36 -6)
+## A coordinate of the target (NOTE, the order would be RAI=DICOM)
+set Xo = (18.099 19.609 6.318)
+set Xt = (27 29 -12)
 # ===================================================
 ## Affine transformation
 set Xt = ($Xt 1)
