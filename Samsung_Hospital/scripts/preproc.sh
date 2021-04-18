@@ -18,35 +18,37 @@ foreach ii (`count -digits 2 1 2`)
 	## convert dcm files into NIFTI files, written by Sungbeen Park
 	
 	# ========================= T1 data : 366 files =========================
-	set raw_T1 = $data_dir/${subj}_${date}_T1
-	dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_T1" $raw_T1
-	rm $output_dir/*.json
-	# added the line since S19, because of the unexpected suffix "_real"
-	mv $output_dir/${subj}_T1*.nii.gz $t1
-	
+	if ( ! -f $t1 ) then
+		set raw_T1 = $data_dir/${subj}_${date}_T1
+		dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_T1" $raw_T1
+		rm $output_dir/*.json
+		# added the line since S19, because of the unexpected suffix "_real"
+		mv $output_dir/${subj}_T1*.nii.gz $t1
+	endif
 	# ========================= fMRI data : 18001 files =========================
-	set raw_fMRI = $data_dir/${subj}_${date}_FMRI
-	set TR = 2
-	
-	set cnt = 0
-	set set_time = `count -digit 1 1 300`
-	foreach t_ini ($set_time)
-		set set_data = `count -digit 4 $t_ini 18001 300`
-		foreach n ($set_data)
-			@ cnt = $cnt + 1
-			set n_prime = `printf %05d $cnt`
-			cp $raw_fMRI/$subj.dcm$n.dcm $output_dir/temp$n_prime.dcm
+	if ( ! -f $epi ) then
+		set raw_fMRI = $data_dir/${subj}_${date}_FMRI
+		set TR = 2
+		
+		set cnt = 0
+		set set_time = `count -digit 1 1 300`
+		foreach t_ini ($set_time)
+			set set_data = `count -digit 4 $t_ini 18001 300`
+			foreach n ($set_data)
+				@ cnt = $cnt + 1
+				set n_prime = `printf %05d $cnt`
+				cp $raw_fMRI/$subj.dcm$n.dcm $output_dir/temp$n_prime.dcm
+			end
+			set t = `printf %03d $t_ini`
+			dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_func$t" $output_dir
+			rm $output_dir/*.dcm
 		end
-		set t = `printf %03d $t_ini`
-		dcm2niix_afni -o $output_dir -s y -z y -f "${subj}_func$t" $output_dir
-		rm $output_dir/*.dcm
-	end
-	3dTcat -tr $TR -prefix $output_dir/temp $output_dir/${subj}_func*.nii.gz
-	rm $output_dir/${subj}_func*.nii.gz
-	3dAFNItoNIFTI -prefix $epi $output_dir/temp+orig
-	rm $output_dir/*.json $output_dir/temp+orig.*
-	## added the line since S19, because of the unexpected suffix "_real"
-	
+		3dTcat -tr $TR -prefix $output_dir/temp $output_dir/${subj}_func*.nii.gz
+		rm $output_dir/${subj}_func*.nii.gz
+		3dAFNItoNIFTI -prefix $epi $output_dir/temp+orig
+		rm $output_dir/*.json $output_dir/temp+orig.*
+		## added the line since S19, because of the unexpected suffix "_real"
+	endif
 	# ========================= DTI data : 3221 files =========================
 	set raw_DTI = $data_dir/${subj}_${date}_dti
 	
