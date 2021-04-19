@@ -8,7 +8,10 @@
 ## space, respectively. The transform is such that Xo = Mt Xt 
 ## You can use this transform to manually warp a volume in orig
 
-set subj = S24
+set subj = S25
+echo "#################"
+echo "###### $subj ######"
+echo "#################"
 
 set root_dir = /Volumes/T7SSD1/samsung_hospital
 set fmri_dir = $root_dir/fmri_data
@@ -22,8 +25,8 @@ echo "Mt="
 cat $affine_matrix
 # ===================================================
 ## A coordinate of the target (NOTE, the order would be RAI=DICOM)
-set Xo = (18.099 19.609 6.318)
-set Xt = (27 29 -12)
+ #set Xo = (18.099 19.609 6.318)
+set Xt = (37 76 50)
 # ===================================================
 ## Affine transformation
 set Xt = ($Xt 1)
@@ -43,5 +46,3 @@ echo "Xt="
 echo $Xt
 echo "Mt*Xt="
 echo $vec_r
-echo "Xo="
-echo $Xo
