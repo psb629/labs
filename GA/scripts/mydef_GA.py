@@ -30,10 +30,11 @@ subj_list = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15',
 stage_list = ['early_practice', 'early_unpractice', 'late_practice', 'late_unpractice']
 
 ## Locations of directories
-root_dir = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
 script_dir = '.'
+root_dir = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
 fmri_dir = root_dir + '/fMRI_data'
 LSS_dir = fmri_dir + '/preproc_data'
+stats_dir = fmri_dir + '/stats'
 mask_dir = fmri_dir + '/roi'
 dmn_dir = mask_dir + '/DMN'
 loc_dir = mask_dir + '/localizer'
