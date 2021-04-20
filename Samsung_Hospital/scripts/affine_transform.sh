@@ -26,7 +26,7 @@ cat $affine_matrix
 # ===================================================
 ## A coordinate of the target (NOTE, the order would be RAI=DICOM)
  #set Xo = (18.099 19.609 6.318)
-set Xt = (37 76 50)
+set Xt = (43.8 64.4 34.3)
 # ===================================================
 ## Affine transformation
 set Xt = ($Xt 1)
