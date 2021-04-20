@@ -149,125 +149,125 @@ foreach nn ($subj_list)
 	## -cost nmi : weired result in the multiband8 protocol
 	## -cost lpa (local pearson correlation)
 	# ================================== register and warp (pb02) ========================
-	foreach run ($run_list)
-		## register each volume to the base
-		3dvolreg -verbose -zpad 1 -cubic -base $preproc_dir/$subj/SBREF.$subj.r04+orig'[0]' \
-			-1Dfile dfile.$subj.r$run.1D -prefix rm.epi.volreg.$subj.r$run           \
-			-1Dmatrix_save mat.r$run.vr.aff12.1D  \
-			pb01.$subj.r$run.blip+orig
-
-		## create an all-1 dataset to mask the extents of the warp
-		3dcalc -overwrite -a pb01.$subj.r$run.blip+orig -expr 1 -prefix rm.$subj.epi.all1
-
-		## catenate volreg, epi2anat and tlrc transformations
-		cat_matvec -ONELINE $subj.anat.unifize+tlrc::WARP_DATA -I $subj.anant.unifize_al_junk_mat.aff12.1D -I \
-			mat.r$run.vr.aff12.1D > mat.$subj.r$run.warp.aff12.1D
-
-		## apply catenated xform : volreg, epi2anat and tlrc
-		3dAllineate -base $subj.anat.unifize+tlrc \
-			-input pb01.$subj.r$run.blip+orig \
-			-1Dmatrix_apply mat.$subj.r$run.warp.aff12.1D \
-			-mast_dxyz $res   -prefix rm.epi.nomask.$subj.r$run # $res는 original data의 resolution과 맞춤.
-
-		## warp the all-1 dataset for extents masking
-		3dAllineate -base $subj.anat.unifize+tlrc \
-			-input rm.$subj.epi.all1+orig \
-			-1Dmatrix_apply mat.$subj.r$run.warp.aff12.1D \
-			-final NN -quiet \
-			-mast_dxyz $res  -prefix rm.epi.1.$subj.r$run
-
-		## make an extents intersection mask of this run
-		3dTstat -min -prefix rm.epi.min.$subj.r$run rm.epi.1.$subj.r$run+tlrc    # -----NEED CHECK-----
-	end
-
-	## make a single file of registration params
-	cat dfile.$subj.r0?.1D > dfile.$subj.r_all.1D
-
-	## create the extents mask: mask_epi_extents+tlrc
-	## (this is a mask of voxels that have valid data at every TR)
-	## (only 1 run, so just use 3dcopy to keep naming straight)
-	3dcopy rm.epi.min.$subj.r04+tlrc mask_epi_extents.$subj
-
-	## and apply the extents mask to the EPI data
-	## (delete any time series with missing data)
-	foreach run ($run_list)
-		3dcalc -a rm.epi.nomask.$subj.r$run+tlrc -b mask_epi_extents.$subj+tlrc \
-			-expr 'a*b' -prefix pb02.$subj.r$run.volreg
-	end
-	# ================================================= blur (pb03) =================================================
-	## blur each volume of each run
-	foreach run ($run_list)
-		3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.r$run.blur \
-			pb02.$subj.r$run.volreg+tlrc
-	end
-	## For each run, blur each volume by a $fwhm mm FWHM (Full Width at Half Max) Gaussian kernel
-	## $fwhm -> 4 is default, 6 is common
-
-	# ================================================= mask =================================================
-	## create 'full_mask' dataset (union mask)
-	## create a 'brain' mask from the EPI data (dilate 1 voxel)
-
-	foreach run ($run_list)
-		3dAutomask -dilate 1 -prefix rm.mask_r$run pb03.$subj.r$run.blur+tlrc
-	end
-	## 3dAutomaks  :  Input dataset is EPI 3D+time, or a skull-stripped anatomical. Output dataset is a brain-only mask dataset.
-	## -dilate nd  = Dilate the mask outwards 'nd' times.
-
-	## create union of inputs, output type is byte
-	3dmask_tool -inputs rm.mask_r0?+tlrc.HEAD -union -prefix full_mask.$subj
-	## 3dmask_tool  -  for combining/dilating/eroding/filling mask
-
-	## ---- create subject anatomy mask, mask_anat.$subj+tlrc ----
-	##      (resampled from tlrc anat). resample은 resolution을 맞춰 sampling을 다시 하는 것. resolution을 낮추면 down sampling하는 것.
-	3dresample -master full_mask.$subj+tlrc -input $subj.anat.unifize+tlrc -prefix rm.resam.anat
-	## convert to binary anat mask; fill gaps and holes
-	3dmask_tool -dilate_input 5 -5 -fill_holes -input rm.resam.anat+tlrc -prefix mask_anat.$subj
-
-	# ================================= scale (pb04) ==================================
-	## scale each voxel time series to have a mean of 100 (be sure no negatives creep in)
-	## (subject to a range of [0,200])
-	foreach run ($run_list)
-		3dTstat -prefix rm.mean_r$run pb03.$subj.r$run.blur+tlrc
-		3dcalc -float -a pb03.$subj.r$run.blur+tlrc -b rm.mean_r$run+tlrc -c mask_epi_extents.$subj+tlrc \
-			-expr 'c * min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.r$run.scale
-	end
-	# ================================ motion regressors =================================
-	## 1d_tool.py will be used to create a censor file just before 3dDeconvolve
-
-	## Example 7a. Output temporal derivative of motion regressors.  There are
-	## 9 runs in dfile_rall.1D, and derivatives are applied per run.
-	## 1d_tool.py -infile dfile_rall.1D -set_nruns 9 \
-	## -derivative -write motion.deriv.1D
-
-	## -demean : demean each run (new mean of each run = 0.0)
-	## -derivative : take the temporal derivative of each vector (done as first backward difference)
-	## compute de-meaned motion parameters (for use in regression)
-	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 -demean -write motion_demean.$subj.1D
-	## compute motion parameter derivatives (just to have)
-	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 -derivative -demean -write motion_deriv.$subj.1D
-	## create censor file motion_${subj}_censor.1D, for censoring motion
-	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 -show_censor_count -censor_prev_TR -censor_motion $thresh_motion motion_{$subj}
-
-	## subjA_enorm.1D is the euclidean norm of the derivative, before the extreme mask is applied.
-	## -censor_prev_TR : for each censored TR, also censor previous
-
-	foreach run ($run_list)
-		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 -demean -write motion_demean.$subj.r$run.1D
-		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 -derivative -demean -write motion_deriv.$subj.r$run.1D
-		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 -show_censor_count -censor_prev_TR -censor_motion $thresh_motion motion_{$subj}.r$run
-	end
-
-	## compute motion magnitude time series: the Euclidean norm
-	## (sqrt(sum squares)) of the motion parameter derivatives
-	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 \
-		-derivative  -collapse_cols euclidean_norm \
-		-write motion_{$subj}.eucl_norm.1D
-
-	foreach run ($run_list)
-		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 \
-			-derivative  -collapse_cols euclidean_norm     \
-			-write motion_{$subj}.r$run.eucl_norm.1D
-	end
+ #	foreach run ($run_list)
+ #		## register each volume to the base
+ #		3dvolreg -verbose -zpad 1 -cubic -base $preproc_dir/$subj/SBREF.$subj.r04+orig'[0]' \
+ #			-1Dfile dfile.$subj.r$run.1D -prefix rm.epi.volreg.$subj.r$run           \
+ #			-1Dmatrix_save mat.r$run.vr.aff12.1D  \
+ #			pb01.$subj.r$run.blip+orig
+ #
+ #		## create an all-1 dataset to mask the extents of the warp
+ #		3dcalc -overwrite -a pb01.$subj.r$run.blip+orig -expr 1 -prefix rm.$subj.epi.all1
+ #
+ #		## catenate volreg, epi2anat and tlrc transformations
+ #		cat_matvec -ONELINE $subj.anat.unifize+tlrc::WARP_DATA -I $subj.anant.unifize_al_junk_mat.aff12.1D -I \
+ #			mat.r$run.vr.aff12.1D > mat.$subj.r$run.warp.aff12.1D
+ #
+ #		## apply catenated xform : volreg, epi2anat and tlrc
+ #		3dAllineate -base $subj.anat.unifize+tlrc \
+ #			-input pb01.$subj.r$run.blip+orig \
+ #			-1Dmatrix_apply mat.$subj.r$run.warp.aff12.1D \
+ #			-mast_dxyz $res   -prefix rm.epi.nomask.$subj.r$run # $res는 original data의 resolution과 맞춤.
+ #
+ #		## warp the all-1 dataset for extents masking
+ #		3dAllineate -base $subj.anat.unifize+tlrc \
+ #			-input rm.$subj.epi.all1+orig \
+ #			-1Dmatrix_apply mat.$subj.r$run.warp.aff12.1D \
+ #			-final NN -quiet \
+ #			-mast_dxyz $res  -prefix rm.epi.1.$subj.r$run
+ #
+ #		## make an extents intersection mask of this run
+ #		3dTstat -min -prefix rm.epi.min.$subj.r$run rm.epi.1.$subj.r$run+tlrc    # -----NEED CHECK-----
+ #	end
+ #
+ #	## make a single file of registration params
+ #	cat dfile.$subj.r0?.1D > dfile.$subj.r_all.1D
+ #
+ #	## create the extents mask: mask_epi_extents+tlrc
+ #	## (this is a mask of voxels that have valid data at every TR)
+ #	## (only 1 run, so just use 3dcopy to keep naming straight)
+ #	3dcopy rm.epi.min.$subj.r04+tlrc mask_epi_extents.$subj
+ #
+ #	## and apply the extents mask to the EPI data
+ #	## (delete any time series with missing data)
+ #	foreach run ($run_list)
+ #		3dcalc -a rm.epi.nomask.$subj.r$run+tlrc -b mask_epi_extents.$subj+tlrc \
+ #			-expr 'a*b' -prefix pb02.$subj.r$run.volreg
+ #	end
+ #	# ================================================= blur (pb03) =================================================
+ #	## blur each volume of each run
+ #	foreach run ($run_list)
+ #		3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.r$run.blur \
+ #			pb02.$subj.r$run.volreg+tlrc
+ #	end
+ #	## For each run, blur each volume by a $fwhm mm FWHM (Full Width at Half Max) Gaussian kernel
+ #	## $fwhm -> 4 is default, 6 is common
+ #
+ #	# ================================================= mask =================================================
+ #	## create 'full_mask' dataset (union mask)
+ #	## create a 'brain' mask from the EPI data (dilate 1 voxel)
+ #
+ #	foreach run ($run_list)
+ #		3dAutomask -dilate 1 -prefix rm.mask_r$run pb03.$subj.r$run.blur+tlrc
+ #	end
+ #	## 3dAutomaks  :  Input dataset is EPI 3D+time, or a skull-stripped anatomical. Output dataset is a brain-only mask dataset.
+ #	## -dilate nd  = Dilate the mask outwards 'nd' times.
+ #
+ #	## create union of inputs, output type is byte
+ #	3dmask_tool -inputs rm.mask_r0?+tlrc.HEAD -union -prefix full_mask.$subj
+ #	## 3dmask_tool  -  for combining/dilating/eroding/filling mask
+ #
+ #	## ---- create subject anatomy mask, mask_anat.$subj+tlrc ----
+ #	##      (resampled from tlrc anat). resample은 resolution을 맞춰 sampling을 다시 하는 것. resolution을 낮추면 down sampling하는 것.
+ #	3dresample -master full_mask.$subj+tlrc -input $subj.anat.unifize+tlrc -prefix rm.resam.anat
+ #	## convert to binary anat mask; fill gaps and holes
+ #	3dmask_tool -dilate_input 5 -5 -fill_holes -input rm.resam.anat+tlrc -prefix mask_anat.$subj
+ #
+ #	# ================================= scale (pb04) ==================================
+ #	## scale each voxel time series to have a mean of 100 (be sure no negatives creep in)
+ #	## (subject to a range of [0,200])
+ #	foreach run ($run_list)
+ #		3dTstat -prefix rm.mean_r$run pb03.$subj.r$run.blur+tlrc
+ #		3dcalc -float -a pb03.$subj.r$run.blur+tlrc -b rm.mean_r$run+tlrc -c mask_epi_extents.$subj+tlrc \
+ #			-expr 'c * min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.r$run.scale
+ #	end
+ #	# ================================ motion regressors =================================
+ #	## 1d_tool.py will be used to create a censor file just before 3dDeconvolve
+ #
+ #	## Example 7a. Output temporal derivative of motion regressors.  There are
+ #	## 9 runs in dfile_rall.1D, and derivatives are applied per run.
+ #	## 1d_tool.py -infile dfile_rall.1D -set_nruns 9 \
+ #	## -derivative -write motion.deriv.1D
+ #
+ #	## -demean : demean each run (new mean of each run = 0.0)
+ #	## -derivative : take the temporal derivative of each vector (done as first backward difference)
+ #	## compute de-meaned motion parameters (for use in regression)
+ #	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 -demean -write motion_demean.$subj.1D
+ #	## compute motion parameter derivatives (just to have)
+ #	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 -derivative -demean -write motion_deriv.$subj.1D
+ #	## create censor file motion_${subj}_censor.1D, for censoring motion
+ #	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 -show_censor_count -censor_prev_TR -censor_motion $thresh_motion motion_{$subj}
+ #
+ #	## subjA_enorm.1D is the euclidean norm of the derivative, before the extreme mask is applied.
+ #	## -censor_prev_TR : for each censored TR, also censor previous
+ #
+ #	foreach run ($run_list)
+ #		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 -demean -write motion_demean.$subj.r$run.1D
+ #		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 -derivative -demean -write motion_deriv.$subj.r$run.1D
+ #		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 -show_censor_count -censor_prev_TR -censor_motion $thresh_motion motion_{$subj}.r$run
+ #	end
+ #
+ #	## compute motion magnitude time series: the Euclidean norm
+ #	## (sqrt(sum squares)) of the motion parameter derivatives
+ #	1d_tool.py -infile dfile_rall.$subj.1D -set_nruns 1 \
+ #		-derivative  -collapse_cols euclidean_norm \
+ #		-write motion_{$subj}.eucl_norm.1D
+ #
+ #	foreach run ($run_list)
+ #		1d_tool.py -infile dfile.$subj.r$run.1D -set_nruns 1 \
+ #			-derivative  -collapse_cols euclidean_norm     \
+ #			-write motion_{$subj}.r$run.eucl_norm.1D
+ #	end
 	# ==================================================================
 	echo "subject $subj completed!"
 end

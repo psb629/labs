@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #### zsh ####
-# which zsh
-# chsh -s /usr/bin/zsh
-# chsh -s /bin/zsh
+ #which zsh
+ #chsh -s /usr/bin/zsh
+ #chsh -s /bin/zsh
 
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -11,12 +11,15 @@
 #### gcc and Xcode ####
 brew install gcc
 
+#### To solve the problem that 'xcrun: error: invalid active developer path' ####
+xcode-select --install
+
 #### Git ####
 brew install git
 mkdir ~/Github
 cd ~/Github
 git clone https://github.com/psb629/labs.git
-#git clone https://github.com/clmnlab/labs.git
+ #git clone https://github.com/clmnlab/labs.git
 git_dir=~/Github/labs
 cd $git_dir
 git init
@@ -49,27 +52,27 @@ curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_settin
 source ~/.vimrc
 
 #### oh-my-zsh ####
-# Xcode required
+## Xcode required
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 cat ~/Github/labs/Mac_Terminal_setting/.zshrc >>~/.zshrc
 
 #### python 3 ####
 brew install python
-# python --version -> Python 2.x
-# python3 --version -> Python -> 3.x
+## python --version -> Python 2.x
+## python3 --version -> Python -> 3.x
 
 #### Anaconda ####
 brew install anaconda
-# add anaconda3 folder to our shell path
+## add anaconda3 folder to our shell path
 echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
 source ~/.zshrc
-# make environment
+## make environment
 conda create --name sampark python=3.7
 conda info --env
-# update pip
+## update pip
 pip install --upgrade pip
-# install packages
-#conda activate sampark
+## install packages
+ #conda activate sampark
 source activate sampark
 pip install numpy
 pip install pandas
@@ -82,14 +85,14 @@ pip install statsmodels
 pip install plotly
 pip install psutil
 pip install pympler
-# check the package installing
+## check the package installing
 pip freeze
 
 #### XQuartz ####
 brew install xquartz
 
 #### afni ####
-# XQuartz required
+## XQuartz required
 cd ~
 update=@update.afni.binaries
 pack=macos_10.12_local
@@ -97,5 +100,14 @@ curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/$update
 tcsh $update -package $pack -do_extras
 cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
 ## Update AFNI to latest version
-# @update.afni.binaries -d
+ #@update.afni.binaries -d
 rm ~/$update
+
+#### Subversion ####
+ #brew install subversion
+
+#### checkout LLVM including related sub-projects like Clang ####
+ #git clone https://github.com/llvm/llvm-project.git
+
+#### cmake ####
+brew install cmake
