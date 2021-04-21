@@ -8,12 +8,13 @@ import pickle
 import numpy as np
 import pandas as pd
 import scipy.stats
-# import matplotlib.pyplot as plt
-# import seaborn as sns
+import matplotlib.pyplot as plt
+import seaborn as sns
 import statsmodels.stats.multitest
+from statsmodels.sandbox.stats.multicomp import multipletests
 
 # import nilearn.masking
-# from nilearn import plotting as nplt
+from nilearn import plotting as nplt
 from nilearn import image as niimg
 import nilearn.decoding
 
@@ -21,7 +22,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
-# from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC
 
 ## Main arrays
 subj_list = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15',
@@ -38,6 +39,25 @@ stats_dir = fmri_dir + '/stats'
 mask_dir = fmri_dir + '/roi'
 dmn_dir = mask_dir + '/DMN'
 loc_dir = mask_dir + '/localizer'
+
+## labeling with target position
+# 1 - 5 - 25 - 21 - 1 - 25 - 5 - 21 - 25 - 1 - 21 - 5 - 1 - ...
+##################
+#  1  2  3  4  5 #
+#  6  7  8  9 10 #
+# 11 12 13 14 15 #
+# 16 17 18 19 20 #
+# 21 22 23 24 25 #
+##################
+target_pos = []
+
+# with open(join(root_dir,'targetID.txt')) as file:
+with open(join(script_dir,'targetID.txt')) as file:
+    for line in file:
+        target_pos.append(int(line.strip()))
+        
+target_pos = target_pos[1:97]
+# target_path = list(range(1,13))*8
 
 def load_betas(subj, stage):
     assert subj in subj_list
@@ -77,6 +97,7 @@ def fast_masking(img, roi):
     # the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
     return img_data[roi_mask, :].T
 
+## do cross validation with given estimator (default: LDA)
 def cross_valid(betas, ROI_imgs, estimator):
     # output : A leave-one-run-out cross-validation (LORO-CV) result.
     #          Automatically save it as pickle file to root_dir
@@ -97,6 +118,7 @@ def cross_valid(betas, ROI_imgs, estimator):
             scores[subj, stage, name] = score['test_score']
     return scores
 
+## show the list of pkl at the location, simultaneously represent overlap
 def show_pkl_list(location, word):
     pkl_list = glob('*%s*.pkl'%word)
     df = pd.DataFrame({'name':pkl_list})
@@ -139,7 +161,8 @@ def show_pkl_list(location, word):
     
     return df
 
-def make_wit_df(scroes):
+## make a wit dataframe
+def make_wit_df(scores):
     wit_df = pd.DataFrame(columns=['subj','ROI','visit','mapping','accuracy_1','accuracy_2','accuracy_3','mean_accuracy'])
 
     for keys, values in scores.items():
@@ -156,6 +179,7 @@ def make_wit_df(scroes):
             , ignore_index=True)
     return wit_df
 
+## paired t-test
 def wit_df_paired_t_test(wit_df, cond_A, cond_B):
     ## cond_A vs. cond_B :
     ### early_practice vs. late_practice
@@ -180,3 +204,42 @@ def wit_df_paired_t_test(wit_df, cond_A, cond_B):
         
     return pvals
 
+## Calculate the T-test for the mean of ONE group of scores.
+def wit_df_mean_t_test(wit_df, stage, mean):
+    ## ex) stage == 'early_late', mean == 0.25 (the chance level)
+    a1, a2 = stage.split('_')
+    assert a1 in ['early', 'late']
+    assert a2 in ['practice', 'unpractice']
+    
+    lines = []
+    ROI_list = wit_df.ROI.unique()
+    for roi in ROI_list:
+        score = wit_df[(wit_df.ROI==roi)&(wit_df.visit==a1)&(wit_df.mapping==a2)]['mean_accuracy']
+        res_uncorrected = scipy.stats.ttest_1samp(a=score, popmean=mean)
+        res_corrected = multipletests(res_uncorrected.pvalue, alpha=0.005, method='bonferroni')
+        reject, pvals_corrected, _, _ = res_corrected
+        lines.append((roi, a1, a2, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
+    
+    return pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
+
+## Figure format
+sns.set(style="ticks", context='talk')
+palette = ['#00A8AA','#C5C7D2']
+
+def draw_lineplot(wit_df, roi_name, title, ax=None):
+    
+    sub_df = wit_df[wit_df.ROI == roi_name]
+    ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
+                       , palette=palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
+    sns.despine()
+    
+    ax.set_xlim((-0.4, 1.4))
+    ax.set_ylim(0.225, 0.55)
+    ax.set_yticks(np.arange(.25,.90,.15))
+    ax.set_ylabel('Decoding Accuracy')
+    ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
+#     ax.get_legend().remove()
+    ax.legend(loc='best', frameon=True)
+    ax.set_title(title)
+    
+    return ax

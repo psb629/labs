@@ -45,6 +45,6 @@ foreach ii (GA GB)
  	temp=($temp "-contr -1 -1 -1 3 3*T25-T1-T5-T21")
 	temp=($temp "-bucket $output_dir/ANOVA.$ii.MO.shortdur.4target")
 	3dANOVA `echo $temp`
- #	echo $temp
- #3dAFNItoNIFTI -prefix ANOVA_MO_shortdur_4target_Target_GB_fstat.nii.gz ANOVA.MO.shortdur.4target.Target.GB+tlrc'[Target:F-stat]'
+
+	3dAFNItoNIFTI -prefix $output_dir/ANOVA.$ii.MO.shortdur.4target+tlrc.nii.gz $output_dir/ANOVA.$ii.MO.shortdur.4target+tlrc'[Target:F-stat]'
 end
