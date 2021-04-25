@@ -7,6 +7,9 @@
 
 #### Homebrew ####
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+## To update Homebrew, simply run:
+ #brew update
+ #brew upgrade
 
 #### gcc and Xcode ####
 brew install gcc
@@ -106,8 +109,16 @@ rm ~/$update
 #### Subversion ####
  #brew install subversion
 
-#### checkout LLVM including related sub-projects like Clang ####
+#### cmake ####
+ #brew install cmake
+
+#### llvm ####
+brew install llvm
+echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.zshrc
+ #export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+ #export LDFLAGS="-L/usr/local/opt/llvm/lib"
+ #export CPPFLAGS="-I/usr/local/opt/llvm/include"
+
+## checkout LLVM including related sub-projects like Clang ####
  #git clone https://github.com/llvm/llvm-project.git
 
-#### cmake ####
-brew install cmake
