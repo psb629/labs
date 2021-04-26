@@ -24,7 +24,60 @@ from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
-class GA:
+class Common:
+    def fast_masking(self, img, roi):
+        ## img : data (NIFTI image)
+        ## roi : mask (NIFTI image)
+        ## output : (trials, voxels)-dimensional fdata array
+        img_data = img.get_fdata()
+        roi_mask = roi.get_fdata().astype(bool)
+        if img_data.shape[:3] != roi_mask.shape:
+            raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
+        ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
+        return img_data[roi_mask, :].T
+    
+    ## show the list of pkl at the location, simultaneously represent overlap
+    def show_pkl_list(self, location, word):
+        pkl_list = glob('*%s*.pkl'%word)
+        df = pd.DataFrame({'name':pkl_list})
+        group = ['' for i in pkl_list]
+        ## check the identity
+        idty = ['a','b','c','d','e','f','g','h','i','j','k','l','m'
+                ,'n','o','p','q','r','s','t','u','v','w','x','y','z'
+                ,'A','B','C','D','E','F','G','H','I','J','K','L','M'
+                ,'N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+        gg = 0
+        for n,p in enumerate(pkl_list):
+            ## assign a pkl a name of the group
+            ## check that the pkl has a group
+            if len(group[n])!=0:
+                continue
+            group[n] = idty[gg]
+            ## check the similarity
+            with open(p,"rb") as fp:
+                pkl_n = pickle.load(file=fp)
+            for m,q in enumerate(pkl_list[(n+1):]):
+                if len(group[m+n+1])!=0:
+                    continue
+                if getsize(join(location,p))!=getsize(join(location,q)):
+                    continue
+                ## Comparison sorting
+                with open(q,"rb") as fq:
+                    pkl_m = pickle.load(file=fq)
+    #             if pkl_n==pkl_m:
+    #                 group[m+n] = idty[gg]
+                all_same = True
+                for key in pkl_n.keys():
+                    if not np.array_equal(pkl_n[key], pkl_m[key]):
+                        all_same = False
+                        break
+                if all_same:
+                    group[m+n+1] = idty[gg]
+            gg += 1
+        df['identity']=group
+        return df
+
+class GA(Common):
 #     def __init__(self):
     ## 
     list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
@@ -92,19 +145,6 @@ class GA:
         beta[subj, stage] = niimg.concat_imgs([temp[g+subj, run] for run in list_run])
 
         return beta
-    
-    def fast_masking(self, img, roi):
-        # img : data (NIFTI image)
-        # roi : mask (NIFTI image)
-        # output : (trials, voxels)-dimensional fdata array
-        img_data = img.get_fdata()
-        roi_mask = roi.get_fdata().astype(bool)
-
-        if img_data.shape[:3] != roi_mask.shape:
-            raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
-
-        # the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
-        return img_data[roi_mask, :].T
 
     ## do cross validation with given estimator (default: LDA)
     def cross_valid(self, betas, ROI_imgs, estimator=lda):
