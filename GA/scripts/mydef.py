@@ -25,6 +25,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
 class Common:
+    
+    ## Initializing
+    roi_imgs = {}
+    
     def fast_masking(self, img, roi):
         ## img : data (NIFTI image)
         ## roi : mask (NIFTI image)
@@ -76,19 +80,52 @@ class Common:
             gg += 1
         df['identity']=group
         return df
+    
+    ## draw the figures of ROI images with a standard underlay
+    def draw_rois(self, magnitude, n_columns, img_bg):
+        ## magnitude: a size of figures
+        n_rows = int(np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
+        fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude, n_rows*magnitude))
+
+        for i, (key, img) in enumerate(self.roi_imgs.items()):
+            print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
+            if n_rows > 1:
+                ax = axes[(i//n_columns),(i%n_columns)]
+            else:
+                ax = axes[i]
+            nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
+                          , draw_cross=False, black_bg=False
+                          , display_mode='ortho', axes=ax)
+        return 0
+    
+    def draw_lineplots_and_rois(self, magnitude, n_columns, img_bg):
+        n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
+        fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
+        
+        for i, (key, img) in enumerate(self.roi_imgs.items()):
+            print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
+            self.draw_lineplot(roi_name=key, title=key, ax=axes[2*(i//n_columns),(i%n_columns)])
+            nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
+                          , draw_cross=False, black_bg=False
+                          , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
+        return 0
 
 class GA(Common):
 #     def __init__(self):
-    ## 
+
+    ## Initializing
+    scores = {}
+    
     list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
                  ,'18', '19', '20', '21', '23', '26', '27', '28', '29', '30'
                  ,'31', '32', '33', '34', '35', '36', '37', '38', '42', '44']
     list_stage = ['early_practice', 'early_unpractice', 'late_practice', 'late_unpractice']
-
+    
     ## Locations of directories
     dir_script = '.'
     dir_root = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
     dir_fmri = dir_root + '/fMRI_data'
+    dir_searchlight = dir_fmri + '/searchlight'
     dir_LSS = dir_fmri + '/preproc_data'
     dir_stats = dir_fmri + '/stats'
     dir_mask = dir_fmri + '/roi'
@@ -115,10 +152,6 @@ class GA(Common):
     
     ## LDA analysis
     lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
-    
-    ## Initializing
-    scores = {}
-    pvals = {}
 
     def load_beta(self, subj, stage):
 
@@ -185,7 +218,7 @@ class GA(Common):
         return self.wit_score
 
     ## paired t-test
-    def do_paired_t_test(self, cond_A, cond_B):
+    def do_paired_ttest(self, cond_A, cond_B):
         ## cond_A vs. cond_B :
         ### early_practice vs. late_practice
         ### early_unpractice vs. late_unpractice
@@ -198,14 +231,19 @@ class GA(Common):
         assert b1 in ['early', 'late']
         assert b2 in ['practice', 'unpractice']
 
+        lines = []
         ROI_list = self.wit_score.ROI.unique()
         for roi in ROI_list:
             A = self.wit_score[(self.wit_score.ROI==roi)&(self.wit_score.visit==a1)&(self.wit_score.mapping==a2)]['mean_accuracy']
             B = self.wit_score[(self.wit_score.ROI==roi)&(self.wit_score.visit==b1)&(self.wit_score.mapping==b2)]['mean_accuracy']
             ttest = scipy.stats.ttest_rel(A, B)
-            self.pvals[roi,cond_A+'/'+cond_B] = statsmodels.stats.multitest.fdrcorrection(ttest.pvalue)
+#             reject, pvals_corrected = statsmodels.stats.multitest.fdrcorrection(ttest.pvalue)
+            reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=0.005, method='bonferroni')
+            lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
 
-        return self.pvals
+        self.wit_paired_ttest = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','t-statistic','Two-sided p-value','rejected','pvalue-corrected'])
+        
+        return self.wit_paired_ttest
 
     ## Calculate the T-test for the mean of ONE group of scores.
     def make_wit_mean_ttest(self, stage, mean):
@@ -219,8 +257,7 @@ class GA(Common):
         for roi in ROI_list:
             score = self.wit_score[(self.wit_score.ROI==roi)&(self.wit_score.visit==a1)&(self.wit_score.mapping==a2)]['mean_accuracy']
             res_uncorrected = scipy.stats.ttest_1samp(a=score, popmean=mean)
-            res_corrected = multipletests(res_uncorrected.pvalue, alpha=0.005, method='bonferroni')
-            reject, pvals_corrected, _, _ = res_corrected
+            reject, pvals_corrected, _, _ = multipletests(res_uncorrected.pvalue, alpha=0.005, method='bonferroni')
             lines.append((roi, a1, a2, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
             
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
@@ -239,7 +276,7 @@ class GA(Common):
 
         ax.set_xlim((-0.4, 1.4))
         ax.set_ylim(0.225, 0.55)
-        ax.set_yticks(np.arange(.25,.90,.15))
+        ax.set_yticks(np.arange(.25,.60,.15))
         ax.set_ylabel('Decoding Accuracy')
         ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
     #     ax.get_legend().remove()
