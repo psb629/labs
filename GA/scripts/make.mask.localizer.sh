@@ -8,7 +8,7 @@ data_dir=$stats_dir/GLM.move-stop
 
 output_dir=$roi_dir/localizer_sampark
 if [ ! -d $output_dir ]; then
-	mkdir -m p 755 $output_dir
+	mkdir -p -m 755 $output_dir
 fi
 
 key_list=(L_Postcentral R_CerebellumIV-V R_Postcentral L_Putamen S_SMA R_CerebellumVIIIb L_Thalamus)
