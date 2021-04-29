@@ -65,31 +65,46 @@ brew install python
 ## python3 --version -> Python -> 3.x
 
 #### Anaconda ####
+## to uninstall anaconda clearly
+ #rm -rf /usr/local/Caskroom/anaconda
+ #sudo rm -rf /usr/local/anaconda3 /Users/clmnlab/.conda
+## installation
 brew install anaconda
 ## add anaconda3 folder to our shell path
 echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
 source ~/.zshrc
 ## make environment
-conda create --name sampark python=3.7
+env_name=sampark
+conda create --name $env_name python=3.7
 conda info --env
 ## update pip
 pip install --upgrade pip
 ## install packages
- #conda activate sampark
-source activate sampark
-pip install numpy
-pip install pandas
-pip install scipy
-pip install sklearn
-pip install nilearn
-pip install matplotlib 
-pip install seaborn
-pip install statsmodels
-pip install plotly
-pip install psutil
-pip install pympler
-## check the package installing
-pip freeze
+ #conda activate $env_name
+source activate $env_name
+is_env_sampark=`conda info | grep sampark | wc -l`
+if [ $is_env_sampark -gt 0 ]; then
+	echo "ready to pip install modules at env '${env_name}'"
+	pip install numpy
+	pip install pandas
+	pip install jupyter notebook
+	pip install scipy
+	pip install sklearn
+	pip install nilearn
+	pip install matplotlib 
+	pip install seaborn
+	pip install statsmodels
+	pip install plotly
+	pip install psutil
+	pip install pympler
+	pip install nltk
+	## generate a new kernel
+	python -m ipykernel install --user --name $env_name --display-name $env_name
+	## check the package installing
+	pip freeze
+else
+	echo "pip install modules at env '${env_name}' is failed"
+fi
 
 #### XQuartz ####
 brew install xquartz
