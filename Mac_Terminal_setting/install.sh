@@ -97,7 +97,8 @@ if [ $is_env_sampark -gt 0 ]; then
 	pip install plotly
 	pip install psutil
 	pip install pympler
-	pip install nltk
+ #	pip install nltk
+ #	pip install tikreg
 	## generate a new kernel
 	python -m ipykernel install --user --name $env_name --display-name $env_name
 	## check the package installing
