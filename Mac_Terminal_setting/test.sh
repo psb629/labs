@@ -20,16 +20,23 @@
  #git push -u origin master
 
 #### Anaconda ####
- #brew install anaconda
- ### add anaconda3 folder to our shell path
- #echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
- #source ~/.zshrc
- ### make environment
+## to uninstall anaconda clearly
+sudo uninstall file:///Applications/Anaconda-Navigator.app/
+sudo rm -rf /usr/local/anaconda3
+sudo rm -rf /usr/local/Caskroom/anaconda
+sudo rm -rf /usr/local/anaconda3 /Users/clmnlab/.conda
+echo "uninstalling anaconda is completed"
+## installation
+brew install anaconda
+source ~/.zshrc
+## make environment
 env_name=sampark
- #conda create --name $env_name python=3.7
- #conda info --env
- ### update pip
- #pip install --upgrade pip
+conda create --name $env_name python=3.7
+conda info --env
+## remove enviroment
+ #conda remove --name $env_name --all
+## update pip
+pip install --upgrade pip
 ## install packages
  #conda activate $env_name
 source activate $env_name
@@ -48,7 +55,12 @@ if [ $is_env_sampark -gt 0 ]; then
 	pip install plotly
 	pip install psutil
 	pip install pympler
-	pip install nltk
+	pip install tables
+	pip install nibabel
+	pip install Cython
+	pip install pycortex
+ #	pip install nltk
+ #	pip install tikreg
 	## generate a new kernel
 	python -m ipykernel install --user --name $env_name --display-name $env_name
 	## check the package installing
