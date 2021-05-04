@@ -1,14 +1,16 @@
 #!/bin/tcsh
 
-set subj_list = (S24 S25)
-set date_list = (210402 210325)
+set subj_list = (S26)
+set date_list = (210420)
+set coord = orig
 
 foreach ii (`count -digits 2 1 2`)
 	set subj = $subj_list[$ii]
 	set date = $date_list[$ii]
 
 	set data_dir = ~/Desktop/${subj}_${date}_MRI
-	set output_dir = /Volumes/T7SSD1/samsung_hospital/fmri_data/preproc_data/$subj
+ #	set output_dir = /Volumes/T7SSD1/samsung_hospital/fmri_data/preproc_data/$subj
+	set output_dir = ~/Desktop/$subj
 	if ( ! -d $output_dir/preprocessed ) then
 		mkdir -p -m 755 $output_dir/preprocessed
 	endif
@@ -80,11 +82,13 @@ foreach ii (`count -digits 2 1 2`)
 	
 	cd $output_dir
 	# ================================= tlrc coordinate ==================================
-	## warp anatomy to standard space, input dataset must be in the current directory:
-	@auto_tlrc -base ~/abin/MNI152_T1_2009c+tlrc.HEAD -input $subj.anat.unifize+orig -no_ss -init_xform AUTO_CENTER
-	## find attribute WARP_DATA in dataset; -I, invert the transformation:
-	cat_matvec $subj.anat.unifize+tlrc::WARP_DATA -I > warp.$subj.anat.Xat.1D
-	3dAFNItoNIFTI -prefix anat_final.$subj.nii.gz $subj.anat.unifize+tlrc
+	if ($coord == tlrc) then
+		## warp anatomy to standard space, input dataset must be in the current directory:
+		@auto_tlrc -base ~/abin/MNI152_T1_2009c+tlrc.HEAD -input $subj.anat.unifize+orig -no_ss -init_xform AUTO_CENTER
+		## find attribute WARP_DATA in dataset; -I, invert the transformation:
+		cat_matvec $subj.anat.unifize+tlrc::WARP_DATA -I > warp.$subj.anat.Xat.1D
+		3dAFNItoNIFTI -prefix anat_final.$subj.nii.gz $subj.anat.unifize+tlrc
+	endif
 	
 	########
 	# Func # : Despiking (3dDespike) -> Slice Timing Correction (3dTshift) -> Motion Correct EPI (3dvolreg)
@@ -148,21 +152,22 @@ foreach ii (`count -digits 2 1 2`)
 	           -derivative -write $subj.motion_derev.1D
 	
 	cd $output_dir
-	## Transforming the function (“follower datasets”), setting the resolution at 1.719 mm:
-	@auto_tlrc -apar $subj.anat.unifize+tlrc -input pb02.$subj.rest.volreg+orig -suffix NONE -dxyz 1.719
-	
+	if ($coord == tlrc) then
+		## Transforming the function (“follower datasets”), setting the resolution at 1.719 mm:
+		@auto_tlrc -apar $subj.anat.unifize+tlrc -input pb02.$subj.rest.volreg+orig -suffix NONE -dxyz 1.719
+	endif
 	# ================================== Spatial Blurring ==================================
 	## Important: blur after tissue based signal extraction
 	## Otherwise, will get unintended signals in WM and CSF extractions that were blurred in from nearby GM (gray matter)
-	3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.rest.blur pb02.$subj.rest.volreg+tlrc
+	3dmerge -1blur_fwhm $fwhm -doall -prefix pb03.$subj.rest.blur pb02.$subj.rest.volreg+${coord}
 	
 	## scale each voxel time series to have a mean of 100 (be sure no negatives creep in):
-	3dTstat -prefix rm.$subj.mean_rest pb03.$subj.rest.blur+tlrc
+	3dTstat -prefix rm.$subj.mean_rest pb03.$subj.rest.blur+${coord}
 	
 	# ================================== Scaling ==================================
 	## create a 'brain' mask from. the EPI data (dilate 1 voxel)
-	3dAutomask -dilate 1 -prefix full_mask.$subj pb03.$subj.rest.blur+tlrc
+	3dAutomask -dilate 1 -prefix full_mask.$subj pb03.$subj.rest.blur+${coord}
 	
 	 #3dcalc -float -a pb03.$subj.rest.blur+orig -b rm.$subj.mean_rest+orig -c rm.$subj.epi.all1+orig -expr 'c * min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.rest.scale
-	3dcalc -float -a pb03.$subj.rest.blur+tlrc -b rm.$subj.mean_rest+tlrc -expr 'min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.rest.scale
+	3dcalc -float -a pb03.$subj.rest.blur+${coord} -b rm.$subj.mean_rest+${coord} -expr 'min(200, a/b*100)*step(a)*step(b)' -prefix pb04.$subj.rest.scale
 end
