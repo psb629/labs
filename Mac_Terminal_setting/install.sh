@@ -67,23 +67,21 @@ brew install python
 #### Anaconda ####
 ## to uninstall anaconda clearly
  #sudo uninstall file:///Applications/Anaconda-Navigator.app/
- #sudo rm -rf /usr/local/anaconda3
- #sudo rm -rf /usr/local/Caskroom/anaconda
- #sudo rm -rf /usr/local/anaconda3 /Users/clmnlab/.conda
+ #sudo rm -rf /usr/local/anaconda3 /usr/local/Caskroom/anaconda /Users/clmnlab/.conda
  #echo "uninstalling anaconda is completed"
 ## installation
 brew install anaconda
 ## add anaconda3 folder to our shell path
 echo 'export PATH=$PATH:/usr/local/anaconda3/bin' >> ~/.zshrc
 source ~/.zshrc
+## update pip
+pip install --upgrade pip
 ## make environment
 env_name=sampark
 conda create --name $env_name python=3.7
 conda info --env
 ## remove enviroment
  #conda remove --name $env_name --all
-## update pip
-pip install --upgrade pip
 ## install packages
  #conda activate $env_name
 source activate $env_name
@@ -102,10 +100,12 @@ if [ $is_env_sampark -gt 0 ]; then
 	pip install plotly
 	pip install psutil
 	pip install pympler
+	## pycortex
+	pip install setuptools wheel Cython
+	pip install pycortex
+	## Jiwoong Park
 	pip install tables
 	pip install nibabel
-	pip install Cython
-	pip install pycortex
  #	pip install nltk
  #	pip install tikreg
 	## generate a new kernel
