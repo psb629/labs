@@ -88,12 +88,13 @@ class Common:
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude, n_rows*magnitude))
 
         for i, (key, img) in enumerate(self.roi_imgs.items()):
-            print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
+            nvoxels=img.get_fdata().astype(bool).sum()
+            print('%s(n_voxels=%d)'%(key,nvoxels))
             if n_rows > 1:
                 ax = axes[(i//n_columns),(i%n_columns)]
             else:
                 ax = axes[i]
-            nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
+            nplt.plot_roi(roi_img=img, bg_img=img_bg, title='%s(n_voxels=%d)'%(key,nvoxels)
                           , draw_cross=False, black_bg=False
                           , display_mode='ortho', axes=ax)
         return 0
