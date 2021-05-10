@@ -24,9 +24,14 @@ from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
+from datetime import date
+
 class Common:
     
-    ## Initializing
+    ## date
+    today = date.today().strftime("%Y%m%d")
+    
+    ## ROI images
     roi_imgs = {}
     
     def fast_masking(self, img, roi):
@@ -99,13 +104,37 @@ class Common:
                           , display_mode='ortho', axes=ax)
         return 0
     
-    def draw_lineplots_and_rois(self, magnitude, n_columns, img_bg):
+    ## Figure format
+    sns.set(style="ticks", context='talk')
+    palette = ['#00A8AA','#C5C7D2']
+
+    def draw_lineplot(self, roi_name, title, ylim=[0.225, 0.55], dy=.15, ax=None):
+
+        sub_df = self.wit_score[self.wit_score.ROI == roi_name]
+        ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
+                           , palette=self.palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
+        sns.despine()
+
+        ax.set_xlim([-0.4, 1.4])
+        ax.set_ylim(ylim)
+        ax.set_yticks(np.arange(ylim[0],ylim[1],dy))
+        ax.set_ylabel('Decoding Accuracy')
+        ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
+    #     ax.get_legend().remove()
+        ax.legend(loc='best', frameon=True)
+        ax.set_title(title)
+
+        return ax
+    
+    def draw_lineplots_with_rois(self, magnitude, n_columns, img_bg, ylim=[0.225, 0.55], dy=.15):
         n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
         
         for i, (key, img) in enumerate(self.roi_imgs.items()):
             print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
-            self.draw_lineplot(roi_name=key, title=key, ax=axes[2*(i//n_columns),(i%n_columns)])
+            self.draw_lineplot(roi_name=key, title=key
+                               , ylim=ylim, dy=dy
+                               , ax=axes[2*(i//n_columns),(i%n_columns)])
             nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
                           , draw_cross=False, black_bg=False
                           , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
@@ -113,9 +142,9 @@ class Common:
 
 class GA(Common):
 #     def __init__(self):
-
-    ## Initializing
-    scores = {}
+    ##################
+    ## Initializing ##
+    ##################
     
     list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
                  ,'18', '19', '20', '21', '23', '26', '27', '28', '29', '30'
@@ -132,6 +161,19 @@ class GA(Common):
     dir_mask = dir_fmri + '/roi'
     dir_dmn = dir_mask + '/DMN'
     dir_loc = dir_mask + '/localizer'
+    
+    ## the difference in reward rate(=success rate) between GB and GA
+    del_RR = np.loadtxt(join(dir_script,"RewardRate_improvement.txt"), delimiter='\n')
+    
+    ## the decoding accuracy
+    scores = {}
+    
+    ## fan images
+    fan_imgs = {}
+    fan_info = None
+    
+    ## background image
+    img_bg = join(dir_mask,'mni152_2009bet.nii.gz')
 
     ## labeling with target position
     # 1 - 5 - 25 - 21 - 1 - 25 - 5 - 21 - 25 - 1 - 21 - 5 - 1 - ...
@@ -153,6 +195,17 @@ class GA(Common):
     
     ## LDA analysis
     lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
+    
+    def load_fan(self):
+        ## load fan_imgs
+        self.fan_imgs={}
+        path_list = glob(join(self.dir_mask,'fan280','*.nii.gz'))
+        for path in path_list:
+            temp = path.split('/')[-1].replace('.nii.gz', '')
+            fname = temp.split('.')[-1]
+            self.fan_imgs[fname] = nilearn.image.load_img(path)
+
+        self.fan_info = pd.read_csv(join(GA.dir_mask,'fan_cluster_net_20200121.csv'), sep=',', index_col=0)
 
     def load_beta(self, subj, stage):
 
@@ -263,25 +316,3 @@ class GA(Common):
             
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
         return self.wit_mean_ttest
-
-    ## Figure format
-    sns.set(style="ticks", context='talk')
-    palette = ['#00A8AA','#C5C7D2']
-
-    def draw_lineplot(self, roi_name, title, ax=None):
-
-        sub_df = self.wit_score[self.wit_score.ROI == roi_name]
-        ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
-                           , palette=self.palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
-        sns.despine()
-
-        ax.set_xlim((-0.4, 1.4))
-        ax.set_ylim(0.225, 0.55)
-        ax.set_yticks(np.arange(.25,.60,.15))
-        ax.set_ylabel('Decoding Accuracy')
-        ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
-    #     ax.get_legend().remove()
-        ax.legend(loc='best', frameon=True)
-        ax.set_title(title)
-
-        return ax
