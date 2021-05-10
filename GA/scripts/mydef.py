@@ -36,7 +36,6 @@ class Common:
     
     def fast_masking(self, img, roi):
         ## img : data (NIFTI image)
-        ## roi : mask (NIFTI image)
         ## output : (trials, voxels)-dimensional fdata array
         img_data = img.get_fdata()
         roi_mask = roi.get_fdata().astype(bool)
@@ -234,9 +233,9 @@ class GA(Common):
         return beta
 
     ## do cross validation with given estimator (default: LDA)
-    def cross_valid(self, betas, ROI_imgs, estimator=lda):
+    def cross_valid(self, betas, estimator=lda):
         # output : A leave-one-run-out cross-validation (LORO-CV) result.
-        #          Automatically save it as pickle file to root_dir
+        
         ## set the parameters
         nrun = 3
         cv = GroupKFold(nrun)
@@ -245,12 +244,12 @@ class GA(Common):
 
         ## cross-validation
         for subj, stage in betas.keys():
-            for name, img in ROI_imgs.items():
-                print(subj, stage, name, end='\r')
+            for region, img in self.roi_imgs.items():
+                print(subj, stage, region, end='\r')
                 X = self.fast_masking(img=betas[subj, stage], roi=img)
                 score = cross_validate(estimator=estimator, X=X, y=y, groups=group
                                        , cv=cv, return_estimator=True, return_train_score=True)
-                self.scores[subj, stage, name] = score['test_score']
+                self.scores[subj, stage, region] = score['test_score']
         return self.scores
 
     ## make a wit dataframe
