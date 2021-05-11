@@ -4,6 +4,7 @@ import os
 # import psutil
 from os.path import join, dirname
 from os.path import getsize
+from os.path import exists
 import pickle
 import numpy as np
 import pandas as pd
@@ -27,12 +28,29 @@ from sklearn.svm import LinearSVC
 from datetime import date
 
 class Common:
+    #####################
+    ## General Modules ##
+    #####################
     
     ## date
     today = date.today().strftime("%Y%m%d")
     
     ## ROI images
     roi_imgs = {}
+    
+    ## fan images
+    fan_imgs = {}
+    fan_info = None
+    
+    ## the decoding accuracy
+    scores = {}
+    
+    ## initialize variables
+    def initialize(self):
+        self.roi_imgs = {}
+        self.fan_imgs = {}
+        self.fan_info = None
+        self.scores = {}
     
     def fast_masking(self, img, roi):
         ## img : data (NIFTI image)
@@ -43,6 +61,13 @@ class Common:
             raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
         ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
         return img_data[roi_mask, :].T
+    
+    def save_scores_as_pkl(self, suffix):
+        ## scores must exist!
+        assert len(self.scores)
+        ## store the result came from cross_valid in the script directory
+        with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
+            pickle.dump(self.scores, fw)
     
     ## show the list of pkl at the location, simultaneously represent overlap
     def show_pkl_list(self, location, word):
@@ -84,6 +109,13 @@ class Common:
             gg += 1
         df['identity']=group
         return df
+    
+    def load_scores_from_pkl(self, fname):
+        ## scores must be blank!
+        assert not len(self.scores)
+        ## load scores from the pkl which is in the scripts directory
+        with open(join(GA.dir_script, fname), "rb") as fr:
+            self.scores = pickle.load(file=fr)
     
     ## draw the figures of ROI images with a standard underlay
     def draw_rois(self, magnitude, n_columns, img_bg):
@@ -140,10 +172,11 @@ class Common:
         return 0
 
 class GA(Common):
-#     def __init__(self):
     ##################
     ## Initializing ##
     ##################
+    
+#     def __init__(self):
     
     list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
                  ,'18', '19', '20', '21', '23', '26', '27', '28', '29', '30'
@@ -153,6 +186,13 @@ class GA(Common):
     ## Locations of directories
     dir_script = '.'
     dir_root = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
+    if not exists(dir_root):
+        print("You need to connect T7SSD1 with your PC!")
+        dir_root = '/Users/clmn/Desktop/GA'
+        if exists(dir_root):
+            print("dir_root is replaced by %s."%dir_root)
+        else:
+            print("Error: dir_root doesn't be assigned.")
     dir_fmri = dir_root + '/fMRI_data'
     dir_searchlight = dir_fmri + '/searchlight'
     dir_LSS = dir_fmri + '/preproc_data'
@@ -163,13 +203,6 @@ class GA(Common):
     
     ## the difference in reward rate(=success rate) between GB and GA
     del_RR = np.loadtxt(join(dir_script,"RewardRate_improvement.txt"), delimiter='\n')
-    
-    ## the decoding accuracy
-    scores = {}
-    
-    ## fan images
-    fan_imgs = {}
-    fan_info = None
     
     ## background image
     img_bg = join(dir_mask,'mni152_2009bet.nii.gz')
@@ -184,16 +217,24 @@ class GA(Common):
     # 21 22 23 24 25 #
     ##################
     target_pos = []
-
     with open(join(dir_script,'targetID.txt')) as file:
         for line in file:
             target_pos.append(int(line.strip()))
-
     target_pos = target_pos[1:97]
     # target_path = list(range(1,13))*8
+    del(file)
     
     ## LDA analysis
     lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
+    
+    ## initialize variables
+    def initialize(self):
+        ## overwrighting
+        super().initialize()
+        ## additional staements
+        self.wit_score = {}
+        self.wit_paired_ttest = None
+        self.wit_mean_ttest = None
     
     def load_fan(self):
         ## load fan_imgs
