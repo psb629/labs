@@ -1,4 +1,0 @@
-ssh -Y clmnlab@10.201.185.39
-pw: ibsCLMN0914!!
-
-cd /volume1/clmnlab
