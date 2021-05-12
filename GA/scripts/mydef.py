@@ -134,21 +134,20 @@ class Common:
                           , draw_cross=False, black_bg=False
                           , display_mode='ortho', axes=ax)
         return 0
-    
-    ## Figure format
-    sns.set(style="ticks", context='talk')
-    palette = ['#00A8AA','#C5C7D2']
 
     def draw_lineplot(self, roi_name, title, ylim=[0.225, 0.55], dy=.15, ax=None):
-
+        ## Figure format
+        sns.set(style="ticks", context='talk')
+        palette = ['#00A8AA','#C5C7D2']
+        
         sub_df = self.wit_score[self.wit_score.ROI == roi_name]
         ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
-                           , palette=self.palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
+                           , palette=palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
         sns.despine()
 
         ax.set_xlim([-0.4, 1.4])
         ax.set_ylim(ylim)
-        ax.set_yticks(np.arange(ylim[0],ylim[1],dy))
+        ax.set_yticks(np.arange(ylim[0],ylim[1]+.5*dy,dy))
         ax.set_ylabel('Decoding Accuracy')
         ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
     #     ax.get_legend().remove()
@@ -156,6 +155,22 @@ class Common:
         ax.set_title(title)
 
         return ax
+
+    def draw_lineplot_with_roi(self, magnitude, roi_name, img_bg, ylim=[0.225, 1.], dy=.5):
+        n_columns = 1 # a number of columns
+        n_rows = 2    # a number of rows
+        fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
+        
+        key = roi_name
+        img = self.roi_imgs[roi_name]
+        print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
+        self.draw_lineplot(roi_name=key, title=key
+                           , ylim=ylim, dy=dy
+                           , ax=axes[0])
+        nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
+                      , draw_cross=False, black_bg=False
+                      , display_mode='ortho', axes=axes[1])
+        return 0
     
     def draw_lineplots_with_rois(self, magnitude, n_columns, img_bg, ylim=[0.225, 0.55], dy=.15):
         n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
