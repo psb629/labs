@@ -5,7 +5,7 @@ step_dir=$root_dir/HW_2
 source=opencl_host_HW2.c
 kernel=matmul_HW2.cl
 modified=opencl_host_HW2.cpp
-filled=matmul_HW2.modified.cl
+filled=matmul_HW2.filled.cl
 output_file=a.exe
 
 cd $step_dir
