@@ -19,12 +19,13 @@ xcode-select --install
 
 #### Git ####
 brew install git
-mkdir ~/Github
-cd ~/Github
+git_dir=~/Github
+mkdir -p -m 755 $git_dir
+cd $git_dir
 git clone https://github.com/psb629/labs.git
  #git clone https://github.com/clmnlab/labs.git
-git_dir=~/Github/labs
-cd $git_dir
+lab_dir=$git_dir/labs
+cd $lab_dir
 git init
 git config --global user.name "psb629"
 git config --global user.email "psb629@gmail.com"
@@ -38,8 +39,8 @@ git_password=${aaa}${bbb}${ccc} # personal access token
 git remote add origin https://"$git_id":"$git_password"@github.com/psb629/labs.git
 git pull origin master
 
-echo "`users`(`ipconfig getifaddr en0`): `date`" >>$git_dir/Mac_Terminal_setting/README.txt
-git add $git_dir/Mac_Terminal_setting/README.txt
+echo "`users`(`ipconfig getifaddr en0`): `date`" >>$lab_dir/Mac_Terminal_setting/README.txt
+git add $lab_dir/Mac_Terminal_setting/README.txt
 git commit -m "ran install.sh"
 git push -u origin master
 
@@ -58,6 +59,13 @@ source ~/.vimrc
 ## Xcode required
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 cat ~/Github/labs/Mac_Terminal_setting/.zshrc >>~/.zshrc
+## plugins ##
+## zsh-syntax-highlighting
+brew install zsh-syntax-highlighting
+cd $git_dir
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #### python 3 ####
 brew install python
