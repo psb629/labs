@@ -1,4 +1,6 @@
-root_dir=`pwd`
+#!/bin/zsh
+
+root_dir=/Users/clmn/Desktop/aiplatform_HW2_for_students_updated
 step_dir=$root_dir/HW_3
 source=opencl_host_HW3.c
 kernel=matmul_HW3.cl

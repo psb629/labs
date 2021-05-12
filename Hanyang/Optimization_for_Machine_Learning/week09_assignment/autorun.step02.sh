@@ -1,4 +1,6 @@
- root_dir=/Users/clmnlab/Desktop/aiplatform_HW2_for_students_updated
+#!/bin/zsh
+
+root_dir=/Users/clmn/Desktop/aiplatform_HW2_for_students_updated
 step_dir=$root_dir/HW_2
 source=opencl_host_HW2.c
 kernel=matmul_HW2.cl

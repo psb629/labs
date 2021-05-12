@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 root_dir=/Users/clmnlab/Desktop/aiplatform_HW2_for_students_updated
 step_dir=$root_dir/HW_1
 source_file=$step_dir/opencl_host_HW1.c
