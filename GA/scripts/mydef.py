@@ -1,18 +1,25 @@
-from glob import glob
-import sys
 import os
-# import psutil
 from os.path import join, dirname
 from os.path import getsize
 from os.path import exists
-import pickle
+from glob import glob
 import numpy as np
-import pandas as pd
-import scipy.stats
 import matplotlib.pyplot as plt
 import seaborn as sns
+# import psutil
+
+import scipy.stats
+import scipy.io
+from scipy import special
+from scipy import optimize
 import statsmodels.stats.multitest
 from statsmodels.sandbox.stats.multicomp import multipletests
+
+import sys
+import plotly as py
+import plotly.express as px
+import pickle
+import pandas as pd
 
 # import nilearn.masking
 from nilearn import plotting as nplt
@@ -25,50 +32,27 @@ from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
+from random import random as rand
+
 from datetime import date
 
 class Common:
-    #####################
-    ## General Modules ##
-    #####################
-    
+
     ## date
     today = date.today().strftime("%Y%m%d")
     
-    ## ROI images
-    roi_imgs = {}
-    
-    ## fan images
-    fan_imgs = {}
-    fan_info = None
-    
-    ## the decoding accuracy
-    scores = {}
-    
+    ## constant numbers
+    sigma_1 = 0.682689492137
+    sigma_2 = 0.954499736104
+    sigma_3 = 0.997300203937
+
     ## initialize variables
     def initialize(self):
         self.roi_imgs = {}
         self.fan_imgs = {}
         self.fan_info = None
         self.scores = {}
-    
-    def fast_masking(self, img, roi):
-        ## img : data (NIFTI image)
-        ## output : (trials, voxels)-dimensional fdata array
-        img_data = img.get_fdata()
-        roi_mask = roi.get_fdata().astype(bool)
-        if img_data.shape[:3] != roi_mask.shape:
-            raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
-        ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
-        return img_data[roi_mask, :].T
-    
-    def save_scores_as_pkl(self, suffix):
-        ## scores must exist!
-        assert len(self.scores)
-        ## store the result came from cross_valid in the script directory
-        with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
-            pickle.dump(self.scores, fw)
-    
+
     ## show the list of pkl at the location, simultaneously represent overlap
     def show_pkl_list(self, location, word):
         pkl_list = glob('*%s*.pkl'%word)
@@ -109,7 +93,42 @@ class Common:
             gg += 1
         df['identity']=group
         return df
+
+    ##############
+    ## Behavior ##
+    ##############
     
+    ##########
+    ## fMRI ##
+    ##########
+    
+    ## ROI images
+    roi_imgs = {}
+    
+    ## fan images
+    fan_imgs = {}
+    fan_info = None
+    
+    ## the decoding accuracy
+    scores = {}
+        
+    def fast_masking(self, img, roi):
+        ## img : data (NIFTI image)
+        ## output : (trials, voxels)-dimensional fdata array
+        img_data = img.get_fdata()
+        roi_mask = roi.get_fdata().astype(bool)
+        if img_data.shape[:3] != roi_mask.shape:
+            raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
+        ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
+        return img_data[roi_mask, :].T
+    
+    def save_scores_as_pkl(self, suffix):
+        ## scores must exist!
+        assert len(self.scores)
+        ## store the result came from cross_valid in the script directory
+        with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
+            pickle.dump(self.scores, fw)
+        
     def load_scores_from_pkl(self, fname):
         ## scores must be blank!
         assert not len(self.scores)
@@ -118,7 +137,7 @@ class Common:
             self.scores = pickle.load(file=fr)
     
     ## draw the figures of ROI images with a standard underlay
-    def draw_rois(self, magnitude, n_columns, img_bg):
+    def draw_rois(self, img_bg, magnitude=8, n_columns=1):
         ## magnitude: a size of figures
         n_rows = int(np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude, n_rows*magnitude))
@@ -156,7 +175,7 @@ class Common:
 
         return ax
 
-    def draw_lineplot_with_roi(self, magnitude, roi_name, img_bg, ylim=[0.225, 1.], dy=.5):
+    def draw_lineplot_with_roi(self, roi_name, img_bg, magnitude=8, ylim=[0.225, 1.], dy=.5):
         n_columns = 1 # a number of columns
         n_rows = 2    # a number of rows
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
@@ -172,7 +191,7 @@ class Common:
                       , display_mode='ortho', axes=axes[1])
         return 0
     
-    def draw_lineplots_with_rois(self, magnitude, n_columns, img_bg, ylim=[0.225, 0.55], dy=.15):
+    def draw_lineplots_with_rois(self, img_bg, magnitude=8, n_columns=1, ylim=[0.225, 0.55], dy=.15):
         n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
         
@@ -185,13 +204,32 @@ class Common:
                           , draw_cross=False, black_bg=False
                           , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
         return 0
+    
+    def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
+        ## Yeo_Network : an array which has integer elements
+        ## Sub_Region : an array which has string elements
+        self.load_fan()
+        dt = pd.DataFrame()
+        if Yeo_Network:
+            for nn in Yeo_Network:
+                dt = dt.append(self.fan_info[(self.fan_info.yeo_17network == nn)])
+        elif Sub_Region:
+            for ss in Sub_Region:
+                dt = dt.append(self.fan_info[(self.fan_info.subregion_name == ss)])
+        temp = {}
+        for idx in dt.index:
+            nn = dt.loc[idx,'label']
+            region = dt.loc[idx,'region']
+            temp[region] = self.fan_imgs[str(nn)]
+        ## merging
+        img0 = nilearn.image.math_img(img1=self.fan_imgs['001'], formula="img1*0")
+        for _, img in temp.items():
+            img0 = nilearn.image.math_img(img1=img0, img2=img, formula="(img1+img2) > 0")
+
+        return img0
 
 class GA(Common):
-    ##################
-    ## Initializing ##
-    ##################
-    
-#     def __init__(self):
+    #     def __init__(self):
     
     list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
                  ,'18', '19', '20', '21', '23', '26', '27', '28', '29', '30'
@@ -208,6 +246,8 @@ class GA(Common):
             print("dir_root is replaced by %s."%dir_root)
         else:
             print("Error: dir_root doesn't be assigned.")
+    dir_behav = dir_root + '/behav_data'
+            
     dir_fmri = dir_root + '/fMRI_data'
     dir_searchlight = dir_fmri + '/searchlight'
     dir_LSS = dir_fmri + '/preproc_data'
@@ -216,12 +256,6 @@ class GA(Common):
     dir_dmn = dir_mask + '/DMN'
     dir_loc = dir_mask + '/localizer'
     
-    ## the difference in reward rate(=success rate) between GB and GA
-    del_RR = np.loadtxt(join(dir_script,"RewardRate_improvement.txt"), delimiter='\n')
-    
-    ## background image
-    img_bg = join(dir_mask,'mni152_2009bet.nii.gz')
-
     ## labeling with target position
     # 1 - 5 - 25 - 21 - 1 - 25 - 5 - 21 - 25 - 1 - 21 - 5 - 1 - ...
     ##################
@@ -239,17 +273,120 @@ class GA(Common):
     # target_path = list(range(1,13))*8
     del(file)
     
-    ## LDA analysis
-    lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
-    
     ## initialize variables
     def initialize(self):
         ## overwrighting
         super().initialize()
         ## additional staements
-        self.wit_score = {}
+        self.wit_score = None
         self.wit_paired_ttest = None
         self.wit_mean_ttest = None
+        #self.rewards = {}
+        self.wit_rewards_wide = None
+        self.wit_rewards_long = None
+    
+    ##############
+    ## Behavior ##
+    ##############
+    
+    def convert_ID(self, ID):
+        ##################   ##################
+        #  1  2  3  4  5 #   #        2       #
+        #  6  7  8  9 10 #   #        1       #
+        # 11 12 13 14 15 # = # -2 -1  0  1  2 #
+        # 16 17 18 19 20 #   #       -1       #
+        # 21 22 23 24 25 #   #       -2       #
+        ##################   ##################
+        x = np.kron(np.ones(5),np.arange(-2,3)).astype(int)
+        y = np.kron(np.arange(2,-3,-1),np.ones(5)).astype(int)
+        pos = np.array((x[ID-1],y[ID-1]))
+        return pos
+    
+    def calc_mrew(self, behav_datum):
+        datum = scipy.io.loadmat(behav_datum)
+        nS = int(datum['nSampleTrial'][0][0])
+        sec_per_trial = 5  ## time spend(second) in each trial
+        ntrial = 12
+        nblock = 8
+        #ttt = nblock*6 # total number of blocks = 8 blocks/run * 6 runs
+        tpr = 97   ## 1 + 12 trials/block * 8 blocks
+        nrun = 7
+
+        temp = datum['LearnTrialStartTime'][0]
+        idx_editpoint = [i+1 for i,t in enumerate(temp[:-2]) if (temp[i]>temp[i+1])]
+
+        cnt_hit_all = np.zeros((tpr*nrun,nS), dtype=bool)
+        for t,ID in enumerate(datum['targetID'][0][idx_editpoint[0]:]):
+            pos = datum['boxSize']*self.convert_ID(ID)
+            xy = datum['allXY'][:,nS*t:nS*(t+1)] # allXY.shape = (2, 60 Hz * 5 s/trial * 97 trials/run * 7 runs = 203700 frames)
+            err = xy - np.ones((2,nS))*pos.T     # err.shape = (2, nS)
+            cnt_hit_all[t,:] = (abs(err[0,:]) <= datum['boxSize']*0.5) & (abs(err[1,:]) <= datum['boxSize']*0.5)
+
+        rew_bin = np.zeros((nrun,sec_per_trial*tpr))
+        for r in range(nrun):
+            temp = cnt_hit_all[tpr*r:tpr*(r+1),:].reshape(nS*tpr,1)
+            for i in range(sec_per_trial*tpr):
+                rew_bin[r,i] = sum(temp[60*i:60*(i+1)])
+
+        max_score =  nS*ntrial   ## total frames in a block
+        temp = rew_bin[:,sec_per_trial:].reshape(nrun*sec_per_trial*ntrial*nblock)
+        norm_mrew = np.zeros(nblock*nrun)
+        for i in range(nblock*nrun):
+            norm_mrew[i] = sum(temp[sec_per_trial*ntrial*i:sec_per_trial*ntrial*(i+1)])/max_score
+
+        return norm_mrew
+    
+    def make_wit_rewards_wide(self):
+        self.wit_rewards_wide = pd.DataFrame(columns=['block%02d'%(block+1) for block in range(48)])
+        for subj in self.list_subj:
+            for visit in ['early', 'late']:
+                suffix = 'fmri' if visit=='early' else('refmri' if visit=='late' else 'invalid')
+                subjID = 'GA'+subj if visit=='early' else('GB'+subj if visit=='late' else 'invalid')
+                for ii, rew in enumerate(self.calc_mrew(self.dir_behav+'/GA%s-%s.mat'%(subj,suffix))[:48]):
+                    self.wit_rewards_wide.loc[subjID,'block%02d'%(ii+1)] = rew
+        for col in self.wit_rewards_wide.columns:
+            self.wit_rewards_wide[col] = self.wit_rewards_wide[col].astype(float)
+                    
+        return self.wit_rewards_wide
+    
+    def make_wit_rewards_long(self):
+        self.wit_rewards_long = pd.DataFrame(columns=['subj','visit','block','reward'])
+        row = 0
+        for subj in self.list_subj:
+            for visit in ['early', 'late']:
+                suffix = 'fmri' if visit=='early' else('refmri' if visit=='late' else 'invalid')
+                rewards = self.calc_mrew(self.dir_behav+'/GA%s-%s.mat'%(subj,suffix))[:48]
+                for block, rew in enumerate(rewards):
+                    self.wit_rewards_long.loc[row,'subj'] = subj
+                    self.wit_rewards_long.loc[row,'visit'] = visit
+                    self.wit_rewards_long.loc[row,'block'] = block+1
+                    self.wit_rewards_long.loc[row,'reward'] = rew
+                    row += 1
+        self.wit_rewards_long.block = self.wit_rewards_long.block.astype(int)
+        self.wit_rewards_long.reward = self.wit_rewards_long.reward.astype(float)
+        
+        return self.wit_rewards_long
+    
+#     def get_mean_rewards(self):
+#         self.rewards = {}
+#         for nn in self.list_subj:
+#             self.rewards['GA'+nn] = self.calc_mrew(self.dir_behav + '/GA%s-fmri.mat'%(nn))
+#             self.rewards['GB'+nn] = self.calc_mrew(self.dir_behav + '/GA%s-refmri.mat'%(nn))
+#             print(nn, end='\r')
+#         return 0
+
+    ## the difference in reward rate(=success rate) between GB and GA
+    del_RewardRate = np.loadtxt(join(dir_script,"RewardRate_improvement.txt"), delimiter='\n')
+    
+    ##########
+    ## fMRI ##
+    ##########
+    
+    ## background image
+    img_bg = join(dir_mask,'mni152_2009bet.nii.gz')
+    
+    ## LDA analysis
+    lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
     
     def load_fan(self):
         ## load fan_imgs
