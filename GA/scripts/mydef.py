@@ -53,6 +53,18 @@ class Common:
         self.fan_info = None
         self.scores = {}
 
+    def save_pkl(self, data, suffix):
+        ## scores must exist!
+        assert len(data)
+        ## save data
+        with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
+            pickle.dump(data, fw)
+        
+    def load_pkl(self, fname):
+        ## load pkl
+        with open(join(GA.dir_script, fname), "rb") as fr:
+            return pickle.load(file=fr)
+
     ## show the list of pkl at the location, simultaneously represent overlap
     def show_pkl_list(self, location, word):
         pkl_list = glob('*%s*.pkl'%word)
@@ -121,21 +133,7 @@ class Common:
             raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
         ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
         return img_data[roi_mask, :].T
-    
-    def save_scores_as_pkl(self, suffix):
-        ## scores must exist!
-        assert len(self.scores)
-        ## store the result came from cross_valid in the script directory
-        with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
-            pickle.dump(self.scores, fw)
-        
-    def load_scores_from_pkl(self, fname):
-        ## scores must be blank!
-        assert not len(self.scores)
-        ## load scores from the pkl which is in the scripts directory
-        with open(join(GA.dir_script, fname), "rb") as fr:
-            self.scores = pickle.load(file=fr)
-    
+
     ## draw the figures of ROI images with a standard underlay
     def draw_rois(self, img_bg, magnitude=8, n_columns=1):
         ## magnitude: a size of figures
@@ -238,16 +236,22 @@ class GA(Common):
     
     ## Locations of directories
     dir_script = '.'
+    
     dir_root = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
     if not exists(dir_root):
         print("You need to connect T7SSD1 with your PC!")
-        dir_root = '/Users/clmn/Desktop/GA'
-        if exists(dir_root):
+        ## CNIR iMac
+        if exists('/Users/clmn/Desktop/GA'):
+            dir_root = '/Users/clmn/Desktop/GA'
+            print("dir_root is replaced by %s."%dir_root)
+        ## Macbook Air
+        elif exists('/Users/clmnlab/Desktop/GA'):
+            dir_root = '/Users/clmnlab/Desktop/GA'
             print("dir_root is replaced by %s."%dir_root)
         else:
             print("Error: dir_root doesn't be assigned.")
-    dir_behav = dir_root + '/behav_data'
             
+    dir_behav = dir_root + '/behav_data'
     dir_fmri = dir_root + '/fMRI_data'
     dir_searchlight = dir_fmri + '/searchlight'
     dir_LSS = dir_fmri + '/preproc_data'
@@ -271,7 +275,7 @@ class GA(Common):
             target_pos.append(int(line.strip()))
     target_pos = target_pos[1:97]
     # target_path = list(range(1,13))*8
-    del(file)
+    del(file, line)
     
     ## initialize variables
     def initialize(self):
@@ -281,6 +285,7 @@ class GA(Common):
         self.wit_score = None
         self.wit_paired_ttest = None
         self.wit_mean_ttest = None
+        self.wit_func_correl = None
         #self.rewards = {}
         self.wit_rewards_wide = None
         self.wit_rewards_long = None
@@ -508,3 +513,29 @@ class GA(Common):
             
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
         return self.wit_mean_ttest
+    
+    def calc_wit_func_correl(self, roiA, roiB):
+        rois = sorted([roiA, roiB])
+        runs = ['r01','r02','r03','r04','r05','r06']
+
+        lines = []
+        for subj in self.list_subj:
+            for visit in ['early','late']:
+                gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
+                for run in runs:
+                    mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
+                    ## load betas
+                    beta = niimg.load_img(join(self.dir_LSS,subj,'betasLSS.%s.%s.nii.gz'%(gg+subj,run)))
+                    ## We suppose to exclude the first slice from the last dimension of this 4D-image
+                    img = niimg.index_img(beta, np.arange(1, 97))
+                    Xbars = {}
+                    for region in rois:
+                        ## masking
+                        X = self.fast_masking(img=img, roi=self.roi_imgs[region])
+                        ## calculate a mean of betas in the region
+                        Xbars[region] = np.mean(X, axis=1)
+                    ## obatin Pearson correlation coefficients
+                    r, p = scipy.stats.pearsonr(x=Xbars[rois[0]], y=Xbars[rois[1]])
+                    lines.append([subj, visit, mapping, run, rois[0], rois[1], r, p])
+        self.wit_func_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
+        return self.wit_func_correl
