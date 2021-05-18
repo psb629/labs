@@ -1,8 +1,9 @@
 To install several programs, copy+paste in your terminal!
------------------------------
+============================
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/install.sh)"
 - - -
-my favorite Zsh-theme is amuse
+my favorite Zsh-theme
+> * amuse
 -----------------------------
 - - -
 If you see the below error message after the installation.
@@ -15,7 +16,7 @@ If you see the below error message after the installation.
 			&& source $HOME/.afni/help/all_progs.COMP.zsh
 	fi
 - - -
-installation logs
+Installation logs
 -----------------------------
 > * 2020년 11월 21일 토요일 18시 50분 10초 JST
 > * 2020년 11월 23일 월요일 15시 41분 03초 KST
