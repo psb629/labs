@@ -7,8 +7,11 @@ my favorite Zsh-theme
 > * amuse
 - - -
 If you see the below error message after the installation.
-	"complete:96: bad math expression: operand expected at end of string"
+
+	complete:96: bad math expression: operand expected at end of string
+
 From ~/.zshrc, the following passages shall be erased.
+
 	if [ -f $HOME/.afni/help/all_progs.COMP.zsh ]
 	then
  		autoload -U +X bashcompinit && bashcompinit
