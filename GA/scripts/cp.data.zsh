@@ -92,8 +92,35 @@ nn_list=( 01 02 05 07 08 \
  #end
 # ==================================================================
 ## copy design matrix of 3dLSS
-from_dir=/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/data_xmat_201910
-to_dir=/Volumes/T7SSD1/GA/fMRI_data/preproc_data
+ #from_dir=/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/data_xmat_201910
+ #to_dir=/Volumes/T7SSD1/GA/fMRI_data/preproc_data
+ #if [ ! -d $to_dir ]; then
+ #	mkdir -p -m 755 $to_dir
+ #fi
+ ### backup log file
+ #backup_log=$to_dir/backup_log.txt
+ #
+ #echo "## `users`: `date`" >>$backup_log
+ #echo "## copy design matrix of 3dLSS" >>$backup_log
+ #echo "### list of absences" >>$backup_log
+ #foreach nn ($nn_list)
+ #	foreach ss (GB)
+ #		foreach rr (`count -digits 2 1 6`)
+ #			## design matrix
+ #			from=$from_dir/X.xmatLSS.MO.shortdur.${ss}${nn}.r${rr}.1D
+ #			if [ ! -e $from ]; then
+ #				echo " $from doesn't exist!" >>$backup_log
+ #				continue
+ #			fi
+ #			to=$to_dir/${nn}/X.xmatLSS.MO.shortdur.${ss}${nn}.r${rr}.1D
+ #			cp $from $to
+ #		end
+ #	end
+ #end
+# ==================================================================
+## copy 4-target regressors
+from_dir=/Volumes/clmnlab/GA/regressors
+to_dir=/Volumes/T7SSD1/GA/behav_data/regressors/4targets
 if [ ! -d $to_dir ]; then
 	mkdir -p -m 755 $to_dir
 fi
@@ -101,19 +128,37 @@ fi
 backup_log=$to_dir/backup_log.txt
 
 echo "## `users`: `date`" >>$backup_log
-echo "## copy design matrix of 3dLSS" >>$backup_log
+echo "## copy 4-target regressors" >>$backup_log
 echo "### list of absences" >>$backup_log
 foreach nn ($nn_list)
-	foreach ss (GB)
+	foreach ss (GA GB)
 		foreach rr (`count -digits 2 1 6`)
-		## design matrix
-		from=$from_dir/X.xmatLSS.MO.shortdur.${ss}${nn}.r${rr}.1D
-		if [ ! -e $from ]; then
-			echo " $from doesn't exist!" >>$backup_log
-			continue
-		fi
-		to=$to_dir/${nn}/X.xmatLSS.MO.shortdur.${ss}${nn}.r${rr}.1D
-		cp $from $to
+			## onsets
+			from=$from_dir/LSS_reg_center/${ss}${nn}/${ss}${nn}_onsettime.r${rr}.txt
+			if [ ! -e $from ]; then
+				echo " $from doesn't exist!" >>$backup_log
+				continue
+			fi
+			to=$to_dir/${ss}${nn}.onset.4targets.r${rr}.txt
+			cp $from $to
+
+			## amplitudes, I don't know what exactly it is.
+			from=$from_dir/reg_onset_displacement/${ss}${nn}/${ss}${nn}_amplitude_r${rr}.txt
+			if [ ! -e $from ]; then
+				echo " $from doesn't exist!" >>$backup_log
+				continue
+			fi
+			to=$to_dir/${ss}${nn}.amplitude.4targets.r${rr}.txt
+			cp $from $to
+
+			## AMregressors
+			from=$from_dir/reg_onset_displacement/AM2_reg/AMregressor_disp_${ss}${nn}_r${rr}.1D
+			if [ ! -e $from ]; then
+				echo " $from doesn't exist!" >>$backup_log
+				continue
+			fi
+			to=$to_dir/${ss}${nn}.AMregressor.4targets.r${rr}.1D
+			cp $from $to
 		end
 	end
 end
