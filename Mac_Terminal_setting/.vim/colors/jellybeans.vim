@@ -653,25 +653,6 @@ call s:X("IndentGuidesEven","","1b1b1b","","","")
 hi! link TagListFileName Directory
 call s:X("PreciseJumpTarget","B9ED67","405026","","White","Green")
 
-if has('nvim')
-  let g:terminal_color_0  = "#444444"
-  let g:terminal_color_1  = "#cf694c"
-  let g:terminal_color_2  = "#9aa50d"
-  let g:terminal_color_3  = "#d7ac4c"
-  let g:terminal_color_4  = "#6d8acf"
-  let g:terminal_color_5  = "#ca30c7"
-  let g:terminal_color_6  = "#c6b3ff"
-  let g:terminal_color_7  = "#e1e1e1"
-  let g:terminal_color_8  = "#686868"
-  let g:terminal_color_9  = "#ca6b4d"
-  let g:terminal_color_10 = "#9aa50d"
-  let g:terminal_color_11 = "#ffe2a3"
-  let g:terminal_color_12 = "#93bedc"
-  let g:terminal_color_13 = "#e539e5"
-  let g:terminal_color_14 = "#82c6f9"
-  let g:terminal_color_15 = "#ffffff"
-endif
-
 " Manual overrides for 256-color terminals. Dark colors auto-map badly.
 if !s:low_color
   hi StatusLineNC ctermbg=235
