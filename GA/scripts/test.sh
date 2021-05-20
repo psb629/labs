@@ -21,3 +21,21 @@ echo 5:$x
 x=3.14
 x=`echo "scale=2;$x*2"|bc`
 echo 6:$x
+
+foreach x (1 2)
+	if [ $x -eq 1 ]; then
+		echo "$x -eq 1 : true"
+	 #elif [ ! $x -eq 1 ]; then
+	 #	echo "false"
+	 else;
+	 	echo "$x -eq 1 : else"
+	fi
+end
+
+foreach x (`count -digits 2 0 3`)
+	if [ $x -eq "0" ]; then
+		echo "$x finded!"
+	else;
+		echo "$x"
+	fi
+end

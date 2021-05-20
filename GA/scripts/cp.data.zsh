@@ -119,46 +119,85 @@ nn_list=( 01 02 05 07 08 \
  #end
 # ==================================================================
 ## copy 4-target regressors
-from_dir=/Volumes/clmnlab/GA/regressors
-to_dir=/Volumes/T7SSD1/GA/behav_data/regressors/4targets
+ #from_dir=/Volumes/clmnlab/GA/regressors
+ #to_dir=/Volumes/T7SSD1/GA/behav_data/regressors/4targets
+ #if [ ! -d $to_dir ]; then
+ #	mkdir -p -m 755 $to_dir
+ #fi
+ ### backup log file
+ #backup_log=$to_dir/backup_log.txt
+ #
+ #echo "## `users`: `date`" >>$backup_log
+ #echo "## copy 4-target regressors" >>$backup_log
+ #echo "### list of absences" >>$backup_log
+ #foreach nn ($nn_list)
+ #	foreach ss (GA GB)
+ #		foreach rr (`count -digits 2 1 6`)
+ #			## onsets
+ #			from=$from_dir/LSS_reg_center/${ss}${nn}/${ss}${nn}_onsettime.r${rr}.txt
+ #			if [ ! -e $from ]; then
+ #				echo " $from doesn't exist!" >>$backup_log
+ #				continue
+ #			fi
+ #			to=$to_dir/${ss}${nn}.onset.4targets.r${rr}.txt
+ #			cp $from $to
+ #
+ #			## amplitudes, I don't know what exactly it is.
+ #			from=$from_dir/reg_onset_displacement/${ss}${nn}/${ss}${nn}_amplitude_r${rr}.txt
+ #			if [ ! -e $from ]; then
+ #				echo " $from doesn't exist!" >>$backup_log
+ #				continue
+ #			fi
+ #			to=$to_dir/${ss}${nn}.amplitude.4targets.r${rr}.txt
+ #			cp $from $to
+ #
+ #			## AMregressors
+ #			from=$from_dir/reg_onset_displacement/AM2_reg/AMregressor_disp_${ss}${nn}_r${rr}.1D
+ #			if [ ! -e $from ]; then
+ #				echo " $from doesn't exist!" >>$backup_log
+ #				continue
+ #			fi
+ #			to=$to_dir/${ss}${nn}.AMregressor.4targets.r${rr}.1D
+ #			cp $from $to
+ #		end
+ #	end
+ #end
+# ==================================================================
+## upload pb02s to Google Drive
+gdrive=/Volumes/GoogleDrive/내\ 드라이브/GA/pb02
+
+from_dir=/Volumes/clmnlab/GA/fmri_data/preproc_data
+to_dir=~/Desktop/pb02
 if [ ! -d $to_dir ]; then
 	mkdir -p -m 755 $to_dir
 fi
-## backup log file
-backup_log=$to_dir/backup_log.txt
+### log_file ###
+log_file=$to_dir/log.txt
 
-echo "## `users`: `date`" >>$backup_log
-echo "## copy 4-target regressors" >>$backup_log
-echo "### list of absences" >>$backup_log
-foreach nn ($nn_list)
-	foreach ss (GA GB)
-		foreach rr (`count -digits 2 1 6`)
-			## onsets
-			from=$from_dir/LSS_reg_center/${ss}${nn}/${ss}${nn}_onsettime.r${rr}.txt
-			if [ ! -e $from ]; then
-				echo " $from doesn't exist!" >>$backup_log
+echo "## start time (`users`): `date`" >>$log_file
+echo "## copy 4-target regressors" >>$log_file
+echo "### list of absences" >>$log_file
+
+foreach gg (GA GB)
+	foreach nn ($nn_list)
+		subj=${gg}${nn}
+		foreach rr (`count -digits 2 0 6`)
+			from=$from_dir/$subj/pb02.$subj.r$rr.volreg+tlrc
+			if [ ! -f $from.HEAD ]; then
+				echo " $from doesn't exist!" >>$log_file
 				continue
 			fi
-			to=$to_dir/${ss}${nn}.onset.4targets.r${rr}.txt
-			cp $from $to
-
-			## amplitudes, I don't know what exactly it is.
-			from=$from_dir/reg_onset_displacement/${ss}${nn}/${ss}${nn}_amplitude_r${rr}.txt
-			if [ ! -e $from ]; then
-				echo " $from doesn't exist!" >>$backup_log
-				continue
+			if [ $rr -eq 00 ]; then
+				to=$to_dir/pb02.$subj.localizer.volreg.nii.gz
+			else;
+				to=$to_dir/pb02.$subj.r$rr.volreg.nii.gz
 			fi
-			to=$to_dir/${ss}${nn}.amplitude.4targets.r${rr}.txt
-			cp $from $to
-
-			## AMregressors
-			from=$from_dir/reg_onset_displacement/AM2_reg/AMregressor_disp_${ss}${nn}_r${rr}.1D
-			if [ ! -e $from ]; then
-				echo " $from doesn't exist!" >>$backup_log
-				continue
-			fi
-			to=$to_dir/${ss}${nn}.AMregressor.4targets.r${rr}.1D
-			cp $from $to
+			3dAFNItoNIFTI -prefix $to $from
+			cp $to $gdrive
+			rm $to
 		end
 	end
 end
+echo "## end time (`users`): `date`" >>$log_file
+cp $log_file $gdrive
+rm $log_file
