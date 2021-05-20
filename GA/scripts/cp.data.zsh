@@ -164,6 +164,11 @@ nn_list=( 01 02 05 07 08 \
  #end
 # ==================================================================
 ## upload pb02s to Google Drive
+nn_list=( 13 14 15 \
+		  18 19 20 21 23 \
+		  26 27 28 29 30 \
+		  31 32 33 34 35 \
+		  36 37 38 42 44 )
 gdrive=/Volumes/GoogleDrive/내\ 드라이브/GA/pb02
 
 from_dir=/Volumes/clmnlab/GA/fmri_data/preproc_data
@@ -175,7 +180,7 @@ fi
 log_file=$to_dir/log.txt
 
 echo "## start time (`users`): `date`" >>$log_file
-echo "## copy 4-target regressors" >>$log_file
+echo "## upload pb02s to Google Drive" >>$log_file
 echo "### list of absences" >>$log_file
 
 foreach gg (GA GB)
