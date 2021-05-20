@@ -1,3 +1,4 @@
+import getpass
 import os
 from os.path import join, dirname
 from os.path import getsize
@@ -240,16 +241,13 @@ class GA(Common):
     dir_root = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
     if not exists(dir_root):
         print("You need to connect T7SSD1 with your PC!")
-        ## CNIR iMac
-        if exists('/Users/clmn/Desktop/GA'):
-            dir_root = '/Users/clmn/Desktop/GA'
-            print("dir_root is replaced by %s."%dir_root)
-        ## Macbook Air
-        elif exists('/Users/clmnlab/Desktop/GA'):
-            dir_root = '/Users/clmnlab/Desktop/GA'
+        username = getpass.getuser()
+        dir_root = join('/Users',username,'Desktop','GA')
+        if exists(dir_root):
             print("dir_root is replaced by %s."%dir_root)
         else:
             print("Error: dir_root doesn't be assigned.")
+    del(username)
             
     dir_behav = dir_root + '/behav_data'
     dir_fmri = dir_root + '/fMRI_data'
