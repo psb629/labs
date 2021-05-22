@@ -164,7 +164,8 @@ nn_list=( 01 02 05 07 08 \
  #end
 # ==================================================================
 ## upload pb02s to Google Drive
-nn_list=( 13 14 15 \
+nn_list=( 01 02 05 07 08 \
+		  11 12 13 14 15 \
 		  18 19 20 21 23 \
 		  26 27 28 29 30 \
 		  31 32 33 34 35 \
@@ -172,7 +173,7 @@ nn_list=( 13 14 15 \
 gdrive=/Volumes/GoogleDrive/내\ 드라이브/GA/pb02
 
 from_dir=/Volumes/clmnlab/GA/fmri_data/preproc_data
-to_dir=~/Desktop/pb02
+to_dir=$gdrive
 if [ ! -d $to_dir ]; then
 	mkdir -p -m 755 $to_dir
 fi
@@ -183,26 +184,34 @@ echo "## start time (`users`): `date`" >>$log_file
 echo "## upload pb02s to Google Drive" >>$log_file
 echo "### list of absences" >>$log_file
 
-foreach gg (GA GB)
-	foreach nn ($nn_list)
+foreach nn ($nn_list)
+	foreach gg (GA GB)
 		subj=${gg}${nn}
 		foreach rr (`count -digits 2 0 6`)
+			## set the object name
+			if [ $rr -eq 00 ]; then
+				fname=pb02.$subj.localizer.volreg.nii.gz
+			else;
+				fname=pb02.$subj.r$rr.volreg.nii.gz
+			fi
+			to=$to_dir/$fname
+			## is $to exist?
+			if [ -f $to ]; then
+ #				echo "$to is already exist."
+				continue
+			fi
+			## check the existance of the original file
 			from=$from_dir/$subj/pb02.$subj.r$rr.volreg+tlrc
 			if [ ! -f $from.HEAD ]; then
 				echo " $from doesn't exist!" >>$log_file
 				continue
 			fi
-			if [ $rr -eq 00 ]; then
-				to=$to_dir/pb02.$subj.localizer.volreg.nii.gz
-			else;
-				to=$to_dir/pb02.$subj.r$rr.volreg.nii.gz
-			fi
-			3dAFNItoNIFTI -prefix $to $from
-			cp $to $gdrive
-			rm $to
+			## transformation
+			pname=/Users/clmn/Desktop/$fname
+			3dAFNItoNIFTI -prefix $pname $from
+			cp $pname $to
+			rm $pname
 		end
 	end
 end
 echo "## end time (`users`): `date`" >>$log_file
-cp $log_file $gdrive
-rm $log_file
