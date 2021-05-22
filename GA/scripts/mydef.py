@@ -38,17 +38,27 @@ from random import random as rand
 from datetime import date
 
 class Common:
-
-    ## date
-    today = date.today().strftime("%Y%m%d")
     
-    ## constant numbers
-    sigma_1 = 0.682689492137
-    sigma_2 = 0.954499736104
-    sigma_3 = 0.997300203937
+    def __init__(self):
+        
+        ## Google Drive
+        self.username = getpass.getuser()
+        self.dir_gDrive = join('/Users',self.username,'Google Drive','내 드라이브')
+        if exists(self.dir_gDrive):
+            print('Google Drive is detected!')
+        else:
+            print('Google Drive is NOT mounted!')
+            del(self.dir_gDrive)
 
-    ## initialize variables
-    def initialize(self):
+        ## date
+        self.today = date.today().strftime("%Y%m%d")
+    
+        ## constant numbers
+        self.sig1 = 0.682689492137
+        self.sig2 = 0.954499736104
+        self.sig3 = 0.997300203937
+        
+        ## initializing several variables
         self.roi_imgs = {}
         self.fan_imgs = {}
         self.fan_info = None
@@ -63,7 +73,7 @@ class Common:
         
     def load_pkl(self, fname):
         ## load pkl
-        with open(join(GA.dir_script, fname), "rb") as fr:
+        with open(join(self.dir_script, fname), "rb") as fr:
             return pickle.load(file=fr)
 
     ## show the list of pkl at the location, simultaneously represent overlap
@@ -114,16 +124,6 @@ class Common:
     ##########
     ## fMRI ##
     ##########
-    
-    ## ROI images
-    roi_imgs = {}
-    
-    ## fan images
-    fan_imgs = {}
-    fan_info = None
-    
-    ## the decoding accuracy
-    scores = {}
         
     def fast_masking(self, img, roi):
         ## img : data (NIFTI image)
@@ -181,11 +181,12 @@ class Common:
         
         key = roi_name
         img = self.roi_imgs[roi_name]
-        print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
+        nv = img.get_fdata().sum()
+        print('%s(n_voxles=%d)'%(key, nv))
         self.draw_lineplot(roi_name=key, title=key
                            , ylim=ylim, dy=dy
                            , ax=axes[0])
-        nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
+        nplt.plot_roi(roi_img=img, bg_img=img_bg, title='%s (%d)'%(key, nv)
                       , draw_cross=False, black_bg=False
                       , display_mode='ortho', axes=axes[1])
         return 0
@@ -195,11 +196,12 @@ class Common:
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
         
         for i, (key, img) in enumerate(self.roi_imgs.items()):
-            print('%s(n_voxles=%d)'%(key,img.get_fdata().sum()))
+            nv = img.get_fdata().sum()
+            print('%s(n_voxles=%d)'%(key, nv))
             self.draw_lineplot(roi_name=key, title=key
                                , ylim=ylim, dy=dy
                                , ax=axes[2*(i//n_columns),(i%n_columns)])
-            nplt.plot_roi(roi_img=img, bg_img=img_bg, title=key
+            nplt.plot_roi(roi_img=img, bg_img=img_bg, title='%s (%d)'%(key, nv)
                           , draw_cross=False, black_bg=False
                           , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
         return 0
@@ -228,57 +230,46 @@ class Common:
         return img0
 
 class GA(Common):
-    #     def __init__(self):
+    def __init__(self):
+        super().__init__()
+        
+        ## experimental properties
+        self.list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
+                          ,'18', '19', '20', '21', '23', '26', '27', '28', '29', '30'
+                          ,'31', '32', '33', '34', '35', '36', '37', '38', '42', '44']
+        self.list_stage = ['early_practice', 'early_unpractice', 'late_practice', 'late_unpractice']
+        
+        ## define directories
+        self.dir_script = '.'
+        self.dir_root = join(self.dir_gDrive,'GA')
+
+        self.dir_behav = self.dir_root + '/behav_data'
+        self.dir_fmri = self.dir_root + '/fMRI_data'
+        self.dir_searchlight = self.dir_fmri + '/searchlight'
+        self.dir_LSS = self.dir_fmri + '/preproc_data'
+        self.dir_stats = self.dir_fmri + '/stats'
+        self.dir_mask = self.dir_fmri + '/roi'
+        self.dir_dmn = self.dir_mask + '/DMN'
+        self.dir_loc = self.dir_mask + '/localizer'
     
-    list_subj = ['01', '02', '05', '07', '08', '11', '12', '13', '14', '15'
-                 ,'18', '19', '20', '21', '23', '26', '27', '28', '29', '30'
-                 ,'31', '32', '33', '34', '35', '36', '37', '38', '42', '44']
-    list_stage = ['early_practice', 'early_unpractice', 'late_practice', 'late_unpractice']
+        ## labeling with target position
+        # 1 - 5 - 25 - 21 - 1 - 25 - 5 - 21 - 25 - 1 - 21 - 5 - 1 - ...
+        ##################
+        #  1  2  3  4  5 #
+        #  6  7  8  9 10 #
+        # 11 12 13 14 15 #
+        # 16 17 18 19 20 #
+        # 21 22 23 24 25 #
+        ##################
+        self.target_pos = []
+        with open(join(self.dir_script,'targetID.txt')) as file:
+            for line in file:
+                self.target_pos.append(int(line.strip()))
+        self.target_pos = self.target_pos[1:97]
+        # self.target_path = list(range(1,13))*8
+        del(file, line)
     
-    ## Locations of directories
-    dir_script = '.'
-    
-    dir_root = '/Volumes/T7SSD1/GA' # check where the data is downloaded on your disk
-    if not exists(dir_root):
-        print("You need to connect T7SSD1 with your PC!")
-        username = getpass.getuser()
-        dir_root = join('/Users',username,'Desktop','GA')
-        if exists(dir_root):
-            print("dir_root is replaced by %s."%dir_root)
-        else:
-            print("Error: dir_root doesn't be assigned.")
-    del(username)
-            
-    dir_behav = dir_root + '/behav_data'
-    dir_fmri = dir_root + '/fMRI_data'
-    dir_searchlight = dir_fmri + '/searchlight'
-    dir_LSS = dir_fmri + '/preproc_data'
-    dir_stats = dir_fmri + '/stats'
-    dir_mask = dir_fmri + '/roi'
-    dir_dmn = dir_mask + '/DMN'
-    dir_loc = dir_mask + '/localizer'
-    
-    ## labeling with target position
-    # 1 - 5 - 25 - 21 - 1 - 25 - 5 - 21 - 25 - 1 - 21 - 5 - 1 - ...
-    ##################
-    #  1  2  3  4  5 #
-    #  6  7  8  9 10 #
-    # 11 12 13 14 15 #
-    # 16 17 18 19 20 #
-    # 21 22 23 24 25 #
-    ##################
-    target_pos = []
-    with open(join(dir_script,'targetID.txt')) as file:
-        for line in file:
-            target_pos.append(int(line.strip()))
-    target_pos = target_pos[1:97]
-    # target_path = list(range(1,13))*8
-    del(file, line)
-    
-    ## initialize variables
-    def initialize(self):
-        ## overwrighting
-        super().initialize()
+        ## initialize variables
         ## additional staements
         self.wit_score = None
         self.wit_paired_ttest = None
@@ -287,6 +278,15 @@ class GA(Common):
         #self.rewards = {}
         self.wit_rewards_wide = None
         self.wit_rewards_long = None
+        
+        ## the difference in reward rate(=success rate) between GB and GA
+        self.del_RewardRate = np.loadtxt(join(self.dir_script,"RewardRate_improvement.txt"), delimiter='\n')
+        
+        ## background image
+        self.img_bg = join(self.dir_mask,'mni152_2009bet.nii.gz')
+
+        ## LDA analysis
+        self.lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
     
     ##############
     ## Behavior ##
@@ -377,19 +377,10 @@ class GA(Common):
 #             self.rewards['GB'+nn] = self.calc_mrew(self.dir_behav + '/GA%s-refmri.mat'%(nn))
 #             print(nn, end='\r')
 #         return 0
-
-    ## the difference in reward rate(=success rate) between GB and GA
-    del_RewardRate = np.loadtxt(join(dir_script,"RewardRate_improvement.txt"), delimiter='\n')
     
     ##########
     ## fMRI ##
     ##########
-    
-    ## background image
-    img_bg = join(dir_mask,'mni152_2009bet.nii.gz')
-    
-    ## LDA analysis
-    lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
     
     def load_fan(self):
         ## load fan_imgs
@@ -400,7 +391,7 @@ class GA(Common):
             fname = temp.split('.')[-1]
             self.fan_imgs[fname] = nilearn.image.load_img(path)
 
-        self.fan_info = pd.read_csv(join(GA.dir_mask,'fan_cluster_net_20200121.csv'), sep=',', index_col=0)
+        self.fan_info = pd.read_csv(join(self.dir_mask,'fan_cluster_net_20200121.csv'), sep=',', index_col=0)
 
     def load_beta(self, subj, stage):
 
@@ -429,7 +420,7 @@ class GA(Common):
         return beta
 
     ## do cross validation with given estimator (default: LDA)
-    def cross_valid(self, betas, estimator=lda):
+    def cross_valid(self, betas, estimator):
         # output : A leave-one-run-out cross-validation (LORO-CV) result.
         
         ## set the parameters
