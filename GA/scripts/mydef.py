@@ -63,7 +63,15 @@ class Common:
         self.fan_imgs = {}
         self.fan_info = None
         self.scores = {}
-
+    
+    #######################
+    ## several operatros ##
+    #######################
+    
+    ###############
+    ## utilities ##
+    ###############
+    
     def save_pkl(self, data, suffix):
         ## scores must exist!
         assert len(data)
@@ -274,7 +282,7 @@ class GA(Common):
         self.wit_score = None
         self.wit_paired_ttest = None
         self.wit_mean_ttest = None
-        self.wit_func_correl = None
+        self.wit_functional_correl = None
         #self.rewards = {}
         self.wit_rewards_wide = None
         self.wit_rewards_long = None
@@ -503,10 +511,9 @@ class GA(Common):
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
         return self.wit_mean_ttest
     
-    def calc_wit_func_correl(self, roiA, roiB):
-        rois = sorted([roiA, roiB])
+    def make_wit_functional_correl(self):
         runs = ['r01','r02','r03','r04','r05','r06']
-
+        sorted_rois = sorted(self.roi_imgs.keys())
         lines = []
         for subj in self.list_subj:
             for visit in ['early','late']:
@@ -516,15 +523,21 @@ class GA(Common):
                     ## load betas
                     beta = niimg.load_img(join(self.dir_LSS,subj,'betasLSS.%s.%s.nii.gz'%(gg+subj,run)))
                     ## We suppose to exclude the first slice from the last dimension of this 4D-image
-                    img = niimg.index_img(beta, np.arange(1, 97))
-                    Xbars = {}
-                    for region in rois:
+                    beta96 = niimg.index_img(beta, np.arange(1, 97))
+                    Xmeans = {}
+                    for region in sorted_rois:
+                        print(subj, visit, run, ": masking... ", end='\r')
                         ## masking
-                        X = self.fast_masking(img=img, roi=self.roi_imgs[region])
+                        X = self.fast_masking(img=beta96, roi=self.roi_imgs[region])
                         ## calculate a mean of betas in the region
-                        Xbars[region] = np.mean(X, axis=1)
+                        Xmeans[region] = np.mean(X, axis=1)
                     ## obatin Pearson correlation coefficients
-                    r, p = scipy.stats.pearsonr(x=Xbars[rois[0]], y=Xbars[rois[1]])
-                    lines.append([subj, visit, mapping, run, rois[0], rois[1], r, p])
-        self.wit_func_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
-        return self.wit_func_correl
+                    for i, roiA in enumerate(sorted_rois[:-1]):
+                        for roiB in sorted_rois[i+1:]:
+                            print(subj, visit, run, ": calculating Pearson correlation coefficients... ", end='\r')
+                            r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
+                            lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
+        self.wit_functional_correl = pd.DataFrame(
+            data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
+        )
+        return self.wit_functional_correl
