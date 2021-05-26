@@ -16,23 +16,28 @@ fmri_dir=$root_dir/fMRI_data
 roi_dir=$fmri_dir/roi
 stats_dir=$fmri_dir/stats
 # ============================================================
+# make a temporal directory to activate 3dDeconvolve
+temp_dir=/Users/clmn/Desktop/temp
+if [ ! -d $temp_dir ]; then
+	mkdir -p -m 755 $temp_dir
+fi
 foreach nn ($nn_list)
-	## make the output directory
+	# define the output_dir in Google Drive
 	output_dir=$stats_dir/$dname/$nn
 	if [ ! -d $output_dir ]; then
 		mkdir -p -m 755 $output_dir
 	fi
-	## make a temporal directory to activate 3dDeconvolve, then re-define the output_dir
-	temp_dir=/Users/clmn/Desktop/temp
-	if [ ! -d $temp_dir ]; then
-		mkdir -p -m 755 $temp_dir
-	fi
-	output_dir=$temp_dir/$dname/$nn
+	## re-define the output_dir in temp_dir
+	output_dir=$temp_dir/$nn
 	if [ ! -d $output_dir ]; then
 		mkdir -p -m 755 $output_dir
 	fi
 	foreach gg (GA GB)
 		subj=$gg$nn
+		## move main files to the temp_dir directory
+		mask=full_mask.$subj.nii.gz
+		cp -n $roi_dir/full/$mask \
+			$temp_dir/$mask
 		foreach rr (`count -digits 2 1 6`)
 			## move main files to the temp_dir directory
 			pb02=pb02.$subj.r$rr.volreg.nii.gz
@@ -41,9 +46,6 @@ foreach nn ($nn_list)
 			censor=motion_censor.$subj.r$rr.1D
 			cp -n $fmri_dir/preproc_data/$nn/$censor \
 				$temp_dir/$consor
-			mask=full_mask.$subj.nii.gz
-			cp -n $roi_dir/full/$mask \
-				$temp_dir/$mask
 			cd $output_dir
 			## AM = Amplitude Modulation
 			## The -stim_times_AM* options have been modified to allow the input of multiple amplidues with each time.
@@ -74,16 +76,16 @@ foreach nn ($nn_list)
 					-cenmode ZERO \
 					-prefix $output_dir/$subj.bp_demean.errts.MO.r$rr.nii.gz
 			## move the temporal directory to Google Drive
-			cp -n $temp_dir/$dname/$nn/. $stats_dir/$dname/$nn/
+			cp -n $output_dir/* $stats_dir/$dname/$nn/
 			## remove useless files
 			rm $temp_dir/$pb02 \
-				$temp_dir/$censor \
-				$temp_dir/$mask
-			rm -r $temp_dir/$dname/$nn
-
+				$temp_dir/$censor
+			rm $output_dir/*
 		end
+		rm $temp_dir/$mask
 	end
 end
+rm -r $temp_dir
  #	# ============================================================
  #	3dAFNItoNIFTI -prefix $output_dir/statMove.$nn.nii.gz $output_dir/statMove.$nn+tlrc.
  #	# ============================================================
