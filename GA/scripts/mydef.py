@@ -520,15 +520,13 @@ class GA(Common):
                 gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
                 for run in runs:
                     mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
-                    ## load betas
-                    beta = niimg.load_img(join(self.dir_LSS,subj,'betasLSS.%s.%s.nii.gz'%(gg+subj,run)))
-                    ## We suppose to exclude the first slice from the last dimension of this 4D-image
-                    beta96 = niimg.index_img(beta, np.arange(1, 97))
+                    ## load errts
+                    errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO',subj,'%s.errts.MO.r%02d.nii.gz'%(gg+subj,run)))
                     Xmeans = {}
                     for region in sorted_rois:
                         print(subj, visit, run, ": masking... ", end='\r')
                         ## masking
-                        X = self.fast_masking(img=beta96, roi=self.roi_imgs[region])
+                        X = self.fast_masking(img=errts, roi=self.roi_imgs[region])
                         ## calculate a mean of betas in the region
                         Xmeans[region] = np.mean(X, axis=1)
                     ## obatin Pearson correlation coefficients
