@@ -13,6 +13,7 @@ conda create -n $env_name python=3.6 ipykernel
 source activate $env_name
 is_env_activated=`conda info | grep $env_name | wc -l`
 if [ $is_env_activated -gt 0 ]; then
+	python -m ipykernel install --user --name $env_name --display-name $env_name
 	echo "ready to pip install modules at env '${env_name}'"
 	pip install -r $GDL_dir/requirements.txt
 fi
