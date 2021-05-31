@@ -39,6 +39,11 @@ foreach nn ($nn_list)
 		cp -n $roi_dir/full/$mask \
 			$temp_dir/$mask
 		foreach rr (`count -digits 2 1 6`)
+			## check the presence of the errts
+			fin_res=$output_dir/$subj.bp_demean.errts.MO.r$rr.nii.gz
+			if [ -f $fin_res ]; then
+				continue
+			fi
 			## move main files to the temp_dir directory
 			pb02=pb02.$subj.r$rr.volreg.nii.gz
 			cp -n $data_dir/$pb02 \
@@ -74,7 +79,7 @@ foreach nn ($nn_list)
 					-mask $temp_dir/$mask \
 					-passband 0.01 0.1 \
 					-cenmode ZERO \
-					-prefix $output_dir/$subj.bp_demean.errts.MO.r$rr.nii.gz
+					-prefix $fin_res
 			## move the temporal directory to Google Drive
 			cp -n $output_dir/* $stats_dir/$dname/$nn/
 			## remove useless files
