@@ -521,10 +521,10 @@ class GA(Common):
                 for run in runs:
                     mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
                     ## load errts
-                    errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO',subj,'%s.errts.MO.r%02d.nii.gz'%(gg+subj,run)))
+                    errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO',subj,'%s.errts.MO.%s.nii.gz'%(gg+subj,run)))
                     Xmeans = {}
                     for region in sorted_rois:
-                        print(subj, visit, run, ": masking... ", end='\r')
+#                         print(subj, visit, run, ": masking... ", end='\r')
                         ## masking
                         X = self.fast_masking(img=errts, roi=self.roi_imgs[region])
                         ## calculate a mean of betas in the region
@@ -532,7 +532,7 @@ class GA(Common):
                     ## obatin Pearson correlation coefficients
                     for i, roiA in enumerate(sorted_rois[:-1]):
                         for roiB in sorted_rois[i+1:]:
-                            print(subj, visit, run, ": calculating Pearson correlation coefficients... ", end='\r')
+                            print(subj, visit, run, end='\r')
                             r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
                             lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
         self.wit_functional_correl = pd.DataFrame(
