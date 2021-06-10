@@ -539,3 +539,35 @@ class GA(Common):
             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
         )
         return self.wit_functional_correl
+    
+    def calc_interaction_strength(self, subj, visit, mapping, group):
+        wit_corr = self.wit_functional_correl
+        ## wit_corr.columns = ['subj', 'visit', 'mapping', 'run', 'roiA', 'roiB', 'Pearson_r', 'pval']
+        df = wit_corr.groupby(['subj','visit','mapping','roiA','roiB']).mean(); del df['pval']
+
+        sorted_rois = sorted(set(list(wit_corr.roiA.unique())+list(wit_corr.roiB.unique())))
+        assert len(sorted_rois)==len(group)
+
+        ## initializing valuable which would be used to normalization, D.S. Bassett et al. 2015
+        Coef = {}
+        for i, a in enumerate(set(group)):
+            for b in list(set(group))[i:]:
+                Coef[a,b]=[]
+        ## append correlation coefficients
+        for a, roiA in enumerate(sorted_rois):
+            for t, roiB in enumerate(sorted_rois[a+1:]):
+                b = t+a+1
+                ## storing the elements of the upper-triangle correlation matrix by group
+                Coef[group[a],group[b]].append(df.loc[subj,visit,mapping,roiA,roiB]['Pearson_r'])
+            ## a diagonal element (be always "1")
+#             Coef[group[a],group[a]].append(1.)
+        ## mean the values (define it as "interaction strength" I_k1,k2)
+        Coef_mean = {}
+        for (i, j) in Coef.keys():
+            Coef_mean[i,j] = np.mean(Coef[i,j])
+        ## normalized a interaction strength representing different groups.
+        for (i, j) in Coef_mean.keys():
+            if i!=j:
+                Coef_mean[i,j]/=np.sqrt(Coef_mean[i,i]*Coef_mean[j,j])
+
+        return Coef_mean
