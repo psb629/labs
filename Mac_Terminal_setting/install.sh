@@ -39,8 +39,8 @@ git_password=${aaa}${bbb}${ccc} # personal access token
 git remote add origin https://"$git_id":"$git_password"@github.com/psb629/labs.git
 git pull origin master
 
-echo "> * `users`(`ipconfig getifaddr en0`): `date`" >>$lab_dir/Mac_Terminal_setting/README.txt
-git add $lab_dir/Mac_Terminal_setting/README.txt
+echo "> * `users`(`ipconfig getifaddr en0`): `date`" >>$lab_dir/Mac_Terminal_setting/README.md
+git add $lab_dir/Mac_Terminal_setting/README.md
 git commit -m "ran install.sh"
 git push -u origin master
 
