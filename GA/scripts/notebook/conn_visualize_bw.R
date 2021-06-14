@@ -8,11 +8,11 @@ load_all("/Users/yerachoi/Documents/ggpubr_edStatCor")
 
 pd <- import("pandas")
 pickle_file <- "/Volumes/clmnlab/GA/fmri_data/glm_results/MO_errts/MO_errts_AM1_recruitment_prac_late-early.pkl"
-df_recruit <- pd$read_pickle(paste0(pickle_file))
+df_recruit <- pd$read_pickle(paste0(pickle_file))	## MO_errts_AM1_recruitment_prac_late-early.pkl
 
 
 # Entire dataframe
-df_conn_comb <- data.frame(matrix(ncol=21, nrow=60))
+df_conn_comb <- data.frame(matrix(ncol=21, nrow=60))	## conn_comb
 names <- c("subj", "prac", "behav", 
            "rcr_dmn", "rcr_core", "rcr_dmsub", "rcr_core_dmsub",
            "rcr_vis",
@@ -34,13 +34,13 @@ subj_vec <- c(
 df_conn_comb$subj <- rep(subj_vec, each=2)
 # prac
 prac_vec <- rep(c('prac', 'unprac'), each=30)
-df_conn_comb$prac <- prac_vec
+df_conn_comb$prac <- prac_vec		## a vector consisting of 'prac'x30 + 'unprac'x30
 # behav (rew)
 behav_prac_file <- '/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/behaviors/rew_GB-GA_n30.1D'
 behav_unprac_file <- '/Volumes/clmnlab/GA/MVPA/LSS_pb02_MO_short_duration/behaviors/rew_gb-ga_unpracticed_n30.1D'
 behav_prac <- as.double(readLines(paste(behav_prac_file, sep=" ")))
 behav_unprac <- as.double(readLines(paste(behav_unprac_file, sep=" ")))
-df_conn_comb$behav <- c(behav_prac, behav_unprac)
+df_conn_comb$behav <- c(behav_prac, behav_unprac)		## a vector consisting of behaviour data
 
 # Recruitment
 # 1. DMN (core + dMsub + MTLsub)
