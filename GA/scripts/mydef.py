@@ -510,8 +510,11 @@ class GA(Common):
             
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
         return self.wit_mean_ttest
+    def calc_global_mean(self, rois, whole_brain):
+        ## output: Time series mean value of whole brain activity in a given ROI
+        sorted_rois = sort
     
-    def make_wit_functional_correl(self):
+    def make_wit_functional_correl(self, global_mean):
         runs = ['r01','r02','r03','r04','r05','r06']
         sorted_rois = sorted(self.roi_imgs.keys())
         lines = []
