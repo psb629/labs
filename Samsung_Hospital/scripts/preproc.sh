@@ -1,10 +1,10 @@
 #!/bin/tcsh
 
-set subj_list = (S26)
-set date_list = (210420)
+set subj_list = (S27 S28)
+set date_list = (210615 210615)
 set coord = orig
 
-foreach ii (`count -digits 2 1 2`)
+foreach ii (`seq -f "%02g" 1 2`)
 	set subj = $subj_list[$ii]
 	set date = $date_list[$ii]
 
@@ -33,9 +33,9 @@ foreach ii (`count -digits 2 1 2`)
 		set TR = 2
 		
 		set cnt = 0
-		set set_time = `count -digit 1 1 300`
+		set set_time = `seq 1 300`
 		foreach t_ini ($set_time)
-			set set_data = `count -digit 4 $t_ini 18001 300`
+			set set_data = `seq -f "%04g" $t_ini 300 18001`
 			foreach n ($set_data)
 				@ cnt = $cnt + 1
 				set n_prime = `printf %05d $cnt`
