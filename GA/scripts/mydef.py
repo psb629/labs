@@ -142,7 +142,7 @@ class Common:
             raise ValueError('different shape while masking! img=%s and roi=%s' % (img_data.shape, roi_mask.shape))
         ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
         return img_data[roi_mask, :].T
-
+    
     ## draw the figures of ROI images with a standard underlay
     def draw_rois(self, img_bg, magnitude=8, n_columns=1):
         ## magnitude: a size of figures
@@ -510,34 +510,37 @@ class GA(Common):
             
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
         return self.wit_mean_ttest
-    def calc_global_mean(self, rois, whole_brain):
-        ## output: Time series mean value of whole brain activity in a given ROI
-        sorted_rois = sort
     
-    def make_wit_functional_correl(self, global_mean):
+    def make_wit_functional_correl(self, roi_imgs):
         runs = ['r01','r02','r03','r04','r05','r06']
-        sorted_rois = sorted(self.roi_imgs.keys())
+        sorted_rois = sorted(roi_imgs.keys())
         lines = []
         for subj in self.list_subj:
             for visit in ['early','late']:
                 gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
+                ## load full mask
+                fname = join(self.dir_mask,'full','full_mask.%s.nii.gz'%(gg+subj))
+                fmask = nilearn.image.load_img(fname)
                 for run in runs:
                     print(subj, visit, run, end='\t\t\t\r')
                     mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
                     ## load errts
-                    errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO.RO',subj,'%s.errts.MO.RO.%s.nii.gz'%(gg+subj,run)))
+                    errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO.RO',subj,'%s.bp_demean.errts.MO.RO.%s.nii.gz'%(gg+subj,run)))
                     assert errts.shape[-1]==1096
+                    ## global activity
+                    gact = np.mean(self.fast_masking(img=errts, roi=fmask), axis=1)
+                    ## mean values in each ROI
                     Xmeans = {}
                     for region in sorted_rois:
 #                         print(subj, visit, run, ": masking... ", end='\r')
                         ## masking
-                        X = self.fast_masking(img=errts, roi=self.roi_imgs[region])
-                        ## calculate a mean of betas in the region
+                        X = self.fast_masking(img=errts, roi=roi_imgs[region])
+                        ## calculate a voxel-wise mean of betas by each region
                         Xmeans[region] = np.mean(X, axis=1)
                     ## obatin Pearson correlation coefficients
                     for i, roiA in enumerate(sorted_rois[:-1]):
                         for roiB in sorted_rois[i+1:]:
-                            r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
+                            r, p = scipy.stats.pearsonr(x=Xmeans[roiA]-gact, y=Xmeans[roiB]-gact)
                             lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
         self.wit_functional_correl = pd.DataFrame(
             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
