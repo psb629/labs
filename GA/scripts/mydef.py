@@ -555,7 +555,7 @@ class GA(Common):
         sorted_rois = sorted(set(list(wit_corr.roiA.unique())+list(wit_corr.roiB.unique())))
         assert len(sorted_rois)==len(group)
 
-        ## initializing valuable which would be used to normalization, D.S. Bassett et al. 2015
+        ## initializing a valuable which would be used to normalization, D.S. Bassett et al., 2015
         Coef = {}
         for i, a in enumerate(set(group)):
             for b in list(set(group))[i:]:
@@ -564,12 +564,13 @@ class GA(Common):
         for a, roiA in enumerate(sorted_rois):
             for t, roiB in enumerate(sorted_rois[a+1:]):
                 b = t+a+1
-                ## storing the elements of the upper-triangle correlation matrix by group
+                ## storing elements of the upper-triangle correlation matrix by group
                 Coef[group[a],group[b]].append(df.loc[subj,visit,mapping,roiA,roiB]['Pearson_r'])
             ## a diagonal element (be always "1")
 #             Coef[group[a],group[a]].append(1.)
         ## mean the values (define it as "interaction strength" I_k1,k2)
         Coef_mean = {}
+        ## i,j : group
         for (i, j) in Coef.keys():
             Coef_mean[i,j] = np.mean(Coef[i,j])
         ## normalized a interaction strength representing different groups.
