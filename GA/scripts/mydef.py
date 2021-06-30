@@ -518,17 +518,12 @@ class GA(Common):
         for subj in self.list_subj:
             for visit in ['early','late']:
                 gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
-                ## load full mask
-                fname = join(self.dir_mask,'full','full_mask.%s.nii.gz'%(gg+subj))
-                fmask = nilearn.image.load_img(fname)
                 for run in runs:
                     print(subj, visit, run, end='\t\t\t\r')
                     mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
                     ## load errts
                     errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO.RO',subj,'%s.bp_demean.errts.MO.RO.%s.nii.gz'%(gg+subj,run)))
                     assert errts.shape[-1]==1096
-                    ## global activity
-                    gact = np.mean(self.fast_masking(img=errts, roi=fmask), axis=1)
                     ## mean values in each ROI
                     Xmeans = {}
                     for region in sorted_rois:
@@ -540,7 +535,7 @@ class GA(Common):
                     ## obatin Pearson correlation coefficients
                     for i, roiA in enumerate(sorted_rois[:-1]):
                         for roiB in sorted_rois[i+1:]:
-                            r, p = scipy.stats.pearsonr(x=Xmeans[roiA]-gact, y=Xmeans[roiB]-gact)
+                            r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
                             lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
         self.wit_functional_correl = pd.DataFrame(
             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']

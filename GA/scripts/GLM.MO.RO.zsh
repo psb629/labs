@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+## MO: motion regress out
+## RO: reward regress out
+
 nn_list=( 01 02 05 07 08 \
 		  11 12 13 14 15 \
 		  18 19 20 21 23 \
