@@ -45,21 +45,13 @@ git commit -m "ran install.sh"
 git push -u origin master
 
 #### vim ####
-cd ~
-curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vimrc
-theme_dir=~/.vim/colors
-if [ ! -d $theme_dir ]; then
-	mkdir -p $theme_dir
-fi
-cd $theme_dir
-curl -O https://raw.githubusercontent.com/psb629/labs/master/Mac_Terminal_setting/.vim/colors/jellybeans.vim
-source ~/.vimrc
+cp $lab_dir/Mac_Terminal_setting/.vim ~/.vim
+cp $lab_dir/Mac_Terminal_setting/.vimrc ~/.vimrc
 
 #### oh-my-zsh ####
 ## Xcode required
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-cat ~/Github/labs/Mac_Terminal_setting/.zshrc >>~/.zshrc
-## plugins ##
+cat $lab_dir/Mac_Terminal_setting/.zshrc >>~/.zshrc
 ## zsh-syntax-highlighting
 brew install zsh-syntax-highlighting
 cd $git_dir
