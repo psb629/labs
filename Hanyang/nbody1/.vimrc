@@ -1,2 +1,0 @@
-:syn on
-:colo delek
