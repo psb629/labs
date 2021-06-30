@@ -3,7 +3,7 @@ Glove Project for group "A" and "B" (abbreviation: GA, GB)
 
 # Connectivity
 
-data_dir = https://drive.google.com/drive/folders/1yEdRzP-z1fc78sWKCj7NQARx_5E4viL4?usp=sharing\
+data_dir = https://drive.google.com/drive/folders/1yEdRzP-z1fc78sWKCj7NQARx_5E4viL4?usp=sharing  
 script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 다음과 같은 regress out이 선행되었다.
