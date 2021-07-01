@@ -85,8 +85,12 @@ class Common:
             return pickle.load(file=fr)
 
     ## show the list of pkl at the location, simultaneously represent overlap
-    def show_pkl_list(self, location, word):
-        pkl_list = glob('*%s*.pkl'%word)
+    def show_pkl_list(self, location, word, binary=True):
+        if binary:
+            read_type = "rb"
+        else:
+            read_type = "r"
+        pkl_list = glob(join(location,'*%s*.pkl'%word))
         df = pd.DataFrame({'name':pkl_list})
         group = ['' for i in pkl_list]
         ## check the identity
@@ -102,7 +106,7 @@ class Common:
                 continue
             group[n] = idty[gg]
             ## check the similarity
-            with open(p,"rb") as fp:
+            with open(p,read_type) as fp:
                 pkl_n = pickle.load(file=fp)
             for m,q in enumerate(pkl_list[(n+1):]):
                 if len(group[m+n+1])!=0:
@@ -110,7 +114,7 @@ class Common:
                 if getsize(join(location,p))!=getsize(join(location,q)):
                     continue
                 ## Comparison sorting
-                with open(q,"rb") as fq:
+                with open(q,read_type) as fq:
                     pkl_m = pickle.load(file=fq)
     #             if pkl_n==pkl_m:
     #                 group[m+n] = idty[gg]
