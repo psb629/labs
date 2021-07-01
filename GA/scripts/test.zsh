@@ -39,30 +39,34 @@ foreach x (`count -digits 2 0 3`)
 		echo "$x"
 	fi
 end
-# ==================================================================
-nn_list=( 01 )
-dname=GLM.MO
 
-data_dir=/Volumes/GoogleDrive/내\ 드라이브/GA/pb02
-root_dir=/Volumes/GoogleDrive/내\ 드라이브/GA
-behav_dir=$root_dir/behav_data
-fmri_dir=$root_dir/fMRI_data
-roi_dir=$fmri_dir/roi
-stats_dir=$fmri_dir/stats
-
-foreach nn ($nn_list)
-	foreach gg (GA)
-		subj=$gg$nn
-		foreach rr (01)
-			## AM = Amplitude Modulation
-			## The -stim_times_AM* options have been modified to allow the input of multiple amplidues with each time.
-			## -stim_times_AM1 still builds only 1 regressor, as before amplitude of each BLOCK (say) is modulated by sum of all extra amplitudes provided.
-			3dDeconvolve -nodata 1096 0.46 \
-						-polort A -float \
-						-num_stimts 1 \
-						-num_glt 1 \
-						-stim_times_AM1 1 $behav_dir/regressors/4targets/$subj.AMregressor.4targets.r$rr.1D 'BLOCK(5,1)' \
-						-x1D /Users/clmn/Github/labs/GA/scripts/AM.$subj.r$rr -x1D_stop
-		end
-	end
+foreach n (`seq 1 30`)
+	echo "nn_list[$n] == $nn_list[$n]"
 end
+# ==================================================================
+ #nn_list=( 01 )
+ #dname=GLM.MO
+ #
+ #data_dir=/Volumes/GoogleDrive/내\ 드라이브/GA/pb02
+ #root_dir=/Volumes/GoogleDrive/내\ 드라이브/GA
+ #behav_dir=$root_dir/behav_data
+ #fmri_dir=$root_dir/fMRI_data
+ #roi_dir=$fmri_dir/roi
+ #stats_dir=$fmri_dir/stats
+ #
+ #foreach nn ($nn_list)
+ #	foreach gg (GA)
+ #		subj=$gg$nn
+ #		foreach rr (01)
+ #			## AM = Amplitude Modulation
+ #			## The -stim_times_AM* options have been modified to allow the input of multiple amplidues with each time.
+ #			## -stim_times_AM1 still builds only 1 regressor, as before amplitude of each BLOCK (say) is modulated by sum of all extra amplitudes provided.
+ #			3dDeconvolve -nodata 1096 0.46 \
+ #						-polort A -float \
+ #						-num_stimts 1 \
+ #						-num_glt 1 \
+ #						-stim_times_AM1 1 $behav_dir/regressors/4targets/$subj.AMregressor.4targets.r$rr.1D 'BLOCK(5,1)' \
+ #						-x1D /Users/clmn/Github/labs/GA/scripts/AM.$subj.r$rr -x1D_stop
+ #		end
+ #	end
+ #end
