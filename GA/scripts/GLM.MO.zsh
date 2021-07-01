@@ -17,7 +17,7 @@ roi_dir=$fmri_dir/roi
 stats_dir=$fmri_dir/stats
 # ============================================================
 # make a temporal directory to activate 3dDeconvolve
-temp_dir=/Users/clmn/Desktop/temp
+temp_dir=~/Desktop/temp
 if [ ! -d $temp_dir ]; then
 	mkdir -p -m 755 $temp_dir
 fi
@@ -38,7 +38,7 @@ foreach nn ($nn_list)
 		mask=full_mask.$subj.nii.gz
 		cp -n $roi_dir/full/$mask \
 			$temp_dir/$mask
-		foreach rr (`count -digits 2 1 6`)
+		foreach rr (`seq -f "%02g" 1 6`)
 			## check the presence of the errts
 			fin_res=$output_dir/$subj.bp_demean.errts.MO.r$rr.nii.gz
 			if [ -f $fin_res ]; then
