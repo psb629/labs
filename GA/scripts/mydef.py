@@ -286,7 +286,7 @@ class GA(Common):
         self.wit_score = None
         self.wit_paired_ttest = None
         self.wit_mean_ttest = None
-        self.wit_functional_correl = None
+        self.wit_functional_correl = pd.DataFrame(columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
         #self.rewards = {}
         self.wit_rewards_wide = None
         self.wit_rewards_long = None
@@ -546,6 +546,19 @@ class GA(Common):
         )
         return self.wit_functional_correl
     
+    def make_wit_functional_correl_from_tsmean(self, subj, visit, run, rois):
+        mapping = 'practice' if run <= 3 else('unpractice' if run > 3 else 'invalid')
+        lines = []
+        sorted_rois = sorted(rois)
+        for roiA in sorted_rois:
+            tsmean_A = self.load_tsmean(subj, visit, run, roiA)
+            for roiB in sorted_rois:
+                tsmean_B = self.load_tsmean(subj, visit, run, roiB)
+                r, p = scipy.stats.pearsonr(x=tsmean_A, y=tsmean_B)
+                lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
+                self.wit_functional_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
+        return self.wit_functional_correl
+    
     def calc_interaction_strength(self, subj, visit, mapping, group):
         wit_corr = self.wit_functional_correl
         ## wit_corr.columns = ['subj', 'visit', 'mapping', 'run', 'roiA', 'roiB', 'Pearson_r', 'pval']
@@ -578,3 +591,29 @@ class GA(Common):
                 Coef_mean[i,j]/=np.sqrt(Coef_mean[i,i]*Coef_mean[j,j])
 
         return Coef_mean
+
+#     def load_tsmean_from_YY(self, gg):
+#         ## tsmean -> (30 people, 6 runs, 1096 times, 46 ROIs): a mean value of BOLDs
+#         gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
+#         data_dir = join(self.dir_root,'NAS05_data','fmri_data','glm_results','MO_errts','network_analysis')
+#         if gg == 'GA':
+#             with open(join(data_dir,"GA_MO_errts_timeseriesmean.pkl"), "rb") as file:
+#                 tsmean = pickle.load(file)   ## (subj, run, time, ROI): a mean value of BOLDs
+#         elif gg == 'GB':
+#             with open(join(data_dir,"NAS05_data","network_analysis","GB_MO_errts_timeseriesmean.pkl"), "rb") as file:
+#                 tsmean = pickle.load(file)   ## (subj, run, time, ROI): a mean value of BOLDs
+#         return tsmean
+
+    def load_tsmean(self, subj, visit, run, ROI):
+        self.fan_info = pd.read_csv(join(self.dir_mask,'fan_cluster_net_20200121.csv'), sep=',', index_col=0)
+        
+        if ROI in list(self.fan_info.region):
+            mask = 'fan%s'%(list(self.fan_info[self.fan_info.region==ROI].label)[0])
+        else:
+            mask = ROI
+        
+        gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
+        ## my result
+        with open(join(self.dir_stats,'GLM.MO','tsmean',mask,'tsmean.bp_demean.errts.MO.%s.r%02d.%s.1D'%(gg+subj,run,mask)),'r') as fr:
+            tsmean = np.genfromtxt(fr, delimiter='\n')
+        return tsmean
