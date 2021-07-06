@@ -40,12 +40,13 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 			$data_dir/fMRI_data/roi/DMN/Core_*.nii
 			$data_dir/fMRI_data/roi/fan280/fan.roi.GA.???.nii.gz
 			```
+		* script : https://github.com/psb629/labs/blob/master/GA/scripts/calc.functional_activities.zsh
 		* output :
 			```zsh
 			$data_dir/fMRI_data/stats/GLM.MO/tsmean
 			```
 
-* Fan mask 280개를 모두 합쳐서 whole brain mask를 만든다(full mask를 사용하지 않는 이유는 white matter를 제외시키기 위함).
+2. Fan mask 280개를 모두 합쳐서 whole brain mask를 만든다(full mask를 사용하지 않는 이유는 white matter를 제외시키기 위함).
 	* input : 
 		```zsh
 		$data_dir/fMRI_data/roi/fan280/fan.roi.GA.???.nii.gz
@@ -57,9 +58,9 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 		```
 		![Whole Fan ROIs](https://github.com/psb629/labs/blob/master/GA/images/fan_overall.png)
 
-* 위의 fan 280개를 합친 mask를 사용하여, GA, GB 피험자 30명씩 (총 60명)의 Run 01~06에 대하여 global activity 를 구함.
-	* script : https://github.com/psb629/labs/blob/master/GA/scripts/calc.global_activity.zsh
-	* output : 
-		```zsh
-		$data_dir/fMRI_data/stats/GLM.MO.RO/global_activities_within_Fan280/$subj.errts.MO.RO.$run.global_activity.1D
-		```
+	1. 위의 fan 280개를 합친 mask를 사용하여, GA, GB 피험자 30명씩 (총 60명)의 Run 01~06에 대하여 global activity 를 구함.
+		* script : https://github.com/psb629/labs/blob/master/GA/scripts/calc.global_activity.zsh
+		* output : 
+			```zsh
+			$data_dir/fMRI_data/stats/GLM.MO.RO/global_activities_within_Fan280/$subj.errts.MO.RO.$run.global_activity.1D
+			```
