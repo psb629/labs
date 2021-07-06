@@ -43,12 +43,12 @@ class Common:
         
         ## Google Drive
         self.username = getpass.getuser()
-        self.dir_gDrive = join('/Users',self.username,'Google Drive','내 드라이브')
-        if exists(self.dir_gDrive):
+        self.dir_root = join('/Users',self.username,'Google Drive','내 드라이브')
+        if exists(self.dir_root):
             print('Google Drive is detected!')
         else:
             print('Google Drive is NOT mounted!')
-            del(self.dir_gDrive)
+            del(self.dir_root)
 
         ## date
         self.today = date.today().strftime("%Y%m%d")
@@ -61,7 +61,7 @@ class Common:
         ## initializing several variables
         self.roi_imgs = {}
         self.fan_imgs = {}
-        self.fan_info = None
+        self.fan_info = pd.read_csv(join(self.dir_root,'Fan280','fan_cluster_net_20200121.csv'), sep=',', index_col=0)
         self.scores = {}
     
     #######################
@@ -253,10 +253,10 @@ class GA(Common):
         
         ## define directories
         self.dir_script = '.'
-        self.dir_root = join(self.dir_gDrive,'GA')
+        self.dir_work = join(self.dir_root,'GA')
 
-        self.dir_behav = self.dir_root + '/behav_data'
-        self.dir_fmri = self.dir_root + '/fMRI_data'
+        self.dir_behav = self.dir_work + '/behav_data'
+        self.dir_fmri = self.dir_work + '/fMRI_data'
         self.dir_searchlight = self.dir_fmri + '/searchlight'
         self.dir_LSS = self.dir_fmri + '/preproc_data'
         self.dir_stats = self.dir_fmri + '/stats'
@@ -403,8 +403,6 @@ class GA(Common):
             fname = temp.split('.')[-1]
             self.fan_imgs[fname] = nilearn.image.load_img(path)
 
-        self.fan_info = pd.read_csv(join(self.dir_mask,'fan_cluster_net_20200121.csv'), sep=',', index_col=0)
-
     def load_beta(self, subj, stage):
 
         assert subj in self.list_subj
@@ -515,36 +513,36 @@ class GA(Common):
         self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
         return self.wit_mean_ttest
     
-    def make_wit_functional_correl(self, roi_imgs):
-        runs = ['r01','r02','r03','r04','r05','r06']
-        sorted_rois = sorted(roi_imgs.keys())
-        lines = []
-        for subj in self.list_subj:
-            for visit in ['early','late']:
-                gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
-                for run in runs:
-                    print(subj, visit, run, end='\t\t\t\r')
-                    mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
-                    ## load errts
-                    errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO.RO',subj,'%s.bp_demean.errts.MO.RO.%s.nii.gz'%(gg+subj,run)))
-                    assert errts.shape[-1]==1096
-                    ## mean values in each ROI
-                    Xmeans = {}
-                    for region in sorted_rois:
-#                         print(subj, visit, run, ": masking... ", end='\r')
-                        ## masking
-                        X = self.fast_masking(img=errts, roi=roi_imgs[region])
-                        ## calculate a voxel-wise mean of betas by each region
-                        Xmeans[region] = np.mean(X, axis=1)
-                    ## obatin Pearson correlation coefficients
-                    for i, roiA in enumerate(sorted_rois[:-1]):
-                        for roiB in sorted_rois[i+1:]:
-                            r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
-                            lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-        self.wit_functional_correl = pd.DataFrame(
-            data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
-        )
-        return self.wit_functional_correl
+#     def make_wit_functional_correl(self, roi_imgs):
+#         runs = ['r01','r02','r03','r04','r05','r06']
+#         sorted_rois = sorted(roi_imgs.keys())
+#         lines = []
+#         for subj in self.list_subj:
+#             for visit in ['early','late']:
+#                 gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
+#                 for run in runs:
+#                     print(subj, visit, run, end='\t\t\t\r')
+#                     mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
+#                     ## load errts
+#                     errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO.RO',subj,'%s.bp_demean.errts.MO.RO.%s.nii.gz'%(gg+subj,run)))
+#                     assert errts.shape[-1]==1096
+#                     ## mean values in each ROI
+#                     Xmeans = {}
+#                     for region in sorted_rois:
+# #                         print(subj, visit, run, ": masking... ", end='\r')
+#                         ## masking
+#                         X = self.fast_masking(img=errts, roi=roi_imgs[region])
+#                         ## calculate a voxel-wise mean of betas by each region
+#                         Xmeans[region] = np.mean(X, axis=1)
+#                     ## obatin Pearson correlation coefficients
+#                     for i, roiA in enumerate(sorted_rois[:-1]):
+#                         for roiB in sorted_rois[i+1:]:
+#                             r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
+#                             lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
+#         self.wit_functional_correl = pd.DataFrame(
+#             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
+#         )
+#         return self.wit_functional_correl
     
     def make_wit_functional_correl_from_tsmean(self, subj, visit, run, rois):
         mapping = 'practice' if run <= 3 else('unpractice' if run > 3 else 'invalid')
@@ -595,7 +593,7 @@ class GA(Common):
 #     def load_tsmean_from_YY(self, gg):
 #         ## tsmean -> (30 people, 6 runs, 1096 times, 46 ROIs): a mean value of BOLDs
 #         gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
-#         data_dir = join(self.dir_root,'NAS05_data','fmri_data','glm_results','MO_errts','network_analysis')
+#         data_dir = join(self.dir_work,'NAS05_data','fmri_data','glm_results','MO_errts','network_analysis')
 #         if gg == 'GA':
 #             with open(join(data_dir,"GA_MO_errts_timeseriesmean.pkl"), "rb") as file:
 #                 tsmean = pickle.load(file)   ## (subj, run, time, ROI): a mean value of BOLDs
@@ -605,8 +603,6 @@ class GA(Common):
 #         return tsmean
 
     def load_tsmean(self, subj, visit, run, ROI):
-        self.fan_info = pd.read_csv(join(self.dir_mask,'fan_cluster_net_20200121.csv'), sep=',', index_col=0)
-        
         if ROI in list(self.fan_info.region):
             mask = 'fan%s'%(list(self.fan_info[self.fan_info.region==ROI].label)[0])
         else:
