@@ -544,17 +544,48 @@ class GA(Common):
 #         )
 #         return self.wit_functional_correl
     
-    def make_wit_functional_correl_from_tsmean(self, subj, visit, run, rois):
-        mapping = 'practice' if run <= 3 else('unpractice' if run > 3 else 'invalid')
-        lines = []
+    def make_wit_functional_correl_from_tsmean(self, subj, visit, mapping, rois):
         sorted_rois = sorted(rois)
-        for roiA in sorted_rois:
-            tsmean_A = self.load_tsmean(subj, visit, run, roiA)
-            for roiB in sorted_rois:
-                tsmean_B = self.load_tsmean(subj, visit, run, roiB)
-                r, p = scipy.stats.pearsonr(x=tsmean_A, y=tsmean_B)
-                lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-                self.wit_functional_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
+        lines = []
+        
+        runs = ['r01','r02','r03'] if mapping=='practice' else (['r04','r05','r06'] if mapping=='unpractice' else 'invalid')
+        for run in runs:
+            print(subj, visit, run, end='\t\t\t\r')
+            for roiA in sorted_rois:
+                tsmean_A = self.load_tsmean(subj, visit, run, roiA)
+                for roiB in sorted_rois:
+                    tsmean_B = self.load_tsmean(subj, visit, run, roiB)
+                    r, p = scipy.stats.pearsonr(x=tsmean_A, y=tsmean_B)
+                    lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
+                    self.wit_functional_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
+        return self.wit_functional_correl
+    
+    def make_wit_functional_correl_from_errts(self, subj, visit, mapping, fdir, fname, rois):
+        sorted_rois = sorted(rois.keys())
+        lines = []
+
+        runs = ['r01','r02','r03'] if mapping=='practice' else (['r04','r05','r06'] if mapping=='unpractice' else 'invalid')
+        gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
+        for run in runs:
+            print(subj, visit, run, end='\t\t\t\r')
+            ## load errts
+            errts = nilearn.image.load_img(join(self.dir_stats,fdir,subj,'%s.%s.%s.nii.gz'%(gg+subj,fname,run)))
+            assert errts.shape[-1]==1096
+            ## mean values in each ROI
+            Xmeans = {}
+            for region in sorted_rois:
+                ## masking
+                X = self.fast_masking(img=errts, roi=rois[region])
+                ## calculate a voxel-wise mean of betas by each region
+                Xmeans[region] = np.mean(X, axis=1)
+            ## obatin Pearson correlation coefficients
+            for i, roiA in enumerate(sorted_rois[:-1]):
+                for roiB in sorted_rois[i+1:]:
+                    r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
+                    lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
+        self.wit_functional_correl = pd.DataFrame(
+            data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
+        )
         return self.wit_functional_correl
     
     def calc_interaction_strength(self, subj, visit, mapping, group):
@@ -610,6 +641,6 @@ class GA(Common):
         
         gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
         ## my result
-        with open(join(self.dir_stats,'GLM.MO','tsmean',mask,'tsmean.bp_demean.errts.MO.%s.r%02d.%s.1D'%(gg+subj,run,mask)),'r') as fr:
+        with open(join(self.dir_stats,'GLM.MO','tsmean',mask,'tsmean.bp_demean.errts.MO.%s.%s.%s.1D'%(gg+subj,run,mask)),'r') as fr:
             tsmean = np.genfromtxt(fr, delimiter='\n')
         return tsmean
