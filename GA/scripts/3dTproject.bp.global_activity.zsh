@@ -6,9 +6,6 @@ nn_list=( 01 02 05 07 08 \
 		  26 27 28 29 30 \
 		  31 32 33 34 35 \
 		  36 37 38 42 44 )
-nn_list=( 01 02 05 07 08 \
-		  11 12 13 14 15 \
-		  18 19 20 )
 # ============================================================
 dname=GLM.MO
 # ============================================================
@@ -36,6 +33,10 @@ foreach nn ($nn_list)
 		cp -n $roi_dir/full/$mask $work_dir/$mask
 		foreach rr (`seq -f "%02g" 1 6`)
 			fin_res=$subj.global_activity.bp_demean.errts.MO.r$rr.nii.gz
+			## check existance
+			if [ -f $fin_dir/$fin_res ]; then
+				continue
+			fi
 			## move the input file to work_dir
 			input=$subj.errts.MO.r$rr.nii.gz
 			cp -n $stats_dir/GLM.MO/$nn/$input $work_dir/$input
