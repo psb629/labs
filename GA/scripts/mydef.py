@@ -85,12 +85,12 @@ class Common:
             return pickle.load(file=fr)
 
     ## show the list of pkl at the location, simultaneously represent overlap
-    def show_pkl_list(self, location, word, binary=True):
+    def show_pkl_list(self, path, word, binary=True):
         if binary:
             read_type = "rb"
         else:
             read_type = "r"
-        pkl_list = glob(join(location,'*%s*.pkl'%word))
+        pkl_list = glob(join(path,'*%s*.pkl'%word))
         df = pd.DataFrame({'name':pkl_list})
         group = ['' for i in pkl_list]
         ## check the identity
@@ -111,7 +111,7 @@ class Common:
             for m,q in enumerate(pkl_list[(n+1):]):
                 if len(group[m+n+1])!=0:
                     continue
-                if getsize(join(location,p))!=getsize(join(location,q)):
+                if getsize(join(path,p))!=getsize(join(path,q)):
                     continue
                 ## Comparison sorting
                 with open(q,read_type) as fq:
@@ -608,7 +608,7 @@ class GA(Common):
                 ## storing elements of the upper-triangle correlation matrix by group
                 Coef[group[a],group[b]].append(df.loc[subj,visit,mapping,roiA,roiB]['Pearson_r'])
             ## a diagonal element (be always "1")
-#             Coef[group[a],group[a]].append(1.)
+            Coef[group[a],group[a]].append(.5)
         ## mean the values (define it as "interaction strength" I_k1,k2)
         Coef_mean = {}
         ## i,j : group
