@@ -1,16 +1,50 @@
 Glove Project for group "A" and "B" (abbreviation: GA, GB)
 =========================================================
 
-# Connectivity
-
 data_dir = https://drive.google.com/drive/folders/1yEdRzP-z1fc78sWKCj7NQARx_5E4viL4?usp=sharing  
 script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
+
+# Behavioral Analysis
+
+## Raw Data
+```zsh
+(GA) $data_dir/behav_data/$subj-fmri.mat
+(GB) $data_dir/behav_data/$subj-refmri.mat
+```
+
+## Analysis
+
+### Success Rate
+### Aspect Ratio
+### Transfer of Learning
+### Head Motion Displacement
+### Overall Movement - Success Rate Analysis
+### Trajectory Visualization
+
+# fMRI Analysis
+
+## GLM results
+
+1. move-stop\
+		a
+
+2. disp_14sensors
+
+3. displacement
+
+4. 4targets
+
+5. rewards
+
+## ROIs
+
+## Connectivity
 
 다음과 같은 regress out이 선행되었다.
 * MO: An amplitude of hand motion
 * RO: A reward rate
 
-## Procedure
+### Procedure
 
 1. MO, RO과 함께 GLM을 하고, 결과로 얻는 residual functional signal (errts)을 detrending (-polort 옵션)과 band passing (-passband 옵션)을 한다.
 	* input : 
