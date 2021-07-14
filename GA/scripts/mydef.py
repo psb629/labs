@@ -72,14 +72,14 @@ class Common:
     ## utilities ##
     ###############
     
-    def save_pkl(self, data, suffix):
+    def save_as_pkl(self, data, suffix):
         ## scores must exist!
         assert len(data)
         ## save data
         with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
             pickle.dump(data, fw)
         
-    def load_pkl(self, fname):
+    def load_from_pkl(self, fname):
         ## load pkl
         with open(join(self.dir_script, fname), "rb") as fr:
             return pickle.load(file=fr)

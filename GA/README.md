@@ -25,8 +25,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 ## GLM results
 
-1. move-stop\
-		a
+1. move-stop
 
 2. disp_14sensors
 
@@ -37,6 +36,50 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 5. rewards
 
 ## ROIs
+
+- localizer
+	- 방식
+		- Localizer scan 에서 GLM.move-stop 을 그룹 통계 분석한다.
+		```zsh
+		$data_dir/fMRI_data/stats/GLM.move-stop/group.statMove.tval.nii.gz
+		```
+		- p < 1e-5 로 thresholding 할 때 나온 7 개 cluster 를 기준으로 NN3 기준 n=200 혹은 그보다 조금 큰 cluster 가 되도록 조정하여 cluster mask 를 만들고 n>200 인 cluster 는 따로 작업하여 n=200 에 맞춘다.
+		```zsh
+		$data_dir/fMRI_data/stats/GLM.move-stop/Clust_mask.localizer.p1e-5.nii.gz
+		$data_dir/fMRI_data/stats/GLM.move-stop/Clust_mask_000?+tlrc.BRIK.gz
+		$data_dir/fMRI_data/stats/GLM.move-stop/Clust_mask_000?+tlrc.HEAD
+		```
+	- 코드\
+	https://github.com/psb629/labs/tree/master/GA/scripts/GLM.move-stop.sh
+	https://github.com/psb629/labs/tree/master/GA/scripts/mk.mask.localizer.sh
+
+	- 데이터
+		```zsh
+		$data_dir/fMRI_data/roi/localizer
+		```
+
+- spherical nodes of DMN
+	- 최종 결과에서는 모듈 별로 하나로 합친 ROI 를 사용하였음
+	- 데이터
+		```zsh
+		$data_dir/fMRI_data/roi/DMN
+		```
+
+- Visual area
+	- 방식
+		```
+		$data_dir/fMRI_data/roi/fan_cluster_net_20200121.csv
+		```
+		기준 Yeo_17network 에서 값이 1인 ROI만 골라서 사용. https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.24336 논문에서는 central visual 이라고 이야기함.
+	- 데이터
+		```zsh
+		$data_dir/fMRI_data/roi/fan280
+		```
+	- 최종 결과에서는 이를 모두 하나로 합친 ROI 만 사용하였음
+
+## Decoding Accuracy
+- 코드\
+	https://github.com/psb629/labs/tree/master/GA/scripts/fMRI_analysis_decoding_accuracy.ipynb
 
 ## Connectivity
 
