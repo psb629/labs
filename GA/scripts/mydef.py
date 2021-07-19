@@ -23,8 +23,8 @@ import pickle
 import pandas as pd
 
 # import nilearn.masking
+import nilearn
 from nilearn import plotting as nplt
-from nilearn import image as niimg
 import nilearn.decoding
 
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -58,11 +58,16 @@ class Common:
         self.sig2 = 0.954499736104
         self.sig3 = 0.997300203937
         
+        ## background image
+        self.img_bg = join(self.dir_root,'mni152_2009bet.nii.gz')
+        
         ## initializing several variables
         self.roi_imgs = {}
         self.fan_imgs = {}
         self.fan_info = pd.read_csv(join(self.dir_root,'Fan280','fan_cluster_net_20200121.csv'), sep=',', index_col=0)
-        self.scores = {}
+        self.df_score = pd.DataFrame(
+            columns=['subj', 'stage', 'ROI','mean_accuracy']
+        )
     
     #######################
     ## several operatros ##
@@ -72,11 +77,11 @@ class Common:
     ## utilities ##
     ###############
     
-    def save_as_pkl(self, data, suffix):
+    def save_as_pkl(self, path, data, suffix):
         ## scores must exist!
         assert len(data)
         ## save data
-        with open(join(self.dir_script, self.today+'_%s.pkl'%suffix),"wb") as fw:
+        with open(join(path, self.today+'_%s.pkl'%suffix),"wb") as fw:
             pickle.dump(data, fw)
         
     def load_from_pkl(self, fname):
@@ -147,22 +152,20 @@ class Common:
         ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
         return img_data[roi_mask, :].T
     
-    ## draw the figures of ROI images with a standard underlay
-    def draw_rois(self, img_bg, magnitude=8, n_columns=1):
+    def draw_rois(self, magnitude=8, nrow=1):
+        ## draw the figures of ROI images with a standard underlay
         ## magnitude: a size of figures
-        n_rows = int(np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
-        fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude, n_rows*magnitude))
-
+        ncol = int(np.ceil(len(self.roi_imgs.keys())/nrow))
+        fig, axes = plt.subplots(nrow, ncol, figsize=(ncol*magnitude, nrow*magnitude))
         for i, (key, img) in enumerate(self.roi_imgs.items()):
-            nvoxels=img.get_fdata().astype(bool).sum()
-            print('%s(n_voxels=%d)'%(key,nvoxels))
-            if n_rows > 1:
-                ax = axes[(i//n_columns),(i%n_columns)]
+            nvox = img.get_fdata().astype(bool).sum()
+            if nrow > 1:
+                ax = axes[(i//ncol),(i%ncol)]
             else:
                 ax = axes[i]
-            nplt.plot_roi(roi_img=img, bg_img=img_bg, title='%s(n_voxels=%d)'%(key,nvoxels)
-                          , draw_cross=False, black_bg=False
-                          , display_mode='ortho', axes=ax)
+            nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s(n_voxels=%d)'%(key,nvox)
+                                      , draw_cross=False, black_bg=False
+                                      , display_mode='ortho', axes=ax)
         return 0
 
     def draw_lineplot(self, roi_name, title, ylim=[0.225, 0.55], dy=.15, ax=None):
@@ -170,7 +173,7 @@ class Common:
         sns.set(style="ticks", context='talk')
         palette = ['#00A8AA','#C5C7D2']
         
-        sub_df = self.wit_score[self.wit_score.ROI == roi_name]
+        sub_df = self.df_score[self.df_score.ROI == roi_name]
         ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
                            , palette=palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
         sns.despine()
@@ -186,7 +189,7 @@ class Common:
 
         return ax
 
-    def draw_lineplot_with_roi(self, roi_name, img_bg, magnitude=8, ylim=[0.225, 1.], dy=.5):
+    def draw_lineplot_with_roi(self, roi_name, magnitude=8, ylim=[0.225, 1.], dy=.5):
         n_columns = 1 # a number of columns
         n_rows = 2    # a number of rows
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
@@ -198,24 +201,24 @@ class Common:
         self.draw_lineplot(roi_name=key, title=key
                            , ylim=ylim, dy=dy
                            , ax=axes[0])
-        nplt.plot_roi(roi_img=img, bg_img=img_bg, title='%s (%d)'%(key, nv)
-                      , draw_cross=False, black_bg=False
-                      , display_mode='ortho', axes=axes[1])
+        nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s (%d)'%(key, nv)
+                                  , draw_cross=False, black_bg=False
+                                  , display_mode='ortho', axes=axes[1])
         return 0
     
-    def draw_lineplots_with_rois(self, img_bg, magnitude=8, n_columns=1, ylim=[0.225, 0.55], dy=.15):
+    def draw_decacc_with_rois(self, magnitude=8, n_columns=1, ylim=[0.225, 0.55], dy=.15):
         n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
         
         for i, (key, img) in enumerate(self.roi_imgs.items()):
-            nv = img.get_fdata().sum()
-            print('%s(n_voxles=%d)'%(key, nv))
+            nvox = img.get_fdata().sum()
+            print('%s(n_voxles=%d)'%(key, nvox))
             self.draw_lineplot(roi_name=key, title=key
                                , ylim=ylim, dy=dy
                                , ax=axes[2*(i//n_columns),(i%n_columns)])
-            nplt.plot_roi(roi_img=img, bg_img=img_bg, title='%s (%d)'%(key, nv)
-                          , draw_cross=False, black_bg=False
-                          , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
+            nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s (%d)'%(key, nvox)
+                                      , draw_cross=False, black_bg=False
+                                      , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
         return 0
     
     def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
@@ -283,7 +286,6 @@ class GA(Common):
     
         ## initialize variables
         ## additional staements
-        self.wit_score = None
         self.wit_paired_ttest = None
         self.wit_mean_ttest = None
         self.wit_functional_correl = pd.DataFrame(columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
@@ -293,9 +295,6 @@ class GA(Common):
         
         ## the difference in reward rate(=success rate) between GB and GA
         self.del_RewardRate = np.loadtxt(join(self.dir_script,"RewardRate_improvement.txt"), delimiter='\n')
-        
-        ## background image
-        self.img_bg = join(self.dir_mask,'mni152_2009bet.nii.gz')
 
         ## LDA analysis
         self.lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
@@ -417,15 +416,15 @@ class GA(Common):
         ## load betas
         temp = {}
         for run in list_run:
-            temp[g+subj, run] = niimg.load_img(join(self.dir_LSS,subj,'betasLSS.%s.%s.nii.gz'%(g+subj,run)))
+            temp[g+subj, run] = nilearn.image.load_img(join(self.dir_LSS,subj,'betasLSS.%s.%s.nii.gz'%(g+subj,run)))
 
         ## We suppose to exclude the first slice from the last dimension of this 4D-image
         for key, value in temp.items():
-            temp[key] = niimg.index_img(value, np.arange(1, 97))
+            temp[key] = nilearn.image.index_img(value, np.arange(1, 97))
 
         ## new arrangement of previous data
         beta = {}
-        beta[subj, stage] = niimg.concat_imgs([temp[g+subj, run] for run in list_run])
+        beta[subj, stage] = nilearn.image.concat_imgs([temp[g+subj, run] for run in list_run])
 
         return beta
 
@@ -449,23 +448,25 @@ class GA(Common):
                 self.scores[subj, stage, region] = score['test_score']
         return self.scores
 
-    ## make a wit dataframe
-    def make_wit_score(self):
-        self.wit_score = pd.DataFrame(columns=['subj','ROI','visit','mapping','accuracy_1','accuracy_2','accuracy_3','mean_accuracy'])
-
-        for keys, values in self.scores.items():
-            v, m = keys[1].split('_')
-            self.wit_score = self.wit_score.append(
-                {'subj': keys[0]
-                 ,'ROI': keys[2]
-                 ,'visit': v
-                 ,'mapping': m
-                 ,'accuracy_1': values[0]
-                 ,'accuracy_2': values[1]
-                 ,'accuracy_3': values[2]
-                 ,'mean_accuracy': np.mean(values)}
-                , ignore_index=True)
-        return self.wit_score
+    ## make a dataframe of a decoding accuracy
+    def make_df_score(self, fname):
+        decacc = self.load_from_pkl(fname=fname)
+        lines = []
+        for keys, values in decacc.items():
+#             v, m = keys[1].split('_')
+#             self.wit_score = self.wit_score.append(
+#                 {'subj': keys[0]
+#                  ,'ROI': keys[2]
+#                  ,'visit': v
+#                  ,'mapping': m
+#                  ,'accuracy_1': values[0]
+#                  ,'accuracy_2': values[1]
+#                  ,'accuracy_3': values[2]
+#                  ,'mean_accuracy': np.mean(values)}
+#                 , ignore_index=True)
+            lines.append([keys[0], keys[1], keys[2], np.mean(values)])
+        self.df_score = pd.DataFrame(lines, columns=self.df_score.columns)
+        return self.df_score
 
     ## paired t-test
     def do_paired_ttest(self, cond_A, cond_B):
@@ -543,8 +544,21 @@ class GA(Common):
 #             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
 #         )
 #         return self.wit_functional_correl
+
+    def load_tsmean(self, subj, visit, run, ROI):
+        if ROI in list(self.fan_info.region):
+            mask = 'fan%s'%(list(self.fan_info[self.fan_info.region==ROI].label)[0])
+        else:
+            mask = ROI
+        
+        gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
+        ## my result
+        with open(join(self.dir_stats,'GLM.MO','tsmean',mask,'tsmean.bp_demean.errts.MO.%s.%s.%s.1D'%(gg+subj,run,mask)),'r') as fr:
+            tsmean = np.genfromtxt(fr, delimiter='\n')
+        return tsmean
     
     def make_wit_functional_correl_from_tsmean(self, subj, visit, mapping, rois):
+        ## Loading mean time series data on ROI from pre-created 1D files.
         sorted_rois = sorted(rois)
         lines = []
         
@@ -561,6 +575,7 @@ class GA(Common):
         return self.wit_functional_correl
     
     def make_wit_functional_correl_from_errts(self, subj, visit, mapping, fdir, fname, rois):
+        ## Etracting time series from errts data
         sorted_rois = sorted(rois.keys())
         lines = []
 
@@ -587,39 +602,6 @@ class GA(Common):
             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
         )
         return self.wit_functional_correl
-    
-    def calc_interaction_strength(self, subj, visit, mapping, group):
-        wit_corr = self.wit_functional_correl
-        ## wit_corr.columns = ['subj', 'visit', 'mapping', 'run', 'roiA', 'roiB', 'Pearson_r', 'pval']
-        df = wit_corr.groupby(['subj','visit','mapping','roiA','roiB']).mean(); del df['pval']
-
-        sorted_rois = sorted(set(list(wit_corr.roiA.unique())+list(wit_corr.roiB.unique())))
-        assert len(sorted_rois)==len(group)
-
-        ## initializing a valuable which would be used to normalization, D.S. Bassett et al., 2015
-        Coef = {}
-        for i, a in enumerate(set(group)):
-            for b in list(set(group))[i:]:
-                Coef[a,b]=[]
-        ## append correlation coefficients
-        for a, roiA in enumerate(sorted_rois):
-            for t, roiB in enumerate(sorted_rois[a+1:]):
-                b = t+a+1
-                ## storing elements of the upper-triangle correlation matrix by group
-                Coef[group[a],group[b]].append(df.loc[subj,visit,mapping,roiA,roiB]['Pearson_r'])
-            ## a diagonal element (be always "1")
-            Coef[group[a],group[a]].append(.5)
-        ## mean the values (define it as "interaction strength" I_k1,k2)
-        Coef_mean = {}
-        ## i,j : group
-        for (i, j) in Coef.keys():
-            Coef_mean[i,j] = np.mean(Coef[i,j])
-        ## normalized a interaction strength representing different groups.
-        for (i, j) in Coef_mean.keys():
-            if i!=j:
-                Coef_mean[i,j]/=np.sqrt(Coef_mean[i,i]*Coef_mean[j,j])
-
-        return Coef_mean
 
 #     def load_tsmean_from_YY(self, gg):
 #         ## tsmean -> (30 people, 6 runs, 1096 times, 46 ROIs): a mean value of BOLDs
@@ -632,15 +614,3 @@ class GA(Common):
 #             with open(join(data_dir,"NAS05_data","network_analysis","GB_MO_errts_timeseriesmean.pkl"), "rb") as file:
 #                 tsmean = pickle.load(file)   ## (subj, run, time, ROI): a mean value of BOLDs
 #         return tsmean
-
-    def load_tsmean(self, subj, visit, run, ROI):
-        if ROI in list(self.fan_info.region):
-            mask = 'fan%s'%(list(self.fan_info[self.fan_info.region==ROI].label)[0])
-        else:
-            mask = ROI
-        
-        gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
-        ## my result
-        with open(join(self.dir_stats,'GLM.MO','tsmean',mask,'tsmean.bp_demean.errts.MO.%s.%s.%s.1D'%(gg+subj,run,mask)),'r') as fr:
-            tsmean = np.genfromtxt(fr, delimiter='\n')
-        return tsmean
