@@ -1,31 +1,23 @@
 import getpass
 import os
-from os.path import join, dirname
-from os.path import getsize
-from os.path import exists
+from os.path import join, dirname, getsize, exists
 from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 # import psutil
 
-import scipy.stats
-import scipy.io
-from scipy import special
-from scipy import optimize
+import scipy
 import statsmodels.stats.multitest
 from statsmodels.sandbox.stats.multicomp import multipletests
 
 import sys
 import plotly as py
-import plotly.express as px
 import pickle
 import pandas as pd
 
-# import nilearn.masking
 import nilearn
-from nilearn import plotting as nplt
-import nilearn.decoding
+from nilearn import image, plotting
 
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import cross_validate
@@ -65,9 +57,12 @@ class Common:
         self.roi_imgs = {}
         self.fan_imgs = {}
         self.fan_info = pd.read_csv(join(self.dir_root,'Fan280','fan_cluster_net_20200121.csv'), sep=',', index_col=0)
+        self.scores = {}
         self.df_score = pd.DataFrame(
             columns=['subj', 'stage', 'ROI','mean_accuracy']
         )
+        ## LDA analysis
+        self.lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
     
     #######################
     ## several operatros ##
@@ -220,7 +215,7 @@ class Common:
 #                                       , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
 #         return 0
 
-    def plot_score(self, data=None, x=None, y=None, hue=None, ylim=(.225, .55), title=None, ax=None):
+    def plot_score(self, data=None, x=None, y=None, hue=None, ylim=None, hline=None, title=None, ax=None):
         if type(data) != pd.core.frame.DataFrame:
             data = self.df_score
             x = 'stage'
@@ -234,8 +229,11 @@ class Common:
             , capsize=.1, ci=self.sig1*100, dodge=True
             , ax=ax
         )
-        ax.set_ylim(ylim)
+        if ylim:
+            ax.set_ylim(ylim)
         ax.set_title(title)
+        if hline:
+            ax.axhline(y=hline, color='k', linestyle='--', alpha=0.25)
         return 0
     
     def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
@@ -312,9 +310,6 @@ class GA(Common):
         
         ## the difference in reward rate(=success rate) between GB and GA
         self.del_RewardRate = np.loadtxt(join(self.dir_script,"RewardRate_improvement.txt"), delimiter='\n')
-
-        ## LDA analysis
-        self.lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
     
     ##############
     ## Behavior ##
@@ -445,16 +440,17 @@ class GA(Common):
 
         return beta
 
-    ## do cross validation with given estimator (default: LDA)
-    def cross_valid(self, betas, estimator):
+    def cross_valid(self, betas, estimator=None):
         # output : A leave-one-run-out cross-validation (LORO-CV) result.
         
+        ## do cross validation with given estimator (default: LDA)
+        if not estimator:
+            estimator = self.lda
         ## set the parameters
         nrun = 3
         cv = GroupKFold(nrun)
         y = [j for i in range(nrun) for j in self.target_pos] ## answer : [5, 25, 21, 1, 25,...]
         group = [i for i in range(nrun) for j in self.target_pos] ## run number : [0, 0, ..., 1, 1, ..., 2, 2]
-
         ## cross-validation
         for subj, stage in betas.keys():
             for region, img in self.roi_imgs.items():
@@ -485,7 +481,7 @@ class GA(Common):
         self.df_score = pd.DataFrame(lines, columns=self.df_score.columns)
         return self.df_score
     
-    def plot_decacc(self, figsize=(12,12)):
+    def plot_decacc(self, figsize=(12,12), ylim=None, hline=None):
         ## create new columns to use as 'x' and 'hue'
         visit = []
         mapping = []
@@ -501,7 +497,12 @@ class GA(Common):
         ncol = nroi
         fig, axes = plt.subplots(nrows=nrow, ncols=ncol, figsize=(figsize[0]*ncol,figsize[1]*nrow))
         for i, roi in enumerate(sorted(temp.ROI.unique())):
-            self.plot_score(data=temp[temp.ROI==roi], x='visit', y='mean_accuracy', hue='mapping', title=roi, ax=axes[i])
+            self.plot_score(
+                data=temp[temp.ROI==roi]
+                , x='visit', y='mean_accuracy', hue='mapping'
+                , title=roi, ax=axes[i]
+                , ylim=ylim, hline=hline
+            )
         return 0
 
     ## paired t-test
