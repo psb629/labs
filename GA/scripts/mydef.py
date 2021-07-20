@@ -152,73 +152,90 @@ class Common:
         ## the shape is (n_trials, n_voxels) which is to cross-validate for runs. =(n_samples, n_features)
         return img_data[roi_mask, :].T
     
-    def draw_rois(self, magnitude=8, nrow=1):
+    def plot_rois(self, figsize=(12,12)):
         ## draw the figures of ROI images with a standard underlay
-        ## magnitude: a size of figures
+        nrow = 1
         ncol = int(np.ceil(len(self.roi_imgs.keys())/nrow))
-        fig, axes = plt.subplots(nrow, ncol, figsize=(ncol*magnitude, nrow*magnitude))
-        for i, (key, img) in enumerate(self.roi_imgs.items()):
+        fig, axes = plt.subplots(nrow, ncol, figsize=(ncol*figsize[0], nrow*figsize[1]))
+#         axes = np.concatenate(axes)
+        sorted_rois = sorted(self.roi_imgs.keys())
+        for i, key in enumerate(sorted_rois):
+            img = self.roi_imgs[key]
             nvox = img.get_fdata().astype(bool).sum()
-            if nrow > 1:
-                ax = axes[(i//ncol),(i%ncol)]
-            else:
-                ax = axes[i]
             nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s(n_voxels=%d)'%(key,nvox)
                                       , draw_cross=False, black_bg=False
-                                      , display_mode='ortho', axes=ax)
+                                      , display_mode='ortho', axes=axes[i])
         return 0
 
-    def draw_lineplot(self, roi_name, title, ylim=[0.225, 0.55], dy=.15, ax=None):
-        ## Figure format
-        sns.set(style="ticks", context='talk')
-        palette = ['#00A8AA','#C5C7D2']
+#     def draw_lineplot(self, roi_name, title, ylim=[0.225, 0.55], dy=.15, ax=None):
+#         ## Figure format
+#         sns.set(style="ticks", context='talk')
+#         palette = ['#00A8AA','#C5C7D2']
         
-        sub_df = self.df_score[self.df_score.ROI == roi_name]
-        ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
-                           , palette=palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
-        sns.despine()
+#         sub_df = self.df_score[self.df_score.ROI == roi_name]
+#         ax = sns.pointplot(x='visit', y='mean_accuracy', hue='mapping', data=sub_df, ax=ax
+#                            , palette=palette, markers='s', scale=1, ci=68, errwidth=2, capsize=0.1)
+#         sns.despine()
 
-        ax.set_xlim([-0.4, 1.4])
-        ax.set_ylim(ylim)
-        ax.set_yticks(np.arange(ylim[0],ylim[1]+.5*dy,dy))
-        ax.set_ylabel('Decoding Accuracy')
-        ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
-    #     ax.get_legend().remove()
-        ax.legend(loc='best', frameon=True)
-        ax.set_title(title)
+#         ax.set_xlim([-0.4, 1.4])
+#         ax.set_ylim(ylim)
+#         ax.set_yticks(np.arange(ylim[0],ylim[1]+.5*dy,dy))
+#         ax.set_ylabel('Decoding Accuracy')
+#         ax.axhline(y=0.25, color='k', linestyle='--', alpha=0.25)
+#     #     ax.get_legend().remove()
+#         ax.legend(loc='best', frameon=True)
+#         ax.set_title(title)
 
-        return ax
+#         return ax
 
-    def draw_lineplot_with_roi(self, roi_name, magnitude=8, ylim=[0.225, 1.], dy=.5):
-        n_columns = 1 # a number of columns
-        n_rows = 2    # a number of rows
-        fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
+#     def draw_lineplot_with_roi(self, roi_name, magnitude=8, ylim=[0.225, 1.], dy=.5):
+#         n_columns = 1 # a number of columns
+#         n_rows = 2    # a number of rows
+#         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
         
-        key = roi_name
-        img = self.roi_imgs[roi_name]
-        nv = img.get_fdata().sum()
-        print('%s(n_voxles=%d)'%(key, nv))
-        self.draw_lineplot(roi_name=key, title=key
-                           , ylim=ylim, dy=dy
-                           , ax=axes[0])
-        nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s (%d)'%(key, nv)
-                                  , draw_cross=False, black_bg=False
-                                  , display_mode='ortho', axes=axes[1])
-        return 0
+#         key = roi_name
+#         img = self.roi_imgs[roi_name]
+#         nv = img.get_fdata().sum()
+#         print('%s(n_voxles=%d)'%(key, nv))
+#         self.draw_lineplot(roi_name=key, title=key
+#                            , ylim=ylim, dy=dy
+#                            , ax=axes[0])
+#         nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s (%d)'%(key, nv)
+#                                   , draw_cross=False, black_bg=False
+#                                   , display_mode='ortho', axes=axes[1])
+#         return 0
     
-    def draw_decacc_with_rois(self, magnitude=8, n_columns=1, ylim=[0.225, 0.55], dy=.15):
-        n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
-        fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
+#     def draw_decacc_with_rois(self, magnitude=8, n_columns=1, ylim=[0.225, 0.55], dy=.15):
+#         n_rows = int(2*np.ceil(len(self.roi_imgs.keys())/n_columns))   # a number of rows
+#         fig, axes = plt.subplots(n_rows, n_columns, figsize=(n_columns*magnitude,n_rows*magnitude))
         
-        for i, (key, img) in enumerate(self.roi_imgs.items()):
-            nvox = img.get_fdata().sum()
-            print('%s(n_voxles=%d)'%(key, nvox))
-            self.draw_lineplot(roi_name=key, title=key
-                               , ylim=ylim, dy=dy
-                               , ax=axes[2*(i//n_columns),(i%n_columns)])
-            nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s (%d)'%(key, nvox)
-                                      , draw_cross=False, black_bg=False
-                                      , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
+#         for i, (key, img) in enumerate(self.roi_imgs.items()):
+#             nvox = img.get_fdata().sum()
+#             print('%s(n_voxles=%d)'%(key, nvox))
+#             self.draw_lineplot(roi_name=key, title=key
+#                                , ylim=ylim, dy=dy
+#                                , ax=axes[2*(i//n_columns),(i%n_columns)])
+#             nilearn.plotting.plot_roi(roi_img=img, bg_img=self.img_bg, title='%s (%d)'%(key, nvox)
+#                                       , draw_cross=False, black_bg=False
+#                                       , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
+#         return 0
+
+    def plot_score(self, data=None, x=None, y=None, hue=None, ylim=(.225, .55), title=None, ax=None):
+        if type(data) != pd.core.frame.DataFrame:
+            data = self.df_score
+            x = 'stage'
+            y = 'mean_accuracy'
+            hue = 'ROI'
+#         fig = plt.figure(figsize=figsize)
+        sns.set(style="ticks", context='talk')
+        ax = sns.pointplot(
+            data=data
+            , x=x, y=y, hue=hue
+            , capsize=.1, ci=self.sig1*100, dodge=True
+            , ax=ax
+        )
+        ax.set_ylim(ylim)
+        ax.set_title(title)
         return 0
     
     def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
@@ -467,6 +484,25 @@ class GA(Common):
             lines.append([keys[0], keys[1], keys[2], np.mean(values)])
         self.df_score = pd.DataFrame(lines, columns=self.df_score.columns)
         return self.df_score
+    
+    def plot_decacc(self, figsize=(12,12)):
+        ## create new columns to use as 'x' and 'hue'
+        visit = []
+        mapping = []
+        for s in self.df_score.stage:
+            [v, m] = s.split('_')
+            visit.append(v)
+            mapping.append(m)
+        temp = self.df_score; temp['visit'] = visit; temp['mapping'] = mapping
+        
+        ## plot
+        nroi = len(temp.ROI.unique())
+        nrow = 1
+        ncol = nroi
+        fig, axes = plt.subplots(nrows=nrow, ncols=ncol, figsize=(figsize[0]*ncol,figsize[1]*nrow))
+        for i, roi in enumerate(sorted(temp.ROI.unique())):
+            self.plot_score(data=temp[temp.ROI==roi], x='visit', y='mean_accuracy', hue='mapping', title=roi, ax=axes[i])
+        return 0
 
     ## paired t-test
     def do_paired_ttest(self, cond_A, cond_B):
