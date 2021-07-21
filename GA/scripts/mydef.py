@@ -41,6 +41,17 @@ class Common:
         else:
             print('Google Drive is NOT mounted!')
             del(self.dir_root)
+        
+        ## Github
+        splited = os.getcwd().split('/')
+        idx = splited.index('labs')
+        self.dir_git = '/'.join(splited[:idx+1])
+        if exists(self.dir_git):
+            print('Git directory is detected!')
+        else:
+            print('Git directory is NOT detected!')
+            del(self.dir_git)
+        del(idx, splited)
 
         ## date
         self.today = date.today().strftime("%Y%m%d")
@@ -60,6 +71,12 @@ class Common:
         self.scores = {}
         self.df_score = pd.DataFrame(
             columns=['subj', 'stage', 'ROI','mean_accuracy']
+        )
+        self.df_paired_ttest = pd.DataFrame(
+            columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected']
+        )
+        self.df_1sample_ttest = pd.DataFrame(
+            columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected']
         )
         ## LDA analysis
         self.lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
@@ -161,6 +178,17 @@ class Common:
                                       , draw_cross=False, black_bg=False
                                       , display_mode='ortho', axes=axes[i])
         return 0
+    
+    def make_df_score(self, fname):
+        ## make a dataframe of a decoding accuracy
+        ## key: subj, ROI, stage
+        ## value: decoding accuracies by runs
+        decacc = self.load_from_pkl(fname=fname)
+        lines = []
+        for keys, values in decacc.items():
+            lines.append([keys[0], keys[1], keys[2], np.mean(values)])
+        self.df_score = pd.DataFrame(lines, columns=self.df_score.columns)
+        return self.df_score
 
 #     def draw_lineplot(self, roi_name, title, ylim=[0.225, 0.55], dy=.15, ax=None):
 #         ## Figure format
@@ -236,6 +264,37 @@ class Common:
             ax.axhline(y=hline, color='k', linestyle='--', alpha=0.25)
         return 0
     
+    def do_paired_ttest(self, cond_A, cond_B, alpha=0.005):
+        ## paired t-test, cond_A vs. cond_B, or stage_A vs. stage_B
+
+        lines = []
+        ROI_list = self.df_score.ROI.unique()
+        for roi in ROI_list:
+            A = self.df_score[(self.df_score.ROI==roi)&(self.df_score.stage==cond_A)]['mean_accuracy']
+            B = self.df_score[(self.df_score.ROI==roi)&(self.df_score.stage==cond_B)]['mean_accuracy']
+            ttest = scipy.stats.ttest_rel(A, B)
+#             reject, pvals_corrected = statsmodels.stats.multitest.fdrcorrection(ttest.pvalue)
+            reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=alpha, method='bonferroni')
+            lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
+
+        self.df_paired_ttest = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected'])
+        
+        return self.df_paired_ttest
+
+    def do_1sample_ttest(self, stage, mean=None, alpha=0.005):
+        ## Calculate the T-test for the mean of ONE group of scores.
+
+        lines = []
+        ROI_list = self.df_score.ROI.unique()
+        for roi in ROI_list:
+            score = self.df_score[(self.df_score.ROI==roi)&(self.df_score.stage==stage)]['mean_accuracy']
+            res_uncorrected = scipy.stats.ttest_1samp(a=score, popmean=mean)
+            reject, pvals_corrected, _, _ = multipletests(res_uncorrected.pvalue, alpha=alpha, method='bonferroni')
+            lines.append((roi, stage, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
+            
+        self.df_1sample_ttest = pd.DataFrame(lines, columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected'])
+        return self.df_1sample_ttest
+    
     def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
         ## Yeo_Network : an array which has integer elements
         ## Sub_Region : an array which has string elements
@@ -301,8 +360,6 @@ class GA(Common):
     
         ## initialize variables
         ## additional staements
-        self.wit_paired_ttest = None
-        self.wit_mean_ttest = None
         self.wit_functional_correl = pd.DataFrame(columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
         #self.rewards = {}
         self.wit_rewards_wide = None
@@ -460,26 +517,6 @@ class GA(Common):
                                        , cv=cv, return_estimator=True, return_train_score=True)
                 self.scores[subj, stage, region] = score['test_score']
         return self.scores
-
-    ## make a dataframe of a decoding accuracy
-    def make_df_score(self, fname):
-        decacc = self.load_from_pkl(fname=fname)
-        lines = []
-        for keys, values in decacc.items():
-#             v, m = keys[1].split('_')
-#             self.wit_score = self.wit_score.append(
-#                 {'subj': keys[0]
-#                  ,'ROI': keys[2]
-#                  ,'visit': v
-#                  ,'mapping': m
-#                  ,'accuracy_1': values[0]
-#                  ,'accuracy_2': values[1]
-#                  ,'accuracy_3': values[2]
-#                  ,'mean_accuracy': np.mean(values)}
-#                 , ignore_index=True)
-            lines.append([keys[0], keys[1], keys[2], np.mean(values)])
-        self.df_score = pd.DataFrame(lines, columns=self.df_score.columns)
-        return self.df_score
     
     def plot_decacc(self, figsize=(12,12), ylim=None, hline=None):
         ## create new columns to use as 'x' and 'hue'
@@ -504,52 +541,6 @@ class GA(Common):
                 , ylim=ylim, hline=hline
             )
         return 0
-
-    ## paired t-test
-    def do_paired_ttest(self, cond_A, cond_B):
-        ## cond_A vs. cond_B :
-        ### early_practice vs. late_practice
-        ### early_unpractice vs. late_unpractice
-        ### early_practice vs. early_unpractice
-        ### late_practice vs. late_unpractice
-        a1, a2 = cond_A.split('_')
-        assert a1 in ['early', 'late']
-        assert a2 in ['practice', 'unpractice']
-        b1, b2 = cond_B.split('_')
-        assert b1 in ['early', 'late']
-        assert b2 in ['practice', 'unpractice']
-
-        lines = []
-        ROI_list = self.wit_score.ROI.unique()
-        for roi in ROI_list:
-            A = self.wit_score[(self.wit_score.ROI==roi)&(self.wit_score.visit==a1)&(self.wit_score.mapping==a2)]['mean_accuracy']
-            B = self.wit_score[(self.wit_score.ROI==roi)&(self.wit_score.visit==b1)&(self.wit_score.mapping==b2)]['mean_accuracy']
-            ttest = scipy.stats.ttest_rel(A, B)
-#             reject, pvals_corrected = statsmodels.stats.multitest.fdrcorrection(ttest.pvalue)
-            reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=0.005, method='bonferroni')
-            lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
-
-        self.wit_paired_ttest = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','t-statistic','Two-sided p-value','rejected','pvalue-corrected'])
-        
-        return self.wit_paired_ttest
-
-    ## Calculate the T-test for the mean of ONE group of scores.
-    def make_wit_mean_ttest(self, stage, mean):
-        ## ex) stage == 'early_late', mean == 0.25 (the chance level)
-        a1, a2 = stage.split('_')
-        assert a1 in ['early', 'late']
-        assert a2 in ['practice', 'unpractice']
-
-        lines = []
-        ROI_list = self.wit_score.ROI.unique()
-        for roi in ROI_list:
-            score = self.wit_score[(self.wit_score.ROI==roi)&(self.wit_score.visit==a1)&(self.wit_score.mapping==a2)]['mean_accuracy']
-            res_uncorrected = scipy.stats.ttest_1samp(a=score, popmean=mean)
-            reject, pvals_corrected, _, _ = multipletests(res_uncorrected.pvalue, alpha=0.005, method='bonferroni')
-            lines.append((roi, a1, a2, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
-            
-        self.wit_mean_ttest = pd.DataFrame(lines, columns=['ROI', 'visit', 'mapping', 'tval', 'pval_uncorrected', 'reject', 'pval_corrected'])
-        return self.wit_mean_ttest
     
 #     def make_wit_functional_correl(self, roi_imgs):
 #         runs = ['r01','r02','r03','r04','r05','r06']

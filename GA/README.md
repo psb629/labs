@@ -38,6 +38,16 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 ## ROIs
 
 - localizer
+	![roi_7localizer](https://github.com/psb629/labs/blob/master/GA/images/20210721_rois.7localizers.png)
+	- 목록
+		- left M1 : $n_{voxel}=200$
+		- right Cerebellum IV-V : $n_{voxel}=200$
+		- right M1 : $n_{voxel}=200$
+		- left Putamen : $n_{voxel}=200$
+		- right SMA : $n_{voxel}=200$
+		- right Cerebellum VIIIb : $n_{voxel}=200$
+		- left Thalamus : $n_{voxel}=200$
+
 	- 방식
 		- Localizer scan 에서 GLM.move-stop 을 그룹 통계 분석한다.
 		```zsh
@@ -58,14 +68,47 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 		$data_dir/fMRI_data/roi/localizer
 		```
 
-- spherical nodes of DMN
-	- 최종 결과에서는 모듈 별로 하나로 합친 ROI 를 사용하였음
+- spherical nodes of DMN ($r=10$mm)
+	![roi_DMN](https://github.com/psb629/labs/blob/master/GA/images/20210721_rois.DMN.png)
+	- 목록
+		- Core
+			- anteromedial frontal cortex (aMPFC) : $n_{voxel}=203$
+			- posterior cingulate (PCC) : $n_{voxel}=203$
+
+		- Medial Temporal Lobe
+			- retrosplenial cortex (RSP) : $n_{voxel}=203$
+			- (posterior) parahippocampal cortex (PHC) : $n_{voxel}=203$
+			- posterior inferior parietal lobe (pIPL) : $n_{voxel}=L187, R170$
+			- ventromedial preforntal cortex (vmPFC) : $n_{voxel}=191$
+			- (anterior) parahippocampal gyrus (HF) : $n_{voxel}=203$
+
+		- dorsomedial prefrontal (dmPFC)
+			- dorsomedial prefrontal cortex (dmPFC) : $n_{voxel}=203$
+			- lateral temporal lobe (LTC) : $n_{voxel}=L196, R193$
+			- temporoparietal junction (TPJ) : $n_{voxel}=L203, R202$
+			- middle temporal pole (tempP) : $n_{voxel}=L79, R90$
+	- 코드\
+	https://github.com/psb629/labs/blob/master/GA/scripts/DMN_ROImasks.sh
+	https://github.com/psb629/labs/tree/master/GA/scripts/DMN_ROImasks2.sh
+	https://github.com/psb629/labs/tree/master/GA/scripts/DMN_ROImasks3.sh
+
 	- 데이터
 		```zsh
 		$data_dir/fMRI_data/roi/DMN
 		```
+	- 최종 결과에서는 모듈 별로 하나로 합친 ROI 를 사용하였음
 
-- Visual area
+- Visual (occipital) area
+	![roi_Yeo1](https://github.com/psb629/labs/blob/master/GA/images/20210721_rois.Yeo1.png)
+	- 목록
+		- fusiform gyrus, BA37 (FuG_3_2) : $n_{voxel}=L333, R297$
+		- lingual gyrus, caudal (MVOcC_5-1) : $n_{voxel}=L200, R244$
+		- cuneus gyrus, caudal (MVOcC_5-3) : $n_{voxel}=L274, R216$
+		- right lingual gyrus, rostral (MVOcC_5-4) : $n_{voxel}=358$
+		- middle occipital gyrus (LOcC_4-1) : $n_{voxel}=L320, R333$
+		- occipital polar cortex (LOcC_4-3) : $n_{voxel}=L416, R436$
+		- inferior occipital gyrus (LOcC_4-4) : $n_{voxel}=L426, R359$
+		- left lateral superior occipital gyrus (LOcC_2-2) : $n_{voxel}=251$
 	- 방식
 		```
 		$data_dir/fMRI_data/roi/fan_cluster_net_20200121.csv
@@ -78,8 +121,39 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 	- 최종 결과에서는 이를 모두 하나로 합친 ROI 만 사용하였음
 
 ## Decoding Accuracy
+- Multivariate Pattern Analysis 데이터\
+	https://github.com/psb629/labs/blob/master/GA/scripts/3dLSS.MO.zsh 로 얻어진 3dLSS 데이터
+	```zsh
+	$data_dir/fMRI_data/preproc_data/$subj/betasLSS.$subj.$run.nii.gz
+	```
 - 코드\
 	https://github.com/psb629/labs/tree/master/GA/scripts/fMRI_analysis_decoding_accuracy.ipynb
+
+- ROI 별
+	1. Localizer
+	![decoding_accuracy_7localizer](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.7localizers.png)
+		- paired t-test (rejected, $\alpha=0.005$)
+			- early_practice vs. late_practice
+				- n200_c1_L_Postcentral
+			- early_unpractice vs. late_unpractice\
+				(None)
+	---
+	2. 3 subnetworks of DMN
+	![decoding_accuracy_DMN](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.DMN.png)
+		- paired t-test (rejected, $\alpha=0.005$)
+			- early_practice vs. late_practice
+				- Core
+				- dMsub_TempP_r_temp
+			- early_unpractice vs. late_unpractice\
+				(None)
+	---
+	3. visual area
+	![decoding_accuracy_Yeo1](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.Yeo1.png)
+		- paired t-test (rejected, $\alpha=0.005$)
+			- early_practice vs. late_practice\
+				(None)
+			- early_unpractice vs. late_unpractice\
+				(None)
 
 ## Connectivity
 
