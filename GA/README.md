@@ -75,14 +75,14 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 			- `anteromedial frontal cortex (aMPFC)` : nvoxels=203
 			- `posterior cingulate (PCC)` : nvoxels=203
 
-		- `Medial Temporal Lobe`
+		- `Medial Temporal Lobe (MTL)`
 			- `retrosplenial cortex (RSP)` : nvoxels=203
 			- `(posterior) parahippocampal cortex (PHC)` : nvoxels=203
 			- `posterior inferior parietal lobe (pIPL)` : nvoxels=L187, R170
 			- `ventromedial preforntal cortex (vmPFC)` : nvoxels=191
 			- `(anterior) parahippocampal gyrus (HF)` : nvoxels=203
 
-		- `dorsomedial prefrontal (dmPFC)`
+		- `dorsomedial sub-regions (dmsub)`
 			- `dorsomedial prefrontal cortex (dmPFC)` : nvoxels=203
 			- `lateral temporal lobe (LTC)` : nvoxels=L196, R193
 			- `temporoparietal junction (TPJ)` : nvoxels=L203, R202
