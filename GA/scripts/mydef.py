@@ -29,9 +29,20 @@ from random import random as rand
 
 from datetime import date
 
+from sys import platform
+
 class Common:
     
     def __init__(self):
+        
+        ## check OS
+        print("OS :",platform)
+#         if platform == "linux" or platform == "linux2":
+#             # linux
+#         elif platform == "darwin":
+#             # OS X
+#         elif platform == "win32":
+#             # Windows...
         
         ## Google Drive
         self.username = getpass.getuser()
@@ -72,12 +83,12 @@ class Common:
         self.df_score = pd.DataFrame(
             columns=['subj', 'stage', 'ROI','mean_accuracy']
         )
-        self.df_paired_ttest = pd.DataFrame(
-            columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected']
-        )
-        self.df_1sample_ttest = pd.DataFrame(
-            columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected']
-        )
+#         self.df_paired_ttest = pd.DataFrame(
+#             columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected']
+#         )
+#         self.df_1sample_ttest = pd.DataFrame(
+#             columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected']
+#         )
         ## LDA analysis
         self.lda = LinearDiscriminantAnalysis(solver='lsqr', shrinkage='auto')
     
@@ -277,9 +288,9 @@ class Common:
             reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=alpha, method='bonferroni')
             lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
 
-        self.df_paired_ttest = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected'])
+        df = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected'])
         
-        return self.df_paired_ttest
+        return df
 
     def do_1sample_ttest(self, stage, mean=None, alpha=0.005):
         ## Calculate the T-test for the mean of ONE group of scores.
@@ -292,8 +303,8 @@ class Common:
             reject, pvals_corrected, _, _ = multipletests(res_uncorrected.pvalue, alpha=alpha, method='bonferroni')
             lines.append((roi, stage, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
             
-        self.df_1sample_ttest = pd.DataFrame(lines, columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected'])
-        return self.df_1sample_ttest
+        df = pd.DataFrame(lines, columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected'])
+        return df
     
     def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
         ## Yeo_Network : an array which has integer elements
