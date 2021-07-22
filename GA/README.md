@@ -132,7 +132,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 - ROI 별
 	1. Localizer
 	![decoding_accuracy_7localizer](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.7localizers.png)
-		- paired t-test (rejected, $\alpha=0.005$)
+		- paired t-test (rejected, ![\alpha=0.005](https://latex.codecogs.com/png.latex?\bg_black&space;\fn_cm&space;\alpha=0.005))
 			- early_practice vs. late_practice
 				- `n200_c1_L_Postcentral`
 			- early_unpractice vs. late_unpractice\
@@ -140,7 +140,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 	---
 	2. 3 subnetworks of DMN
 	![decoding_accuracy_DMN](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.DMN.png)
-		- paired t-test (rejected, $\alpha=0.005$)
+		- paired t-test (rejected, ![\alpha=0.005](https://latex.codecogs.com/png.latex?\bg_black&space;\fn_cm&space;\alpha=0.005))
 			- early_practice vs. late_practice
 				- `Core`
 				- `dMsub_TempP_r_temp`
@@ -149,7 +149,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 	---
 	3. visual area
 	![decoding_accuracy_Yeo1](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.Yeo1.png)
-		- paired t-test (rejected, $\alpha=0.005$)
+		- paired t-test (rejected, ![\alpha=0.005](https://latex.codecogs.com/png.latex?\bg_black&space;\fn_cm&space;\alpha=0.005))
 			- early_practice vs. late_practice\
 				(None)
 			- early_unpractice vs. late_unpractice\
