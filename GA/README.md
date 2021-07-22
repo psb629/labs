@@ -187,8 +187,8 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 		를 node 로 하는 average BOLD signals를 계산한다.
 		
 		* input :
-			```javascript
-			javascript
+			```ruby
+			ruby
 			$data_dir/fMRI_data/stats/GLM.MO.RO/$subj/$subj/$subj.bp_demean.errts.MO.$run.nii.gz
 			$data_dir/fMRI_data/roi/DMN/Core_*.nii
 			$data_dir/fMRI_data/roi/fan280/fan.roi.GA.???.nii.gz
