@@ -54,7 +54,8 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 		$data_dir/fMRI_data/stats/GLM.move-stop/group.statMove.tval.nii.gz
 		```
 		- p < 1e-5 로 thresholding 할 때 나온 7 개 cluster 를 기준으로 NN3 기준 n=200 혹은 그보다 조금 큰 cluster 가 되도록 조정하여 cluster mask 를 만들고 n>200 인 cluster 는 따로 작업하여 n=200 에 맞춘다.
-		```zsh
+		```java
+		java
 		$data_dir/fMRI_data/stats/GLM.move-stop/Clust_mask.localizer.p1e-5.nii.gz
 		$data_dir/fMRI_data/stats/GLM.move-stop/Clust_mask_000?+tlrc.BRIK.gz
 		$data_dir/fMRI_data/stats/GLM.move-stop/Clust_mask_000?+tlrc.HEAD
@@ -68,21 +69,21 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 		$data_dir/fMRI_data/roi/localizer
 		```
 
-- spherical nodes of DMN ($r=10$mm)
+- spherical nodes of DMN (![r=10](https://latex.codecogs.com/gif.latex?\bg_black&space;r=10)mm)
 	![roi_DMN](https://github.com/psb629/labs/blob/master/GA/images/20210721_rois.DMN.png)
 	- 목록
-		- `Core`
+		- `Core` : nvoxels=760
 			- `anteromedial frontal cortex (aMPFC)` : nvoxels=203
 			- `posterior cingulate (PCC)` : nvoxels=203
 
-		- `Medial Temporal Lobe (MTL)`
+		- `Medial Temporal Lobe (MTL)` : nvoxels=1766
 			- `retrosplenial cortex (RSP)` : nvoxels=203
 			- `(posterior) parahippocampal cortex (PHC)` : nvoxels=203
 			- `posterior inferior parietal lobe (pIPL)` : nvoxels=L187, R170
 			- `ventromedial preforntal cortex (vmPFC)` : nvoxels=191
 			- `(anterior) parahippocampal gyrus (HF)` : nvoxels=203
 
-		- `dorsomedial sub-regions (dmsub)`
+		- `dorsomedial sub-regions (dmsub)` : nvoxels=1166
 			- `dorsomedial prefrontal cortex (dmPFC)` : nvoxels=203
 			- `lateral temporal lobe (LTC)` : nvoxels=L196, R193
 			- `temporoparietal junction (TPJ)` : nvoxels=L203, R202
@@ -186,7 +187,8 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 		를 node 로 하는 average BOLD signals를 계산한다.
 		
 		* input :
-			```zsh
+			```javascript
+			javascript
 			$data_dir/fMRI_data/stats/GLM.MO.RO/$subj/$subj/$subj.bp_demean.errts.MO.$run.nii.gz
 			$data_dir/fMRI_data/roi/DMN/Core_*.nii
 			$data_dir/fMRI_data/roi/fan280/fan.roi.GA.???.nii.gz
