@@ -371,7 +371,7 @@ class GA(Common):
     
         ## initialize variables
         ## additional staements
-        self.wit_functional_correl = pd.DataFrame(columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
+        self.df_functional_correl = pd.DataFrame(columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
         #self.rewards = {}
         self.wit_rewards_wide = None
         self.wit_rewards_long = None
@@ -596,7 +596,7 @@ class GA(Common):
             tsmean = np.genfromtxt(fr, delimiter='\n')
         return tsmean
     
-    def make_wit_functional_correl_from_tsmean(self, subj, visit, mapping, rois):
+    def make_df_functional_correl_from_tsmean(self, subj, visit, mapping, rois):
         ## Loading mean time series data on ROI from pre-created 1D files.
         sorted_rois = sorted(rois)
         lines = []
@@ -610,10 +610,10 @@ class GA(Common):
                     tsmean_B = self.load_tsmean(subj, visit, run, roiB)
                     r, p = scipy.stats.pearsonr(x=tsmean_A, y=tsmean_B)
                     lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-                    self.wit_functional_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
-        return self.wit_functional_correl
+                    self.df_functional_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
+        return self.df_functional_correl
     
-    def make_wit_functional_correl_from_errts(self, subj, visit, mapping, fdir, fname, rois):
+    def make_df_functional_correl_from_errts(self, subj, visit, mapping, fdir, fname, rois):
         ## Etracting time series from errts data
         sorted_rois = sorted(rois.keys())
         lines = []
@@ -637,10 +637,10 @@ class GA(Common):
                 for roiB in sorted_rois[i+1:]:
                     r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
                     lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-        self.wit_functional_correl = pd.DataFrame(
+        self.df_functional_correl = pd.DataFrame(
             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
         )
-        return self.wit_functional_correl
+        return self.df_functional_correl
 
 #     def load_tsmean_from_YY(self, gg):
 #         ## tsmean -> (30 people, 6 runs, 1096 times, 46 ROIs): a mean value of BOLDs
