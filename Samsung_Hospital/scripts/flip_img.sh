@@ -2,7 +2,7 @@
 
 root_dir=~/Downloads
 
-foreach subj (S27 S28)
+foreach subj (S30)
 	foreach axis (s c a)
 		img_file=$root_dir/${subj}_${axis}.png
 
