@@ -80,9 +80,8 @@ class Common:
         self.fan_imgs = {}
         self.fan_info = pd.read_csv(join(self.dir_root,'Fan280','fan_cluster_net_20200121.csv'), sep=',', index_col=0)
         self.scores = {}
-        self.df_score = pd.DataFrame(
-            columns=['subj', 'stage', 'ROI','mean_accuracy']
-        )
+        self.df_score = pd.DataFrame(columns=['subj', 'stage', 'ROI','mean_accuracy'])
+        self.df_functional_correlation = pd.DataFrame(columns=['subj','stage','run','roiA','roiB','Pearson_r','pval'])
 #         self.df_paired_ttest = pd.DataFrame(
 #             columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected']
 #         )
@@ -306,28 +305,55 @@ class Common:
         df = pd.DataFrame(lines, columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected'])
         return df
     
-    def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
-        ## Yeo_Network : an array which has integer elements
-        ## Sub_Region : an array which has string elements
-        self.load_fan()
-        dt = pd.DataFrame()
-        if Yeo_Network:
-            for nn in Yeo_Network:
-                dt = dt.append(self.fan_info[(self.fan_info.yeo_17network == nn)])
-        elif Sub_Region:
-            for ss in Sub_Region:
-                dt = dt.append(self.fan_info[(self.fan_info.subregion_name == ss)])
-        temp = {}
-        for idx in dt.index:
-            nn = dt.loc[idx,'label']
-            region = dt.loc[idx,'region']
-            temp[region] = self.fan_imgs[str(nn)]
-        ## merging
-        img0 = nilearn.image.math_img(img1=self.fan_imgs['001'], formula="img1*0")
-        for _, img in temp.items():
-            img0 = nilearn.image.math_img(img1=img0, img2=img, formula="(img1+img2) > 0")
+    def load_tsmean_1D(self, fdir, fname):
+        with open(join(fdir, fname),'rb') as fr:
+            tsmean = np.genfromtxt(fr, delimiter='\n')
 
-        return img0
+        return tsmean
+    
+    def make_df_correlation_matrix(self, subj, stage, group, data=None):
+        ## data: DataFrame. 일반적으로 self.df_functional_correlation
+        if not data:
+            data=self.df_functional_correlation
+        ## data 의 ROI 리스트를 정렬시키고 저장함.
+        sorted_rois = sorted(set(list(data.roiA.unique())+list(data.roiB.unique())))
+        ## data 를 주어진 subj, stage에 대해서 groupby 하여, 각 RUN 의 Pearson correlation 을 평균 냄.
+        df = data.groupby(['subj','stage','roiA','roiB']).mean()
+        ## group: 각 ROI 마다 network 값을 할당한 list. 크기는 ROI list 와 같아야 함.
+        assert len(group)==len(sorted_rois)
+        
+        ## correlation matrix 를 DataFrame 형태로 만듦.
+        corrmat = pd.DataFrame(index=sorted_rois, columns=sorted_rois, dtype='float64')
+        for roiA in sorted_rois:
+            for roiB in sorted_rois:
+                loc = tuple([subj, stage]+sorted([roiA, roiB]))
+                corrmat.loc[roiA][roiB] = df.loc[loc]['Pearson_r']
+#             corrmat.loc[roiA][roiA] = 2.  ## Is this Yera and Yunha's fault?
+
+        return corrmat
+    
+#     def merge_fan_rois(self, Yeo_Network=False, Sub_Region=False):
+#         ## Yeo_Network : an array which has integer elements
+#         ## Sub_Region : an array which has string elements
+#         self.load_fan()
+#         dt = pd.DataFrame()
+#         if Yeo_Network:
+#             for nn in Yeo_Network:
+#                 dt = dt.append(self.fan_info[(self.fan_info.yeo_17network == nn)])
+#         elif Sub_Region:
+#             for ss in Sub_Region:
+#                 dt = dt.append(self.fan_info[(self.fan_info.subregion_name == ss)])
+#         temp = {}
+#         for idx in dt.index:
+#             nn = dt.loc[idx,'label']
+#             region = dt.loc[idx,'region']
+#             temp[region] = self.fan_imgs[str(nn)]
+#         ## merging
+#         img0 = nilearn.image.math_img(img1=self.fan_imgs['001'], formula="img1*0")
+#         for _, img in temp.items():
+#             img0 = nilearn.image.math_img(img1=img0, img2=img, formula="(img1+img2) > 0")
+
+#         return img0
 
 class GA(Common):
     def __init__(self):
@@ -345,12 +371,11 @@ class GA(Common):
 
         self.dir_behav = self.dir_work + '/behav_data'
         self.dir_fmri = self.dir_work + '/fMRI_data'
-        self.dir_searchlight = self.dir_fmri + '/searchlight'
+#         self.dir_searchlight = self.dir_fmri + '/searchlight'
         self.dir_LSS = self.dir_fmri + '/preproc_data'
         self.dir_stats = self.dir_fmri + '/stats'
         self.dir_mask = self.dir_fmri + '/roi'
-        self.dir_dmn = self.dir_mask + '/DMN'
-        self.dir_loc = self.dir_mask + '/localizer'
+#         self.dir_loc = self.dir_mask + '/localizer'
     
         ## labeling with target position
         # 1 - 5 - 25 - 21 - 1 - 25 - 5 - 21 - 25 - 1 - 21 - 5 - 1 - ...
@@ -371,8 +396,7 @@ class GA(Common):
     
         ## initialize variables
         ## additional staements
-        self.df_functional_correl = pd.DataFrame(columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
-        #self.rewards = {}
+#         self.rewards = {}
         self.wit_rewards_wide = None
         self.wit_rewards_long = None
         
@@ -431,7 +455,7 @@ class GA(Common):
         return norm_mrew
     
     def make_wit_rewards_wide(self):
-        self.wit_rewards_wide = pd.DataFrame(columns=['block%02d'%(block+1) for block in range(48)])
+        self.wit_rewards_wide = pd.DataFrame(columns=['block%02d'%(block+1) for block in range(48)], dtype='float64')
         for subj in self.list_subj:
             for visit in ['early', 'late']:
                 suffix = 'fmri' if visit=='early' else('refmri' if visit=='late' else 'invalid')
@@ -552,95 +576,79 @@ class GA(Common):
                 , ylim=ylim, hline=hline
             )
         return 0
+
+    def convert_fdir_and_fname_for_tsmean(self, subj, stage, region):
+        ## stats_dir/GLM.MO/tsmean/roi 폴더에 미리 계산된 BOLD의 시계열 평균값 1D 파일의 경로와 파일명을 출력해주는 함수.
+        ## e.g.) subj: '01', stage: 'early_practice', region: 'FuG_L_3_2'
+        
+        gg='GA' if 'early' in stage else ('GB' if 'late' in stage else 'invalid')
+        runs=['r01', 'r02', 'r03'] if 'practice' in stage else (['r04', 'r05', 'r06'] if 'unpractice' in stage else 'invalid')
+        
+        ## 일반적인 roi 폴더 경로는 그 영역의 이름이나, Fan mask 로 있는 영역이면 파일 경로를 fan??? 로 출력함.
+        roi = region
+        if region in list(self.fan_info.region):
+            roi = 'fan%s'%int(self.fan_info[self.fan_info.region==region].label)
+        fdir = join(self.dir_stats,'GLM.MO','tsmean',roi)
+        
+        ## 각 stage 별로 각각 존재하는 run 별로 파일명을 출력함. 이때 fdir, fname 쌍 들은 tuple 형태로 저장.
+        pair = []
+        for run in runs:
+            fname = 'tsmean.bp_demean.errts.MO.%s.%s.%s.1D'%(gg+subj,run,roi)
+            pair.append((fdir,fname))
+        
+        return pair
     
-#     def make_wit_functional_correl(self, roi_imgs):
-#         runs = ['r01','r02','r03','r04','r05','r06']
-#         sorted_rois = sorted(roi_imgs.keys())
+    def make_df_func_correl_from_tsmean(self, subj, stage, rois):
+        ## convert_fdir_and_fname_for_tsmean() 함수로 얻은 경로와 파일명을 통해 tsmean(1D 파일)을 불러오고, run, roi 별로 correlation 을 계산하여 DataFrame 형태로 리턴.
+        sorted_rois = sorted(rois)
+        runs=['r01', 'r02', 'r03'] if 'practice' in stage else (['r04', 'r05', 'r06'] if 'unpractice' in stage else 'invalid')
+        
+        lines = []
+        for i, run in enumerate(runs):
+            print(subj, stage, run, end='\t\t\t\r')
+            for a, roiA in enumerate(sorted_rois):
+                fdir, fname = self.convert_fdir_and_fname_for_tsmean(subj, stage, roiA)[i]
+                tsmeanA = self.load_tsmean_1D(fdir=fdir, fname=fname)
+                for roiB in sorted_rois[a:]:
+                    fdir, fname = self.convert_fdir_and_fname_for_tsmean(subj, stage, roiB)[i]
+                    tsmeanB = self.load_tsmean_1D(fdir=fdir, fname=fname)
+                    ## Pearson correlation 계산
+                    r, p = scipy.stats.pearsonr(x=tsmeanA, y=tsmeanB)
+                    ## 총 line 수: [ROI조합수(상삼각성분수) + ROI수(대각성분수)] * RUN수
+                    lines.append([subj, stage, run, roiA, roiB, r, p])
+
+        res = pd.DataFrame(lines, columns=self.df_functional_correlation.columns)
+        
+        return res
+    
+#     def make_df_functional_correl_from_errts(self, subj, visit, mapping, fdir, fname, rois):
+#         ## Etracting time series from errts data
+#         sorted_rois = sorted(rois.keys())
 #         lines = []
-#         for subj in self.list_subj:
-#             for visit in ['early','late']:
-#                 gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
-#                 for run in runs:
-#                     print(subj, visit, run, end='\t\t\t\r')
-#                     mapping = 'practice' if run in ['r01','r02','r03'] else('unpractice' if run in ['r04','r05','r06'] else 'invalid')
-#                     ## load errts
-#                     errts = nilearn.image.load_img(join(self.dir_stats,'GLM.MO.RO',subj,'%s.bp_demean.errts.MO.RO.%s.nii.gz'%(gg+subj,run)))
-#                     assert errts.shape[-1]==1096
-#                     ## mean values in each ROI
-#                     Xmeans = {}
-#                     for region in sorted_rois:
-# #                         print(subj, visit, run, ": masking... ", end='\r')
-#                         ## masking
-#                         X = self.fast_masking(img=errts, roi=roi_imgs[region])
-#                         ## calculate a voxel-wise mean of betas by each region
-#                         Xmeans[region] = np.mean(X, axis=1)
-#                     ## obatin Pearson correlation coefficients
-#                     for i, roiA in enumerate(sorted_rois[:-1]):
-#                         for roiB in sorted_rois[i+1:]:
-#                             r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
-#                             lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-#         self.wit_functional_correl = pd.DataFrame(
+
+#         runs = ['r01','r02','r03'] if mapping=='practice' else (['r04','r05','r06'] if mapping=='unpractice' else 'invalid')
+#         gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
+#         for run in runs:
+#             print(subj, visit, run, end='\t\t\t\r')
+#             ## load errts
+#             errts = nilearn.image.load_img(join(self.dir_stats,fdir,subj,'%s.%s.%s.nii.gz'%(gg+subj,fname,run)))
+#             assert errts.shape[-1]==1096
+#             ## mean values in each ROI
+#             Xmeans = {}
+#             for region in sorted_rois:
+#                 ## masking
+#                 X = self.fast_masking(img=errts, roi=rois[region])
+#                 ## calculate a voxel-wise mean of betas by each region
+#                 Xmeans[region] = np.mean(X, axis=1)
+#             ## obatin Pearson correlation coefficients
+#             for i, roiA in enumerate(sorted_rois[:-1]):
+#                 for roiB in sorted_rois[i+1:]:
+#                     r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
+#                     lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
+#         self.df_functional_correl = pd.DataFrame(
 #             data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
 #         )
-#         return self.wit_functional_correl
-
-    def load_tsmean(self, subj, visit, run, ROI):
-        if ROI in list(self.fan_info.region):
-            mask = 'fan%s'%(list(self.fan_info[self.fan_info.region==ROI].label)[0])
-        else:
-            mask = ROI
-        
-        gg = 'GA' if visit=='early' else ('GB' if visit=='late' else None)
-        ## my result
-        with open(join(self.dir_stats,'GLM.MO','tsmean',mask,'tsmean.bp_demean.errts.MO.%s.%s.%s.1D'%(gg+subj,run,mask)),'r') as fr:
-            tsmean = np.genfromtxt(fr, delimiter='\n')
-        return tsmean
-    
-    def make_df_functional_correl_from_tsmean(self, subj, visit, mapping, rois):
-        ## Loading mean time series data on ROI from pre-created 1D files.
-        sorted_rois = sorted(rois)
-        lines = []
-        
-        runs = ['r01','r02','r03'] if mapping=='practice' else (['r04','r05','r06'] if mapping=='unpractice' else 'invalid')
-        for run in runs:
-            print(subj, visit, run, end='\t\t\t\r')
-            for roiA in sorted_rois:
-                tsmean_A = self.load_tsmean(subj, visit, run, roiA)
-                for roiB in sorted_rois:
-                    tsmean_B = self.load_tsmean(subj, visit, run, roiB)
-                    r, p = scipy.stats.pearsonr(x=tsmean_A, y=tsmean_B)
-                    lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-                    self.df_functional_correl = pd.DataFrame(lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval'])
-        return self.df_functional_correl
-    
-    def make_df_functional_correl_from_errts(self, subj, visit, mapping, fdir, fname, rois):
-        ## Etracting time series from errts data
-        sorted_rois = sorted(rois.keys())
-        lines = []
-
-        runs = ['r01','r02','r03'] if mapping=='practice' else (['r04','r05','r06'] if mapping=='unpractice' else 'invalid')
-        gg = 'GA' if visit=='early' else ('GB' if visit=='late' else 'invalid')
-        for run in runs:
-            print(subj, visit, run, end='\t\t\t\r')
-            ## load errts
-            errts = nilearn.image.load_img(join(self.dir_stats,fdir,subj,'%s.%s.%s.nii.gz'%(gg+subj,fname,run)))
-            assert errts.shape[-1]==1096
-            ## mean values in each ROI
-            Xmeans = {}
-            for region in sorted_rois:
-                ## masking
-                X = self.fast_masking(img=errts, roi=rois[region])
-                ## calculate a voxel-wise mean of betas by each region
-                Xmeans[region] = np.mean(X, axis=1)
-            ## obatin Pearson correlation coefficients
-            for i, roiA in enumerate(sorted_rois[:-1]):
-                for roiB in sorted_rois[i+1:]:
-                    r, p = scipy.stats.pearsonr(x=Xmeans[roiA], y=Xmeans[roiB])
-                    lines.append([subj, visit, mapping, run, roiA, roiB, r, p])
-        self.df_functional_correl = pd.DataFrame(
-            data=lines, columns=['subj','visit','mapping','run','roiA','roiB','Pearson_r','pval']
-        )
-        return self.df_functional_correl
+#         return self.df_functional_correl
 
 #     def load_tsmean_from_YY(self, gg):
 #         ## tsmean -> (30 people, 6 runs, 1096 times, 46 ROIs): a mean value of BOLDs
