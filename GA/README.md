@@ -1,6 +1,9 @@
 Glove Project for group "A" and "B" (abbreviation: GA, GB)
 =========================================================
 
+- Early (GA) : Goal-directed stage
+- Late (GB) : Automatic stage
+
 data_dir = https://drive.google.com/drive/folders/1yEdRzP-z1fc78sWKCj7NQARx_5E4viL4?usp=sharing  
 script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
@@ -138,11 +141,12 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 			- early_unpractice vs. late_unpractice\
 				(None)
 	---
-	2. 3 subnetworks of DMN
+	2. 3 subnetworks of DMN\
+	우리의 가설은 DMN 이 motor adapation task 나 sequence learning task 보다도 훨씬 큰 cognitive resource를 요구하는 de novo motor task 에서 중요한 역할을 한다는 것이다.
 	![decoding_accuracy_DMN](https://github.com/psb629/labs/blob/master/GA/images/20210721_decacc.DMN.png)
 		- paired t-test (rejected, ![\alpha=0.005](https://latex.codecogs.com/png.latex?\bg_black&space;\fn_cm&space;\alpha=0.005))
 			- early_practice vs. late_practice
-				- `Core`
+				- `Core` : 
 				- `dMsub_TempP_r_temp`
 			- early_unpractice vs. late_unpractice\
 				(None)
@@ -156,8 +160,9 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 				(None)
 
 ## Connectivity
+task-positive 영역과 task-negative 영역간의 상호작용이 개별적인 학습성과의 변동을 어느정도 설명할 수 있는지 파악하고자 한다.
 
-다음과 같은 regress out이 선행되었다.
+분석에 앞서 다음과 같은 regress out이 선행되었다.
 * MO: An amplitude of hand motion
 * RO: A reward rate
 
