@@ -44,11 +44,11 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 	![roi_7localizer](https://github.com/psb629/labs/blob/master/GA/images/20210721_rois.7localizers.png)
 	- 목록
 		- `left M1` : nvoxels=200
-		- `right Cerebellum IV-V` : nvoxels=200
+		- `right Cerebellum, Lobules IV-V` : nvoxels=200
 		- `right M1` : nvoxels=200
 		- `left Putamen` : nvoxels=200
 		- `right SMA` : nvoxels=200
-		- `right Cerebellum VIIIb` : nvoxels=200
+		- `right Cerebellum, Lobule VIIIb` : nvoxels=200
 		- `left Thalamus` : nvoxels=200
 
 	- 방식

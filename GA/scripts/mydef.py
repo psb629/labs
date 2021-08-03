@@ -83,7 +83,7 @@ class Common:
         self.df_score = pd.DataFrame(columns=['subj', 'stage', 'ROI','mean_accuracy'])
         self.df_functional_correlation = pd.DataFrame(columns=['subj','stage','run','roiA','roiB','Pearson_r','pval'])
 #         self.df_paired_ttest = pd.DataFrame(
-#             columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected']
+#             columns=['ROI','cond_A','cond_B','tval','two-sided p-value','rejected','pval-corrected']
 #         )
 #         self.df_1sample_ttest = pd.DataFrame(
 #             columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected']
@@ -253,7 +253,7 @@ class Common:
 #                                       , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
 #         return 0
 
-    def plot_score(self, data=None, x=None, y=None, hue=None, ylim=None, hline=None, title=None, ax=None):
+    def plot_score(self, data=None, x=None, y=None, hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False):
         if type(data) != pd.core.frame.DataFrame:
             data = self.df_score
             x = 'stage'
@@ -272,6 +272,8 @@ class Common:
         ax.set_title(title)
         if hline:
             ax.axhline(y=hline, color='k', linestyle='--', alpha=0.25)
+        if legend_outside:
+            ax.legend(title='ROIs', bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
         return 0
     
     def do_paired_ttest(self, cond_A, cond_B, alpha=0.005):
@@ -287,7 +289,7 @@ class Common:
             reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=alpha, method='bonferroni')
             lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
 
-        df = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','Two-sided p-value','rejected','pval-corrected'])
+        df = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','two-sided p-value','rejected','pval-corrected'])
         
         return df
 
