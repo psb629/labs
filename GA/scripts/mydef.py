@@ -397,8 +397,8 @@ class GA(Common):
         ## initialize variables
         ## additional staements
 #         self.rewards = {}
-        self.wit_rewards_wide = None
-        self.wit_rewards_long = None
+        self.df_rewards_wide = None
+        self.df_rewards_long = None
         
         ## the difference in reward rate(=success rate) between GB and GA
         self.del_RewardRate = np.loadtxt(join(self.dir_script,"RewardRate_improvement.txt"), delimiter='\n')
@@ -454,36 +454,36 @@ class GA(Common):
 
         return norm_mrew
     
-    def make_wit_rewards_wide(self):
-        self.wit_rewards_wide = pd.DataFrame(columns=['block%02d'%(block+1) for block in range(48)], dtype='float64')
+    def make_df_rewards_wide(self):
+        self.df_rewards_wide = pd.DataFrame(columns=['block%02d'%(block+1) for block in range(48)], dtype='float64')
         for subj in self.list_subj:
             for visit in ['early', 'late']:
                 suffix = 'fmri' if visit=='early' else('refmri' if visit=='late' else 'invalid')
                 subjID = 'GA'+subj if visit=='early' else('GB'+subj if visit=='late' else 'invalid')
                 for ii, rew in enumerate(self.calc_mrew(self.dir_behav+'/GA%s-%s.mat'%(subj,suffix))[:48]):
-                    self.wit_rewards_wide.loc[subjID,'block%02d'%(ii+1)] = rew
-        for col in self.wit_rewards_wide.columns:
-            self.wit_rewards_wide[col] = self.wit_rewards_wide[col].astype(float)
+                    self.df_rewards_wide.loc[subjID,'block%02d'%(ii+1)] = rew
+        for col in self.df_rewards_wide.columns:
+            self.df_rewards_wide[col] = self.df_rewards_wide[col].astype(float)
                     
-        return self.wit_rewards_wide
+        return self.df_rewards_wide
     
-    def make_wit_rewards_long(self):
-        self.wit_rewards_long = pd.DataFrame(columns=['subj','visit','block','reward'])
+    def make_df_rewards_long(self):
+        self.df_rewards_long = pd.DataFrame(columns=['subj','visit','block','reward'])
         row = 0
         for subj in self.list_subj:
             for visit in ['early', 'late']:
                 suffix = 'fmri' if visit=='early' else('refmri' if visit=='late' else 'invalid')
                 rewards = self.calc_mrew(self.dir_behav+'/GA%s-%s.mat'%(subj,suffix))[:48]
                 for block, rew in enumerate(rewards):
-                    self.wit_rewards_long.loc[row,'subj'] = subj
-                    self.wit_rewards_long.loc[row,'visit'] = visit
-                    self.wit_rewards_long.loc[row,'block'] = block+1
-                    self.wit_rewards_long.loc[row,'reward'] = rew
+                    self.df_rewards_long.loc[row,'subj'] = subj
+                    self.df_rewards_long.loc[row,'visit'] = visit
+                    self.df_rewards_long.loc[row,'block'] = block+1
+                    self.df_rewards_long.loc[row,'reward'] = rew
                     row += 1
-        self.wit_rewards_long.block = self.wit_rewards_long.block.astype(int)
-        self.wit_rewards_long.reward = self.wit_rewards_long.reward.astype(float)
+        self.df_rewards_long.block = self.df_rewards_long.block.astype(int)
+        self.df_rewards_long.reward = self.df_rewards_long.reward.astype(float)
         
-        return self.wit_rewards_long
+        return self.df_rewards_long
     
 #     def get_mean_rewards(self):
 #         self.rewards = {}
