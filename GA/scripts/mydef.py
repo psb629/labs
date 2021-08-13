@@ -36,17 +36,17 @@ class Common:
     def __init__(self):
         
         ## check OS
+        self.username = getpass.getuser()
         print("OS :",platform)
-#         if platform == "linux" or platform == "linux2":
-#             # linux
-#         elif platform == "darwin":
-#             # OS X
+        if platform == "linux" or platform == "linux2":
+            # linux
+            self.dir_root = join('/home',self.username,'GoogleDrive')
+        elif platform == "darwin":
+            # OS X
+            self.dir_root = join('/Users',self.username,'Google Drive','내 드라이브')
 #         elif platform == "win32":
 #             # Windows...
         
-        ## Google Drive
-        self.username = getpass.getuser()
-        self.dir_root = join('/Users',self.username,'Google Drive','내 드라이브')
         if exists(self.dir_root):
             print('Google Drive is detected!')
         else:
@@ -95,6 +95,43 @@ class Common:
     ## several operatros ##
     #######################
     
+    def do_paired_ttest(self, cond_A, cond_B, data=None, alpha=0.005):
+        ## paired t-test, cond_A vs. cond_B
+
+        if type(data) != pd.core.frame.DataFrame:
+            data = self.df_score
+            
+        lines = []
+        ROI_list = data.ROI.unique()
+        for roi in ROI_list:
+            A = data[(data.ROI==roi)&(data.stage==cond_A)]['mean_accuracy']
+            B = data[(data.ROI==roi)&(data.stage==cond_B)]['mean_accuracy']
+            ttest = scipy.stats.ttest_rel(A, B)
+#             reject, pvals_corrected = statsmodels.stats.multitest.fdrcorrection(ttest.pvalue)
+            reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=alpha, method='bonferroni')
+            lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
+
+        df = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','two-sided p-value','rejected','pval-corrected'])
+        
+        return df
+
+    def do_1sample_ttest(self, stage, data=None, mean=None, alpha=0.005):
+        ## Calculate the T-test for the mean of ONE group of scores.
+
+        if type(data) != pd.core.frame.DataFrame:
+            data = self.df_score
+            
+        lines = []
+        ROI_list = data.ROI.unique()
+        for roi in ROI_list:
+            score = data[(data.ROI==roi)&(data.stage==stage)]['mean_accuracy']
+            res_uncorrected = scipy.stats.ttest_1samp(a=score, popmean=mean)
+            reject, pvals_corrected, _, _ = multipletests(res_uncorrected.pvalue, alpha=alpha, method='bonferroni')
+            lines.append((roi, stage, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
+            
+        df = pd.DataFrame(lines, columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected'])
+        return df
+    
     ###############
     ## utilities ##
     ###############
@@ -108,7 +145,7 @@ class Common:
         
     def load_from_pkl(self, fname):
         ## load pkl
-        with open(join(self.dir_script, fname), "rb") as fr:
+        with open(fname, "rb") as fr:
             return pickle.load(file=fr)
 
     ## show the list of pkl at the location, simultaneously represent overlap
@@ -253,7 +290,10 @@ class Common:
 #                                       , display_mode='ortho', axes=axes[2*(i//n_columns)+1,(i%n_columns)])
 #         return 0
 
-    def plot_score(self, data=None, x=None, y=None, hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False):
+#     def reshape_5D_to_4D(self, img):
+        
+
+    def plot_df_score(self, data=None, x=None, y=None, hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False):
         if type(data) != pd.core.frame.DataFrame:
             data = self.df_score
             x = 'stage'
@@ -275,38 +315,7 @@ class Common:
         if legend_outside:
             ax.legend(title='ROIs', bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
         return 0
-    
-    def do_paired_ttest(self, cond_A, cond_B, alpha=0.005):
-        ## paired t-test, cond_A vs. cond_B, or stage_A vs. stage_B
-
-        lines = []
-        ROI_list = self.df_score.ROI.unique()
-        for roi in ROI_list:
-            A = self.df_score[(self.df_score.ROI==roi)&(self.df_score.stage==cond_A)]['mean_accuracy']
-            B = self.df_score[(self.df_score.ROI==roi)&(self.df_score.stage==cond_B)]['mean_accuracy']
-            ttest = scipy.stats.ttest_rel(A, B)
-#             reject, pvals_corrected = statsmodels.stats.multitest.fdrcorrection(ttest.pvalue)
-            reject, pvals_corrected, _, _ = multipletests(ttest.pvalue, alpha=alpha, method='bonferroni')
-            lines.append((roi,cond_A,cond_B,ttest.statistic,ttest.pvalue,reject[0], pvals_corrected[0]))
-
-        df = pd.DataFrame(lines, columns=['ROI','cond_A','cond_B','tval','two-sided p-value','rejected','pval-corrected'])
-        
-        return df
-
-    def do_1sample_ttest(self, stage, mean=None, alpha=0.005):
-        ## Calculate the T-test for the mean of ONE group of scores.
-
-        lines = []
-        ROI_list = self.df_score.ROI.unique()
-        for roi in ROI_list:
-            score = self.df_score[(self.df_score.ROI==roi)&(self.df_score.stage==stage)]['mean_accuracy']
-            res_uncorrected = scipy.stats.ttest_1samp(a=score, popmean=mean)
-            reject, pvals_corrected, _, _ = multipletests(res_uncorrected.pvalue, alpha=alpha, method='bonferroni')
-            lines.append((roi, stage, res_uncorrected.statistic, res_uncorrected.pvalue, reject[0], pvals_corrected[0]))
-            
-        df = pd.DataFrame(lines, columns=['ROI', 'stage', 'tval', 'pval_uncorrected', 'rejected', 'pval_corrected'])
-        return df
-    
+      
     def load_tsmean_1D(self, fdir, fname):
         with open(join(fdir, fname),'rb') as fr:
             tsmean = np.genfromtxt(fr, delimiter='\n')
@@ -511,7 +520,8 @@ class GA(Common):
     def load_beta(self, subj, stage):
 
         assert subj in self.list_subj
-        print(subj, stage, end='\r')
+        print('\t\t\t\t\t',end='\r')
+        print('Loading...', subj, stage, end='\r')
         ## betasLSS.G???.r0?.nii.gz
         a, b = stage.split('_')
         assert ((a == 'early')|(a == 'late'))
@@ -548,6 +558,7 @@ class GA(Common):
         ## cross-validation
         for subj, stage in betas.keys():
             for region, img in self.roi_imgs.items():
+                print('\t\t\t\t\t',end='\r')
                 print(subj, stage, region, end='\r')
                 X = self.fast_masking(img=betas[subj, stage], roi=img)
                 score = cross_validate(estimator=estimator, X=X, y=y, groups=group
@@ -571,7 +582,7 @@ class GA(Common):
         ncol = nroi
         fig, axes = plt.subplots(nrows=nrow, ncols=ncol, figsize=(figsize[0]*ncol,figsize[1]*nrow))
         for i, roi in enumerate(sorted(temp.ROI.unique())):
-            self.plot_score(
+            self.plot_df_score(
                 data=temp[temp.ROI==roi]
                 , x='visit', y='mean_accuracy', hue='mapping'
                 , title=roi, ax=axes[i]
@@ -607,7 +618,8 @@ class GA(Common):
         
         lines = []
         for i, run in enumerate(runs):
-            print(subj, stage, run, end='\t\t\t\r')
+            print('\t\t\t\t\t',end='\r')
+            print(subj, stage, run, end='\r')
             for a, roiA in enumerate(sorted_rois):
                 fdir, fname = self.convert_fdir_and_fname_for_tsmean(subj, stage, roiA)[i]
                 tsmeanA = self.load_tsmean_1D(fdir=fdir, fname=fname)
