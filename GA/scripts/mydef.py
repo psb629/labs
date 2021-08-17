@@ -5,6 +5,8 @@ from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import itertools
+# markers = [next(mks) for i in df["category"].unique()]
 # import psutil
 
 import scipy
@@ -300,12 +302,15 @@ class Common:
             y = 'mean_accuracy'
             hue = 'ROI'
 #         fig = plt.figure(figsize=figsize)
+        mks = itertools.cycle(['o', 'x', '^', '+', '*', '8', 's', 'p', 'D'])
+        markers = [next(mks) for i in data[hue].unique()]
         sns.set(style="ticks", context='talk')
         ax = sns.pointplot(
             data=data
             , x=x, y=y, hue=hue
             , capsize=.1, ci=self.sig1*100, dodge=True
             , ax=ax
+            , markers=markers
         )
         if ylim:
             ax.set_ylim(ylim)
