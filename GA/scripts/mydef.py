@@ -302,7 +302,7 @@ class Common:
             y = 'mean_accuracy'
             hue = 'ROI'
 #         fig = plt.figure(figsize=figsize)
-        mks = itertools.cycle(['o', 'x', '^', '+', '*', '8', 's', 'p', 'D'])
+        mks = itertools.cycle(['o', 's', '^', '*', 'p', 'D'])
         markers = [next(mks) for i in data[hue].unique()]
         sns.set(style="ticks", context='talk')
         ax = sns.pointplot(
