@@ -1,16 +1,17 @@
 #!/bin/tcsh
 
-set subj_list = (S30)
-set date_list = (210702)
+set subj_list = (S31)
+set date_list = (210817)
 set coord = orig
 
 foreach ii (`seq -f "%02g" 1 2`)
 	set subj = $subj_list[$ii]
 	set date = $date_list[$ii]
 
-	set data_dir = ~/Desktop/${subj}_${date}_MRI
+	set root_dir = ~/Desktop
+	set data_dir = $root_dir/${subj}_${date}_MRI
  #	set output_dir = /Volumes/T7SSD1/samsung_hospital/fmri_data/preproc_data/$subj
-	set output_dir = ~/Desktop/$subj
+	set output_dir = $root_dir/$subj
 	if ( ! -d $output_dir/preprocessed ) then
 		mkdir -p -m 755 $output_dir/preprocessed
 	endif
