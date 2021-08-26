@@ -44,6 +44,16 @@ fan_dir=$roi_dir/fan280
 # No.209 LOcC_L_2_2
 fans=( 105 106 189 190 193 194 196 199 200 203 204 205 206 209 )
 # ============================================================
+## Localizer
+localizer_dir=$roi_dir/localizer
+localizers=( n200_c1_L_Postcentral\
+			 n200_c2_R_CerebellumIV-V\
+			 n200_c3_R_Postcentral\
+			 n200_c4_L_Putamen\
+			 n200_c5_R_SMA\
+			 n200_c6_R_CerebellumVIIIb\
+			 n200_c7_L_Thalamus )
+# ============================================================
 ## regions
 regions=()
 foreach dmn ($DMNs)
@@ -52,6 +62,9 @@ end
 foreach fan ($fans)
 	regions=($regions fan$fan)
 end
+foreach localizer ($localizers)
+	regions=($regions $localizer)
+end
 ## masks
 masks=()
 foreach dmn ($DMNs)
@@ -59,6 +72,9 @@ foreach dmn ($DMNs)
 end
 foreach fan ($fans)
 	masks=($masks $fan_dir/fan.roi.GA.$fan.nii.gz)
+end
+foreach localizer ($localizers)
+	masks=($masks $localizer_dir/${localizer}_mask.nii)
 end
 ## copy them to work_dir
 foreach mask ($masks)
@@ -71,6 +87,9 @@ foreach dmn ($DMNs)
 end
 foreach fan ($fans)
 	masks=($masks $work_dir/fan.roi.GA.$fan.nii.gz)
+end
+foreach localizer ($localizers)
+	masks=($masks $work_dir/${localizer}_mask.nii)
 end
 # ============================================================
 ## check a validation by each mask
@@ -85,18 +104,25 @@ foreach nn ($nn_list)
 		foreach run (r01 r02 r03 r04 r05 r06)
 			data=$subj.bp_demean.errts.MO.$run.nii.gz
 			cp -n $stats_dir/GLM.MO/$nn/$data $work_dir
-
 			cd $work_dir
-			aa=1
+			aa=0
 			foreach mask ($masks)
+				aa=$[$aa+1]
+				fname=tsmean.bp_demean.errts.MO.$subj.$run.$regions[$aa].1D
+				if [ -f $stats_dir/GLM.MO/tsmean/$regions[$aa]/$fname ]; then
+					continue
+				fi
 				output_dir=$work_dir/$regions[$aa]
 				if [ ! -d $output_dir ]; then
 					mkdir -p -m 755 $output_dir
 				fi
-				3dmaskave -quiet -mask $mask $data >$output_dir/tsmean.bp_demean.errts.MO.$subj.$run.$regions[$aa].1D
-				aa=$[$aa+1]
+				3dmaskave -quiet -mask $mask $data >$output_dir/$fname
 			end
 			rm $data
 		end
 	end
 end
+foreach mask ($masks)
+	rm $mask
+end
+cp -n -r $work_dir/* $stats_dir/GLM.MO/tsmean/
