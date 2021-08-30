@@ -142,7 +142,7 @@ class Common:
         ## scores must exist!
         assert len(data)
         ## save data
-        with open(join(path, self.today+'_%s.pkl'%suffix),"wb") as fw:
+        with open(join(path, self.today+'.%s.pkl'%suffix),"wb") as fw:
             pickle.dump(data, fw)
         
     def load_from_pkl(self, fname):
