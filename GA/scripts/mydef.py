@@ -525,8 +525,7 @@ class GA(Common):
     def load_beta(self, subj, stage):
 
         assert subj in self.list_subj
-        print('\t\t\t\t\t',end='\r')
-        print('Loading...', subj, stage, end='\r')
+        print('Loading...', subj, stage, end='\t\t\t\t\r')
         ## betasLSS.G???.r0?.nii.gz
         a, b = stage.split('_')
         assert ((a == 'early')|(a == 'late'))
@@ -563,8 +562,7 @@ class GA(Common):
         ## cross-validation
         for subj, stage in betas.keys():
             for region, img in self.roi_imgs.items():
-                print('\t\t\t\t\t',end='\r')
-                print(subj, stage, region, end='\r')
+                print(subj, stage, region, end='\t\t\t\t\r')
                 X = self.fast_masking(img=betas[subj, stage], roi=img)
                 score = cross_validate(estimator=estimator, X=X, y=y, groups=group
                                        , cv=cv, return_estimator=True, return_train_score=True)
@@ -623,8 +621,7 @@ class GA(Common):
         
         lines = []
         for i, run in enumerate(runs):
-            print('\t\t\t\t\t',end='\r')
-            print(subj, stage, run, end='\r')
+            print(subj, stage, run, end='\t\t\t\t\r')
             for a, roiA in enumerate(sorted_rois):
                 fdir, fname = self.convert_fdir_and_fname_for_tsmean(subj, stage, roiA)[i]
                 tsmeanA = self.load_tsmean_1D(fdir=fdir, fname=fname)
