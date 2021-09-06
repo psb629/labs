@@ -295,16 +295,15 @@ class Common:
 #     def reshape_5D_to_4D(self, img):
         
 
-    def plot_df_score(self, data=None, x=None, y=None, hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False):
+    def plot_df_score(self, data=None, x=None, y=None, xlabel='Stage', ylabel='Mean Accuracy', hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False, font_magn=2.):
         if type(data) != pd.core.frame.DataFrame:
             data = self.df_score
             x = 'stage'
             y = 'mean_accuracy'
             hue = 'ROI'
-#         fig = plt.figure(figsize=figsize)
+        sns.set(style="ticks", context='talk', font_scale=font_magn)
         mks = itertools.cycle(['o', 's', '^', '*', 'p', 'D'])
         markers = [next(mks) for i in data[hue].unique()]
-        sns.set(style="ticks", context='talk')
         ax = sns.pointplot(
             data=data
             , x=x, y=y, hue=hue
@@ -312,14 +311,19 @@ class Common:
             , ax=ax
             , markers=markers
         )
+        ax.tick_params(axis='x', rotation=45)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
         if ylim:
             ax.set_ylim(ylim)
-        ax.set_title(title)
+        ax.set_title(title, fontsize=25)
         if hline:
             ax.axhline(y=hline, color='k', linestyle='--', alpha=0.25)
         if legend_outside:
-            ax.legend(title='ROIs', bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
-        return 0
+            ax.legend(title='ROIs'
+                      , prop={'size': 25}
+                      , bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
+        return ax
       
     def load_tsmean_1D(self, fdir, fname):
         with open(join(fdir, fname),'rb') as fr:
@@ -568,30 +572,6 @@ class GA(Common):
                                        , cv=cv, return_estimator=True, return_train_score=True)
                 self.scores[subj, stage, region] = score['test_score']
         return self.scores
-    
-    def plot_decacc(self, figsize=(12,12), ylim=None, hline=None):
-        ## create new columns to use as 'x' and 'hue'
-        visit = []
-        mapping = []
-        for s in self.df_score.stage:
-            [v, m] = s.split('_')
-            visit.append(v)
-            mapping.append(m)
-        temp = self.df_score; temp['visit'] = visit; temp['mapping'] = mapping
-        
-        ## plot
-        nroi = len(temp.ROI.unique())
-        nrow = 1
-        ncol = nroi
-        fig, axes = plt.subplots(nrows=nrow, ncols=ncol, figsize=(figsize[0]*ncol,figsize[1]*nrow))
-        for i, roi in enumerate(sorted(temp.ROI.unique())):
-            self.plot_df_score(
-                data=temp[temp.ROI==roi]
-                , x='visit', y='mean_accuracy', hue='mapping'
-                , title=roi, ax=axes[i]
-                , ylim=ylim, hline=hline
-            )
-        return 0
 
     def convert_fdir_and_fname_for_tsmean(self, subj, stage, region):
         ## stats_dir/GLM.MO/tsmean/roi 폴더에 미리 계산된 BOLD의 시계열 평균값 1D 파일의 경로와 파일명을 출력해주는 함수.
