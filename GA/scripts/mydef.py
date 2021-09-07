@@ -309,7 +309,7 @@ class Common:
             , x=x, y=y, hue=hue
             , capsize=.1, ci=self.sig1*100, dodge=True
             , ax=ax
-            , markers=markers
+            , markers=markers, scale = 1.75
         )
         ax.tick_params(axis='x', rotation=45)
         ax.set_xlabel(xlabel)
