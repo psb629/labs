@@ -295,13 +295,13 @@ class Common:
 #     def reshape_5D_to_4D(self, img):
         
 
-    def plot_df_score(self, data=None, x=None, y=None, xlabel='Stage', ylabel='Mean Accuracy', hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False, font_magn=2.):
+    def plot_df_score(self, data=None, x=None, y=None, xlabel='Stage', ylabel='Mean Accuracy', hue=None, ylim=None, hline=None, title=None, ax=None, legend_outside=False, font_scale=1., scale=1.):
         if type(data) != pd.core.frame.DataFrame:
             data = self.df_score
             x = 'stage'
             y = 'mean_accuracy'
             hue = 'ROI'
-        sns.set(style="ticks", context='talk', font_scale=font_magn)
+        sns.set(style="ticks", context='talk', font_scale=font_scale)
         mks = itertools.cycle(['o', 's', '^', '*', 'p', 'D'])
         markers = [next(mks) for i in data[hue].unique()]
         ax = sns.pointplot(
@@ -309,19 +309,19 @@ class Common:
             , x=x, y=y, hue=hue
             , capsize=.1, ci=self.sig1*100, dodge=True
             , ax=ax
-            , markers=markers, scale = 1.75
+            , markers=markers, scale = scale
         )
         ax.tick_params(axis='x', rotation=45)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         if ylim:
             ax.set_ylim(ylim)
-        ax.set_title(title, fontsize=25)
+        ax.set_title(title)
         if hline:
             ax.axhline(y=hline, color='k', linestyle='--', alpha=0.25)
         if legend_outside:
             ax.legend(title='ROIs'
-                      , prop={'size': 25}
+#                       , prop={'size': 12}
                       , bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
         return ax
       
