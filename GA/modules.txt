@@ -1,0 +1,23 @@
+## basic modules
+numpy
+pandas
+jupyter
+notebook
+ipykernel
+scipy
+sklearn
+nilearn
+matplotlib 
+seaborn
+statsmodels
+pingouin
+plotly
+
+tqdm
+torchvision
+torch
+opencv-python
+decord
+
+## jupyter
+ipywidgets
