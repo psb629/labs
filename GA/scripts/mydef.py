@@ -42,18 +42,18 @@ class Common:
         print("OS :",platform)
         if platform == "linux" or platform == "linux2":
             # linux
-            self.dir_root = join('/home',self.username,'GoogleDrive')
+            self.dir_gdrive = join('/home',self.username,'GoogleDrive')
         elif platform == "darwin":
             # OS X
-            self.dir_root = join('/Users',self.username,'Google Drive','내 드라이브')
+            self.dir_gdrive = join('/Users',self.username,'Google Drive','내 드라이브')
 #         elif platform == "win32":
 #             # Windows...
         
-        if exists(self.dir_root):
+        if exists(self.dir_gdrive):
             print('Google Drive is detected!')
         else:
             print('Google Drive is NOT mounted!')
-            del(self.dir_root)
+            del(self.dir_gdrive)
         
         ## Github
         splited = os.getcwd().split('/')
@@ -75,12 +75,12 @@ class Common:
         self.sig3 = 0.997300203937
         
         ## background image
-        self.img_bg = join(self.dir_root,'mni152_2009bet.nii.gz')
+        self.img_bg = join(self.dir_gdrive,'mni152_2009bet.nii.gz')
         
         ## initializing several variables
         self.roi_imgs = {}
         self.fan_imgs = {}
-        self.fan_info = pd.read_csv(join(self.dir_root,'Fan280','fan_cluster_net_20200121.csv'), sep=',', index_col=0)
+        self.fan_info = pd.read_csv(join(self.dir_gdrive,'Fan280','fan_cluster_net_20200121.csv'), sep=',', index_col=0)
         self.scores = {}
         self.df_score = pd.DataFrame(columns=['subj', 'stage', 'ROI','mean_accuracy'])
         self.df_functional_correlation = pd.DataFrame(columns=['subj','stage','run','roiA','roiB','Pearson_r','pval'])
@@ -387,7 +387,7 @@ class GA(Common):
         
         ## define directories
         self.dir_script = '.'
-        self.dir_work = join(self.dir_root,'GA')
+        self.dir_work = join(self.dir_gdrive,'GA')
 
         self.dir_behav = self.dir_work + '/behav_data'
         self.dir_fmri = self.dir_work + '/fMRI_data'
@@ -447,7 +447,7 @@ class GA(Common):
         ntrial = 12
         nblock = 8
         #ttt = nblock*6 # total number of blocks = 8 blocks/run * 6 runs
-        tpr = 97   ## 1 + 12 trials/block * 8 blocks
+        tpr = 97   ## 1 trial/run + 12 trials/block * 8 block/run
         nrun = 7
 
         temp = datum['LearnTrialStartTime'][0]
