@@ -1,10 +1,6 @@
 #!/bin/bash
 
-env_name=GA
-
-## remove
-conda remove --name $env_name --all
-jupyter kernelspec uninstall $env_name
+env_name=vgg16
 
 #### Anaconda ####
 ## update pip
