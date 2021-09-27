@@ -17,6 +17,7 @@ existence=`conda info | grep $env_name | wc -l`
 if [ $existence -gt 0 ]; then
 	echo "ready to pip install modules at env '${env_name}'"
 	pip install -r ./modules.txt
+	pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
 	## generate a new kernel
 	pip install ipykernel
  #	jupyter kernelspec list

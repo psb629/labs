@@ -14,8 +14,6 @@ pingouin
 plotly
 
 tqdm
-torchvision
-torch
 opencv-python
 decord
 
