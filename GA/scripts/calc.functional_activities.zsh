@@ -7,16 +7,17 @@ nn_list=( 01 02 05 07 08 \
 		  31 32 33 34 35 \
 		  36 37 38 42 44 )
 # ============================================================
-root_dir=/Volumes/GoogleDrive/내\ 드라이브/GA
+ #root_dir=/Volumes/GoogleDrive/내\ 드라이브/GA
+root_dir=/home/sungbeenpark/GoogleDrive/GA
 behav_dir=$root_dir/behav_data
 fmri_dir=$root_dir/fMRI_data
 roi_dir=$fmri_dir/roi
 stats_dir=$fmri_dir/stats
 # ============================================================
-work_dir=~/Desktop/temp
-if [ ! -d $work_dir ]; then
-	mkdir -p -m 755 $work_dir
-fi
+ #work_dir=~/Desktop/temp
+ #if [ ! -d $work_dir ]; then
+ #	mkdir -p -m 755 $work_dir
+ #fi
 # ============================================================
 ## Default mode network
 DMN_dir=$roi_dir/DMN
@@ -24,7 +25,9 @@ DMN_dir=$roi_dir/DMN
 # Core_aMPFC_l
 # Core_PCC_r
 # Core_PCC_l
-DMNs=( Core_aMPFC_r Core_aMPFC_l Core_PCC_r Core_PCC_l )
+DMNs=( Core_aMPFC_r Core_aMPFC_l Core_PCC_r Core_PCC_l \
+	dMsub_dMPFC dMsub_LTC_l dMsub_LTC_r dMsub_TempP_l_temp dMsub_TempP_r_temp dMsub_TPJ_l dMsub_TPJ_r \
+	MTLsub_HF_l MTLsub_HF_r MTLsub_PHC_l MTLsub_PHC_r MTLsub_pIPL_l MTLsub_pIPL_r MTLsub_Rsp_l MTLsub_Rsp_r MTLsub_vMPFC )
 # ============================================================
 ## Yeo_network 1
 fan_dir=$roi_dir/fan280
@@ -76,21 +79,21 @@ end
 foreach localizer ($localizers)
 	masks=($masks $localizer_dir/${localizer}_mask.nii)
 end
-## copy them to work_dir
-foreach mask ($masks)
-	cp -n $mask $work_dir
-end
-## redirection paths of masks
-masks=()
-foreach dmn ($DMNs)
-	masks=($masks $work_dir/$dmn.nii)
-end
-foreach fan ($fans)
-	masks=($masks $work_dir/fan.roi.GA.$fan.nii.gz)
-end
-foreach localizer ($localizers)
-	masks=($masks $work_dir/${localizer}_mask.nii)
-end
+ ### copy them to work_dir
+ #foreach mask ($masks)
+ #	cp -n $mask $work_dir
+ #end
+ ### redirection paths of masks
+ #masks=()
+ #foreach dmn ($DMNs)
+ #	masks=($masks $work_dir/$dmn.nii)
+ #end
+ #foreach fan ($fans)
+ #	masks=($masks $work_dir/fan.roi.GA.$fan.nii.gz)
+ #end
+ #foreach localizer ($localizers)
+ #	masks=($masks $work_dir/${localizer}_mask.nii)
+ #end
 # ============================================================
 ## check a validation by each mask
 foreach mask ($masks)
@@ -102,27 +105,29 @@ foreach nn ($nn_list)
 	foreach gg (GA GB)
 		subj=$gg$nn
 		foreach run (r01 r02 r03 r04 r05 r06)
-			data=$subj.bp_demean.errts.MO.$run.nii.gz
-			cp -n $stats_dir/GLM.MO/$nn/$data $work_dir
-			cd $work_dir
+			data=$stats_dir/GLM.MO/$nn/$subj.bp_demean.errts.MO.$run.nii.gz
+ #			cp -n $data $work_dir
+ #			cd $work_dir
 			aa=0
 			foreach mask ($masks)
+				echo " Calculating ${gg}${nn} $run $mask ..."
 				aa=$[$aa+1]
 				fname=tsmean.bp_demean.errts.MO.$subj.$run.$regions[$aa].1D
 				if [ -f $stats_dir/GLM.MO/tsmean/$regions[$aa]/$fname ]; then
 					continue
 				fi
-				output_dir=$work_dir/$regions[$aa]
+ #				output_dir=$work_dir/$regions[$aa]
+				output_dir=$stats_dir/GLM.MO/tsmean/$regions[$aa]
 				if [ ! -d $output_dir ]; then
 					mkdir -p -m 755 $output_dir
 				fi
 				3dmaskave -quiet -mask $mask $data >$output_dir/$fname
 			end
-			rm $data
+ #			rm $work_dir/$data
 		end
 	end
 end
-foreach mask ($masks)
-	rm $mask
-end
-cp -n -r $work_dir/* $stats_dir/GLM.MO/tsmean/
+ #foreach mask ($masks)
+ #	rm $mask
+ #end
+ #cp -n -r $work_dir/* $stats_dir/GLM.MO/tsmean/
