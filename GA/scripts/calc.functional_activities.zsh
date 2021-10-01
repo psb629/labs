@@ -14,17 +14,15 @@ fmri_dir=$root_dir/fMRI_data
 roi_dir=$fmri_dir/roi
 stats_dir=$fmri_dir/stats
 # ============================================================
- #work_dir=~/Desktop/temp
+find $stats_dir/GLM.MO/tsmean -type f -size 0 -delete
+# ============================================================
+ #work_dir=~/temp
  #if [ ! -d $work_dir ]; then
  #	mkdir -p -m 755 $work_dir
  #fi
 # ============================================================
 ## Default mode network
 DMN_dir=$roi_dir/DMN
-# Core_aMPFC_r
-# Core_aMPFC_l
-# Core_PCC_r
-# Core_PCC_l
 DMNs=( Core_aMPFC_r Core_aMPFC_l Core_PCC_r Core_PCC_l \
 	dMsub_dMPFC dMsub_LTC_l dMsub_LTC_r dMsub_TempP_l_temp dMsub_TempP_r_temp dMsub_TPJ_l dMsub_TPJ_r \
 	MTLsub_HF_l MTLsub_HF_r MTLsub_PHC_l MTLsub_PHC_r MTLsub_pIPL_l MTLsub_pIPL_r MTLsub_Rsp_l MTLsub_Rsp_r MTLsub_vMPFC )
@@ -79,11 +77,13 @@ end
 foreach localizer ($localizers)
 	masks=($masks $localizer_dir/${localizer}_mask.nii)
 end
- ### copy them to work_dir
+# ============================================================
+## copy them to work_dir
  #foreach mask ($masks)
  #	cp -n $mask $work_dir
  #end
- ### redirection paths of masks
+# ============================================================
+## redirection paths of masks
  #masks=()
  #foreach dmn ($DMNs)
  #	masks=($masks $work_dir/$dmn.nii)
@@ -105,25 +105,29 @@ foreach nn ($nn_list)
 	foreach gg (GA GB)
 		subj=$gg$nn
 		foreach run (r01 r02 r03 r04 r05 r06)
-			data=$stats_dir/GLM.MO/$nn/$subj.bp_demean.errts.MO.$run.nii.gz
- #			cp -n $data $work_dir
- #			cd $work_dir
+			data=$subj.bp_demean.errts.MO.$run.nii.gz
 			aa=0
 			foreach mask ($masks)
-				echo " Calculating ${gg}${nn} $run $mask ..."
 				aa=$[$aa+1]
 				fname=tsmean.bp_demean.errts.MO.$subj.$run.$regions[$aa].1D
-				if [ -f $stats_dir/GLM.MO/tsmean/$regions[$aa]/$fname ]; then
-					continue
+				if [ ! -f $stats_dir/GLM.MO/tsmean/$regions[$aa]/$fname ]; then
+ #					if [ ! -f $work_dir/$data ]; then
+ #						echo "copying $data to $work_dir"
+ #						cp -n $stats_dir/GLM.MO/$nn/$data $work_dir
+ #					fi
+					echo "Calculating ${gg}${nn} $run $regions[$aa] ..."
+ #	 				output_dir=$work_dir/$regions[$aa]
+					output_dir=$stats_dir/GLM.MO/tsmean/$regions[$aa]
+					if [ ! -d $output_dir ]; then
+						mkdir -p -m 755 $output_dir
+					fi
+ #					3dmaskave -quiet -mask $mask $work_dir/$data >$output_dir/$fname
+					3dmaskave -quiet -mask $mask $stats_dir/GLM.MO/$nn/$data >$output_dir/$fname
 				fi
- #				output_dir=$work_dir/$regions[$aa]
-				output_dir=$stats_dir/GLM.MO/tsmean/$regions[$aa]
-				if [ ! -d $output_dir ]; then
-					mkdir -p -m 755 $output_dir
-				fi
-				3dmaskave -quiet -mask $mask $data >$output_dir/$fname
 			end
- #			rm $work_dir/$data
+ #			if [ -f $work_dir/$data ]; then
+ #				rm $work_dir/$data
+ #			fi
 		end
 	end
 end
@@ -131,3 +135,4 @@ end
  #	rm $mask
  #end
  #cp -n -r $work_dir/* $stats_dir/GLM.MO/tsmean/
+find $stats_dir/GLM.MO/tsmean -type f -size 0
