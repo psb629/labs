@@ -14,12 +14,15 @@ end
 echo $list_layer
 
 dir_data=~/GoogleDrive/GA/results/activations/vgg16/pca/eval
-dir_output=$dir_data
 
 roi='fullmask'
 id='GB'
 nn=01
 foreach layer in $list_layer
 	pname=score.$roi.$layer.$id$nn.nii
+	dir_output=$dir_data/$nn
+	if [ ! -d $dir_output ]; then
+		mkdir -p -m 755 $dir_output
+	fi
 	3dMean -prefix $dir_output/$pname $dir_data/score.r*.$roi.$layer.$id$nn.nii
 end
