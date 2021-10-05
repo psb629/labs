@@ -325,8 +325,8 @@ class Common:
                       , bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
         return ax
       
-    def load_tsmean_1D(self, fdir, fname):
-        with open(join(fdir, fname),'rb') as fr:
+    def load_tsmean_1D(self, fname):
+        with open(join(fname),'rb') as fr:
             tsmean = np.genfromtxt(fr, delimiter='\n')
 
         return tsmean
@@ -604,10 +604,12 @@ class GA(Common):
             print(subj, stage, run, end='\t\t\t\t\r')
             for a, roiA in enumerate(sorted_rois):
                 fdir, fname = self.convert_fdir_and_fname_for_tsmean(subj, stage, roiA)[i]
-                tsmeanA = self.load_tsmean_1D(fdir=fdir, fname=fname)
+                tmp = join(fdir, fname)
+                tsmeanA = self.load_tsmean_1D(fname=tmp)
                 for roiB in sorted_rois[a:]:
                     fdir, fname = self.convert_fdir_and_fname_for_tsmean(subj, stage, roiB)[i]
-                    tsmeanB = self.load_tsmean_1D(fdir=fdir, fname=fname)
+                    tmp = join(fdir, fname)
+                    tsmeanB = self.load_tsmean_1D(fname=tmp)
                     ## Pearson correlation 계산
                     r, p = scipy.stats.pearsonr(x=tsmeanA, y=tsmeanB)
                     ## 총 line 수: [ROI조합수(상삼각성분수) + ROI수(대각성분수)] * RUN수
