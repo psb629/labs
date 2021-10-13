@@ -6,7 +6,7 @@ set fwhm = 4
 set thresh_motion = 0.4
 #=============================================
 set list_subj = (GP08 GP09 GP10 GP11 GP17 GP18 GP20 GP21)
-set list_subj = (GP09 GP10 GP11 GP17 GP18 GP20 GP21)
+set list_subj = (GP08)
 set list_run = (r01 r02 r03)
 #=============================================
 set root_dir = $HOME/Desktop/GP
@@ -42,172 +42,173 @@ foreach subj ($list_subj)
 		endif
 	end
 	#=============================================
-	## Convert *.IMA files to *.BRIK/*.HEAD
-	cd $dist_PA
-	Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
-	-gert_outdir $output_dir -gert_quit_on_err
-	3dWarp -deoblique -prefix $output_dir/$subj.dist_PA $output_dir/temp+orig
-	rm $output_dir/temp*
-	
-	cd $dist_AP
-	Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
-	-gert_outdir $output_dir -gert_quit_on_err
-	3dWarp -deoblique -prefix $output_dir/$subj.dist_AP $output_dir/temp+orig
-	rm $output_dir/temp*
-	
-	foreach run ($list_run)
-		cd $raw_dir/$run
-		Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
-		-gert_outdir $output_dir -gert_quit_on_err
-		3dWarp -deoblique -prefix $output_dir/func.$subj.$run $output_dir/temp+orig
-		rm $output_dir/temp*
-		
-		cd $raw_dir/${run}_SBREF
-		Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
-		-gert_outdir $output_dir -gert_quit_on_err
-		3dWarp -deoblique -prefix $output_dir/SBREF.$subj.$run $output_dir/temp+orig
-		rm $output_dir/temp*
-	end
-
-	# ==================================================================
-	########
-	# Func # : Despiking (3dDespike) -> Slice Timing Correction (3dTshift) -> Motion Correct EPI (3dvolreg)
-	########  -> Alignment (@auto_tlrc) -> Spatial Blurring -> Nuisance Regression -> Scaling
-	
+ #	## Convert *.IMA files to *.BRIK/*.HEAD
+ #	cd $dist_PA
+ #	Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
+ #	-gert_outdir $output_dir -gert_quit_on_err
+ #	3dWarp -deoblique -prefix $output_dir/$subj.dist_PA $output_dir/temp+orig
+ #	rm $output_dir/temp*
+ #	
+ #	cd $dist_AP
+ #	Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
+ #	-gert_outdir $output_dir -gert_quit_on_err
+ #	3dWarp -deoblique -prefix $output_dir/$subj.dist_AP $output_dir/temp+orig
+ #	rm $output_dir/temp*
+ #	
+ #	foreach run ($list_run)
+ #		cd $raw_dir/$run
+ #		Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
+ #		-gert_outdir $output_dir -gert_quit_on_err
+ #		3dWarp -deoblique -prefix $output_dir/func.$subj.$run $output_dir/temp+orig
+ #		rm $output_dir/temp*
+ #		
+ #		cd $raw_dir/${run}_SBREF
+ #		Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
+ #		-gert_outdir $output_dir -gert_quit_on_err
+ #		3dWarp -deoblique -prefix $output_dir/SBREF.$subj.$run $output_dir/temp+orig
+ #		rm $output_dir/temp*
+ #	end
+ #
+ #	# ==================================================================
+ #	########
+ #	# Func # : Despiking (3dDespike) -> Slice Timing Correction (3dTshift) -> Motion Correct EPI (3dvolreg)
+ #	########  -> Alignment (@auto_tlrc) -> Spatial Blurring -> Nuisance Regression -> Scaling
+ #	
+ #	cd $output_dir
+ #	
+ #	## tcat은 각 시간의 volume(sub-brick) 데이터를 시간에 대해 catenate 해준다는 뜻. 시간을 포함한 4차원 데이터로 merge.
+ #	## apply 3dTcat to copy input dsets to results dir, while
+ #	## removing the first 0 TRs
+ #	#	foreach run ($list_run)
+ #	#		3dTcat -prefix $output_dir/pb00.$subj.$run.tcat $preproc_dir/$subj/func.$subj.$run+orig'[0..$]'
+ #	#	end
+ #	## if you want to remove the first 2 TRs (TR indices 0 and 1), use [2..$] instead of [0..$]
+ #	## 2..$ -> $는 just a variable which means the very end of that array. Only keeping volumes two to the very end 라는 뜻.
+ #	
+ #	## data check: compute outlier fraction for each volume
+ #	## Calculate number of 'outliers' a 3D+time dataset, at each time point, and writes the results to stdout.
+ #	## outliers -> MAD (Mean Absolute Deviation). If the MAD is 10, that means that at the RT we have an average of five median absolute deviations from the mean. Usually about 5.5 MAD is considered an outlier.
+ #	touch out.pre_ss_warn.txt
+ #	set npol = 4
+ #	foreach run ($list_run)
+ #		# ================================= outcount =================================
+ #		## The formula that we use for polort, which is applied by afni_proc.py and by "3dDeconvolve -polort A", is pnum = 1 + floor(run_duration/150), where times are in seconds. Yes, pnum would be the order of polynomial used in 3dToutcount or 3dDeconvolve, while run_duration is the duration of the run in seconds (regardless of the number of time points).
+ #		3dToutcount -automask -fraction -polort $npol -legendre func.$subj.$run+orig > outcount.$subj.$run.1D
+ #		## polort = the polynomial order of the baseline model
+ #		if ( `1deval -a outcount.$subj.$run.1D"{0}" -expr "step(a-0.4)"` ) then
+ #			echo "** TR #0 outliers: possible pre-steady state TRs in run ${run}" >> out.$subj.pre_ss_warn.txt
+ #		endif
+ #	end
+ #	## catenate outlier counts into a single time series
+ #	cat outcount.$subj.r0?.1D > outcount.$subj.r_all.1D
+ #	#================================ despike =================================
+ #	## truncate spikes in each voxel's time series:
+ #	foreach run ($list_run)
+ #		3dDespike -NEW -nomask -prefix pb00.$subj.$run.despike func.$subj.$run+orig
+ #	end
+ #	# ================================= tshift (pb01) =================================
+ #	## slice timing alignment on volumes (default is -time 0)
+ #	## 데이터를 얻는(slicing) 시간이 각각의 axial voxel에 대해 다르기 때문에 보정해주는 것.
+ #	foreach run ($list_run)
+ #		3dTshift -tzero 0 -quintic -prefix pb01.$subj.$run.tshift pb00.$subj.$run.despike+orig
+ #	end
+ #	## tzero : to interpolate all the slices as though they were all acquired at the beginning of each TR.
+ #	## quintic : 5th order of polynomial
+ #	# ================================= blip: B0-distortion correction =================================
+ #	## copy external -blip_forward_dset dataset
+ #	3dTcat -prefix $output_dir/blip_forward $output_dir/$subj.dist_AP+orig
+ #	## copy external -blip_reverse_dset dataset
+ #	3dTcat -prefix $output_dir/blip_reverse $output_dir/$subj.dist_PA+orig
+ #	
+ #	## compute blip up/down non-linear distortion correction for EPI
+ #	
+ #	## create median datasets from forward and reverse time series
+ #	3dTstat -median -prefix rm.blip.med.fwd blip_forward+orig
+ #	3dTstat -median -prefix rm.blip.med.rev blip_reverse+orig
+ #	
+ #	## automask the median datasets
+ #	3dAutomask -apply_prefix rm.blip.med.masked.fwd rm.blip.med.fwd+orig
+ #	3dAutomask -apply_prefix rm.blip.med.masked.rev rm.blip.med.rev+orig
+ #	
+ #	## compute the midpoint warp between the median datasets
+ #	3dQwarp -plusminus -pmNAMES Rev For		\
+ #		-pblur 0.05 0.05 -blur -1 -1		\
+ #		-noweight -minpatch 9				\
+ #		-source rm.blip.med.masked.rev+orig	\
+ #		-base rm.blip.med.masked.fwd+orig	\
+ #		-prefix blip_warp
+ #	
+ #	## warp median datasets (forward and each masked) for QC checks
+ #	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
+ #		-source rm.blip.med.fwd+orig \
+ #		-prefix blip_med_for
+ #	
+ #	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
+ #		-source rm.blip.med.masked.fwd+orig \
+ #		-prefix blip_med_for_masked
+ #	
+ #	3dNwarpApply -quintic -nwarp blip_warp_Rev_WARP+orig \
+ #		-source rm.blip.med.masked.rev+orig \
+ #		-prefix blip_med_rev_masked
+ #	
+ #	# warp EPI time series data
+ #	foreach run ($list_run)
+ #		3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
+ #			-source pb01.$subj.$run.tshift+orig \
+ #			-prefix pb01.$subj.$run.blip
+ #	end
+ #	# ================================== Align Anatomy with EPI ==================================
+ #	cd $output_dir
+ #	## align anatomical datasets to EPI registration base (default: anat2epi):
+ #	align_epi_anat.py -anat2epi -anat $subj.anat.unifize+orig -anat_has_skull no \
+ #	    -epi SBREF.$subj.r01+orig -epi_base 3 \
+ #	    -epi_strip 3dAutomask \
+ #	    -suffix _al_junk -check_flip \
+ #	    -volreg off -tshift off -ginormous_move \
+ #	    -cost lpa -align_centers yes
+ #	## -cost nmi : weired result in the multiband8 protocol
+ #	## -cost lpa (local pearson correlation)
+ #	# ================================== register and warp (pb02) ========================
 	cd $output_dir
-	
-	## tcat은 각 시간의 volume(sub-brick) 데이터를 시간에 대해 catenate 해준다는 뜻. 시간을 포함한 4차원 데이터로 merge.
-	## apply 3dTcat to copy input dsets to results dir, while
-	## removing the first 0 TRs
-	#	foreach run ($list_run)
-	#		3dTcat -prefix $output_dir/pb00.$subj.$run.tcat $preproc_dir/$subj/func.$subj.$run+orig'[0..$]'
-	#	end
-	## if you want to remove the first 2 TRs (TR indices 0 and 1), use [2..$] instead of [0..$]
-	## 2..$ -> $는 just a variable which means the very end of that array. Only keeping volumes two to the very end 라는 뜻.
-	
-	## data check: compute outlier fraction for each volume
-	## Calculate number of 'outliers' a 3D+time dataset, at each time point, and writes the results to stdout.
-	## outliers -> MAD (Mean Absolute Deviation). If the MAD is 10, that means that at the RT we have an average of five median absolute deviations from the mean. Usually about 5.5 MAD is considered an outlier.
-	touch out.pre_ss_warn.txt
-	set npol = 4
-	foreach run ($list_run)
-		# ================================= outcount =================================
-		## The formula that we use for polort, which is applied by afni_proc.py and by "3dDeconvolve -polort A", is pnum = 1 + floor(run_duration/150), where times are in seconds. Yes, pnum would be the order of polynomial used in 3dToutcount or 3dDeconvolve, while run_duration is the duration of the run in seconds (regardless of the number of time points).
-		3dToutcount -automask -fraction -polort $npol -legendre func.$subj.$run+orig > outcount.$subj.$run.1D
-		## polort = the polynomial order of the baseline model
-		if ( `1deval -a outcount.$subj.$run.1D"{0}" -expr "step(a-0.4)"` ) then
-			echo "** TR #0 outliers: possible pre-steady state TRs in run ${run}" >> out.$subj.pre_ss_warn.txt
-		endif
-	end
-	## catenate outlier counts into a single time series
-	cat outcount.$subj.r0?.1D > outcount.$subj.r_all.1D
-	#================================ despike =================================
-	## truncate spikes in each voxel's time series:
-	foreach run ($list_run)
-		3dDespike -NEW -nomask -prefix pb00.$subj.$run.despike func.$subj.$run+orig
-	end
-	# ================================= tshift (pb01) =================================
-	## slice timing alignment on volumes (default is -time 0)
-	## 데이터를 얻는(slicing) 시간이 각각의 axial voxel에 대해 다르기 때문에 보정해주는 것.
-	foreach run ($list_run)
-		3dTshift -tzero 0 -quintic -prefix pb01.$subj.$run.tshift pb00.$subj.$run.despike+orig
-	end
-	## tzero : to interpolate all the slices as though they were all acquired at the beginning of each TR.
-	## quintic : 5th order of polynomial
-	# ================================= blip: B0-distortion correction =================================
-	## copy external -blip_forward_dset dataset
-	3dTcat -prefix $output_dir/blip_forward $output_dir/$subj.dist_AP+orig
-	## copy external -blip_reverse_dset dataset
-	3dTcat -prefix $output_dir/blip_reverse $output_dir/$subj.dist_PA+orig
-	
-	## compute blip up/down non-linear distortion correction for EPI
-	
-	## create median datasets from forward and reverse time series
-	3dTstat -median -prefix rm.blip.med.fwd blip_forward+orig
-	3dTstat -median -prefix rm.blip.med.rev blip_reverse+orig
-	
-	## automask the median datasets
-	3dAutomask -apply_prefix rm.blip.med.masked.fwd rm.blip.med.fwd+orig
-	3dAutomask -apply_prefix rm.blip.med.masked.rev rm.blip.med.rev+orig
-	
-	## compute the midpoint warp between the median datasets
-	3dQwarp -plusminus -pmNAMES Rev For		\
-		-pblur 0.05 0.05 -blur -1 -1		\
-		-noweight -minpatch 9				\
-		-source rm.blip.med.masked.rev+orig	\
-		-base rm.blip.med.masked.fwd+orig	\
-		-prefix blip_warp
-	
-	## warp median datasets (forward and each masked) for QC checks
-	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
-		-source rm.blip.med.fwd+orig \
-		-prefix blip_med_for
-	
-	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
-		-source rm.blip.med.masked.fwd+orig \
-		-prefix blip_med_for_masked
-	
-	3dNwarpApply -quintic -nwarp blip_warp_Rev_WARP+orig \
-		-source rm.blip.med.masked.rev+orig \
-		-prefix blip_med_rev_masked
-	
-	# warp EPI time series data
-	foreach run ($list_run)
-		3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
-			-source pb01.$subj.$run.tshift+orig \
-			-prefix pb01.$subj.$run.blip
-	end
-	# ================================== Align Anatomy with EPI ==================================
-	cd $output_dir
-	## align anatomical datasets to EPI registration base (default: anat2epi):
-	align_epi_anat.py -anat2epi -anat $subj.anat.unifize+orig -anat_has_skull no \
-	    -epi SBREF.$subj.rest+orig -epi_base 3 \
-	    -epi_strip 3dAutomask \
-	    -suffix _al_junk -check_flip \
-	    -volreg off -tshift off -ginormous_move \
-	    -cost lpa -align_centers yes
-	## -cost nmi : weired result in the multiband8 protocol
-	## -cost lpa (local pearson correlation)
-	# ================================== register and warp (pb02) ========================
-	cd $output_dir
-	foreach run ($list_run)
-		## register each volume to the base
-		3dvolreg -verbose -zpad 1 -cubic -base SBREF.$subj.rest+orig'[0]' \
-			-1Dfile dfile.$subj.$run.1D -prefix rm.epi.volreg.$subj.$run           \
-			-1Dmatrix_save mat.$run.vr.aff12.1D  \
-			pb01.$subj.$run.blip+orig
-	
-		## create an all-1 dataset to mask the extents of the warp
-		3dcalc -overwrite -a pb01.$subj.$run.blip+orig -expr 1 -prefix rm.$subj.epi.all1
-	
-		## catenate volreg, epi2anat and tlrc transformations
-		cat_matvec -ONELINE $subj.anat.unifize+tlrc::WARP_DATA -I $subj.anat.unifize_al_junk_mat.aff12.1D -I \
-			mat.$run.vr.aff12.1D > mat.$subj.$run.warp.aff12.1D
-	
-		## apply catenated xform : volreg, epi2anat and tlrc
-		3dAllineate -base $subj.anat.unifize+tlrc \
-			-input pb01.$subj.$run.blip+orig \
-			-1Dmatrix_apply mat.$subj.$run.warp.aff12.1D \
-			-mast_dxyz $res   -prefix rm.epi.nomask.$subj.$run # $res는 original data의 resolution과 맞춤e
-	
-		## warp the all-1 dataset for extents masking
-		3dAllineate -base $subj.anat.unifize+tlrc \
-			-input rm.$subj.epi.all1+orig \
-			-1Dmatrix_apply mat.$subj.$run.warp.aff12.1D \
-			-final NN -quiet \
-			-mast_dxyz $res  -prefix rm.epi.1.$subj.$run
-	
-		## make an extents intersection mask of this run
-		3dTstat -min -prefix rm.epi.min.$subj.$run rm.epi.1.$subj.$run+tlrc    # -----NEED CHECK-----
-	end
-	
+ #	foreach run ($list_run)
+ #		## register each volume to the base
+ #		3dvolreg -verbose -zpad 1 -cubic -base SBREF.$subj.r01+orig'[0]' \
+ #			-1Dfile dfile.$subj.$run.1D -prefix rm.epi.volreg.$subj.$run           \
+ #			-1Dmatrix_save mat.$run.vr.aff12.1D  \
+ #			pb01.$subj.$run.blip+orig
+ #	
+ #		## create an all-1 dataset to mask the extents of the warp
+ #		3dcalc -overwrite -a pb01.$subj.$run.blip+orig -expr 1 -prefix rm.$subj.epi.all1
+ #	
+ #		## catenate volreg, epi2anat and tlrc transformations
+ #		cat_matvec -ONELINE $subj.anat.unifize+tlrc::WARP_DATA \
+ #			-I $subj.anat.unifize_al_junk_mat.aff12.1D \
+ #			-I mat.$run.vr.aff12.1D > mat.$subj.$run.warp.aff12.1D
+ #	
+ #		## apply catenated xform : volreg, epi2anat and tlrc
+ #		3dAllineate -base $subj.anat.unifize+tlrc \
+ #			-input pb01.$subj.$run.blip+orig \
+ #			-1Dmatrix_apply mat.$subj.$run.warp.aff12.1D \
+ #			-mast_dxyz $res   -prefix rm.epi.nomask.$subj.$run # $res는 original data의 resolution과 맞춤e
+ #	
+ #		## warp the all-1 dataset for extents masking
+ #		3dAllineate -base $subj.anat.unifize+tlrc \
+ #			-input rm.$subj.epi.all1+orig \
+ #			-1Dmatrix_apply mat.$subj.$run.warp.aff12.1D \
+ #			-final NN -quiet \
+ #			-mast_dxyz $res  -prefix rm.epi.1.$subj.$run
+ #	
+ #		## make an extents intersection mask of this run
+ #		3dTstat -min -prefix rm.epi.min.$subj.$run rm.epi.1.$subj.$run+tlrc    # -----NEED CHECK-----
+ #	end
+ #	
 	## make a single file of registration params
 	cat dfile.$subj.r0?.1D > dfile.$subj.r_all.1D
 	
 	## create the extents mask: mask_epi_extents+tlrc
 	## (this is a mask of voxels that have valid data at every TR)
 	## (only 1 run, so just use 3dcopy to keep naming straight)
-	3dcopy rm.epi.min.$subj.rest+tlrc mask_epi_extents.$subj
+	3dcopy rm.epi.min.$subj.r01+tlrc mask_epi_extents.$subj
 	
 	## and apply the extents mask to the EPI data
 	## (delete any time series with missing data)
@@ -290,8 +291,8 @@ foreach subj ($list_subj)
 			-write motion_{$subj}.$run.eucl_norm.1D
 	end
 	# ==================================================================
-	rm $output_dir/pb00.*
-	rm $output_dir/pb01.*
-	# ==================================================================
+ #	rm $output_dir/pb00.*
+ #	rm $output_dir/pb01.*
+ #	# ==================================================================
 	echo "subject $subj completed!"
 end
