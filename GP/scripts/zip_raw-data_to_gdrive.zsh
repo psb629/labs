@@ -16,5 +16,5 @@ foreach nn in $list_subj
 	## compress
 	cd $dir_input
 	input=$subj
-	zip -r $output $input -x "*.DS_Store" "*.dimon.files.run.*" "*.GERT_Reco_dicom_*" "*__MACOSX"
+	zip -r $output $input -x "*.DS_Store" "*dimon.files.run.*" "*GERT_Reco_dicom_*" "*__MACOSX"
 end
