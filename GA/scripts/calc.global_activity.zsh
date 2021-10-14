@@ -47,10 +47,10 @@ foreach nn ($list_nn)
 				fi
 				3dmaskave -quiet -mask $dir_work/$mask $dir_work/$data >$dir_output/$fname
 			fi
+			if [ -e $dir_work/$data ]; then
+				rm $dir_work/$data
+			fi
 		end
-		if [ -e $dir_work/$data ]; then
-			rm $dir_work/$data
-		fi
 	end
 end
 # ============================================================
