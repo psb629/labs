@@ -1,47 +1,60 @@
 #!/bin/zsh
 
-nn_list=( 01 02 05 07 08 \
+list_nn=( 01 02 05 07 08 \
 		  11 12 13 14 15 \
 		  18 19 20 21 23 \
 		  26 27 28 29 30 \
 		  31 32 33 34 35 \
 		  36 37 38 42 44 )
 # ============================================================
-root_dir=/Volumes/GoogleDrive/내\ 드라이브/GA
-behav_dir=$root_dir/behav_data
-fmri_dir=$root_dir/fMRI_data
-roi_dir=$fmri_dir/roi
-stats_dir=$fmri_dir/stats
+dir_data=/home/sungbeenpark/GoogleDrive/GA
+dir_behav=$dir_data/behav_data
+dir_fmri=$dir_data/fMRI_data
+dir_roi=$dir_fmri/roi
+dir_stats=$dir_fmri/stats
 # ============================================================
-fin_dir=$stats_dir/GLM.MO/tsmean/fan_all
+region='full_mask'
+mask=full_mask.GAs.nii.gz
 # ============================================================
-mask=fan.roi.GA.all.nii.gz
-# ============================================================
-work_dir=~/Desktop/temp
-if [ ! -d $work_dir ]; then
-	mkdir -p -m 755 $work_dir
+dir_fin=$dir_stats/GLM.MO/tsmean/$region
+if [ ! -d $dir_fin ]; then
+	mkdir -p -m 755 $dir_fin
 fi
-cp -n $roi_dir/fan280/$mask $work_dir
 # ============================================================
-foreach nn ($nn_list)
+dir_work=~/tsmean
+if [ ! -d $dir_work ]; then
+	mkdir -p -m 755 $dir_work
+fi
+cp -n $dir_roi/$mask $dir_work
+# ============================================================
+foreach nn ($list_nn)
 	foreach gg (GA GB)
 		subj=$gg$nn
 		foreach run (r01 r02 r03 r04 r05 r06)
-			res=$subj.errts.MO.$run.global_activity.1D
-			if [ -f $fin_dir/$res ]; then
-				continue
+			data=$subj.bp_demean.errts.MO.$run.nii.gz
+			fname=tsmean.bp_demean.errts.MO.$subj.$run.$region.1D
+			
+			## 만약 최종 output 이 없으면, 계산을 위한 데이터 복사부터 시작
+			if [ ! -e $dir_fin/$fname ]; then
+				if [ ! -e $dir_work/$data ]; then
+					echo "copying $data to $dir_work"
+					cp -n $dir_stats/GLM.MO/$nn/$data $dir_work
+				fi
+				echo "Calculating ${gg}${nn} $run $regions[$aa] ..."
+	 			dir_output=$dir_work/$region
+				if [ ! -d $dir_output ]; then
+					mkdir -p -m 755 $dir_output
+				fi
+				3dmaskave -quiet -mask $dir_work/$mask $dir_work/$data >$dir_output/$fname
 			fi
-			data=$subj.errts.MO.$run.nii.gz
-			cp -n $stats_dir/GLM.MO/$nn/$data $work_dir
-
-			cd $work_dir
-			3dmaskave -quiet -mask $mask $data > $res
-			rm $data
 		end
+		if [ -e $dir_work/$data ]; then
+			rm $dir_work/$data
+		fi
 	end
 end
 # ============================================================
-if [ ! -d $fin_dir ]; then
-	mkdir -p -m 755 $fin_dir
-fi
-cp -n $work_dir/*.1D $fin_dir
+rm $dir_work/$mask
+# ============================================================
+cp -n -r $dir_work/$region/* $dir_fin
+find $dir_fin -type f -size 0
