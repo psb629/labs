@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 list_subj=(08 09 10 11 17 18 20 21)
+list_subj=(09 10 11 17 18 20 21)
 
 foreach nn in $list_subj
 	subj=GP$nn
