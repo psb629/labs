@@ -114,49 +114,49 @@ foreach subj ($list_subj)
  #	end
  #	## tzero : to interpolate all the slices as though they were all acquired at the beginning of each TR.
  #	## quintic : 5th order of polynomial
- #	# ================================= blip: B0-distortion correction =================================
- #	## copy external -blip_forward_dset dataset
- #	3dTcat -prefix $output_dir/blip_forward $output_dir/$subj.dist_AP+orig
- #	## copy external -blip_reverse_dset dataset
- #	3dTcat -prefix $output_dir/blip_reverse $output_dir/$subj.dist_PA+orig
- #	
- #	## compute blip up/down non-linear distortion correction for EPI
- #	
- #	## create median datasets from forward and reverse time series
- #	3dTstat -median -prefix rm.blip.med.fwd blip_forward+orig
- #	3dTstat -median -prefix rm.blip.med.rev blip_reverse+orig
- #	
- #	## automask the median datasets
- #	3dAutomask -apply_prefix rm.blip.med.masked.fwd rm.blip.med.fwd+orig
- #	3dAutomask -apply_prefix rm.blip.med.masked.rev rm.blip.med.rev+orig
- #	
- #	## compute the midpoint warp between the median datasets
- #	3dQwarp -plusminus -pmNAMES Rev For		\
- #		-pblur 0.05 0.05 -blur -1 -1		\
- #		-noweight -minpatch 9				\
- #		-source rm.blip.med.masked.rev+orig	\
- #		-base rm.blip.med.masked.fwd+orig	\
- #		-prefix blip_warp
- #	
- #	## warp median datasets (forward and each masked) for QC checks
- #	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
- #		-source rm.blip.med.fwd+orig \
- #		-prefix blip_med_for
- #	
- #	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
- #		-source rm.blip.med.masked.fwd+orig \
- #		-prefix blip_med_for_masked
- #	
- #	3dNwarpApply -quintic -nwarp blip_warp_Rev_WARP+orig \
- #		-source rm.blip.med.masked.rev+orig \
- #		-prefix blip_med_rev_masked
- #	
- #	# warp EPI time series data
- #	foreach run ($list_run)
- #		3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
- #			-source pb01.$subj.$run.tshift+orig \
- #			-prefix pb01.$subj.$run.blip
- #	end
+	# ================================= blip: B0-distortion correction =================================
+	## copy external -blip_forward_dset dataset
+	3dTcat -prefix $output_dir/blip_forward $output_dir/$subj.dist_AP+orig
+	## copy external -blip_reverse_dset dataset
+	3dTcat -prefix $output_dir/blip_reverse $output_dir/$subj.dist_PA+orig
+	
+	## compute blip up/down non-linear distortion correction for EPI
+	
+	## create median datasets from forward and reverse time series
+	3dTstat -median -prefix rm.blip.med.fwd blip_forward+orig
+	3dTstat -median -prefix rm.blip.med.rev blip_reverse+orig
+	
+	## automask the median datasets
+	3dAutomask -apply_prefix rm.blip.med.masked.fwd rm.blip.med.fwd+orig
+	3dAutomask -apply_prefix rm.blip.med.masked.rev rm.blip.med.rev+orig
+	
+	## compute the midpoint warp between the median datasets
+	3dQwarp -plusminus -pmNAMES Rev For		\
+		-pblur 0.05 0.05 -blur -1 -1		\
+		-noweight -minpatch 9				\
+		-source rm.blip.med.masked.rev+orig	\
+		-base rm.blip.med.masked.fwd+orig	\
+		-prefix blip_warp
+	
+	## warp median datasets (forward and each masked) for QC checks
+	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
+		-source rm.blip.med.fwd+orig \
+		-prefix blip_med_for
+	
+	3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
+		-source rm.blip.med.masked.fwd+orig \
+		-prefix blip_med_for_masked
+	
+	3dNwarpApply -quintic -nwarp blip_warp_Rev_WARP+orig \
+		-source rm.blip.med.masked.rev+orig \
+		-prefix blip_med_rev_masked
+	
+	# warp EPI time series data
+	foreach run ($list_run)
+		3dNwarpApply -quintic -nwarp blip_warp_For_WARP+orig \
+			-source pb01.$subj.$run.tshift+orig \
+			-prefix pb01.$subj.$run.blip
+	end
  #	# ================================== Align Anatomy with EPI ==================================
  #	cd $output_dir
  #	## align anatomical datasets to EPI registration base (default: anat2epi):
