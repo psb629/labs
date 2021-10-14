@@ -40,7 +40,7 @@ foreach nn ($list_nn)
 					echo "copying $data to $dir_work"
 					cp -n $dir_stats/GLM.MO/$nn/$data $dir_work
 				fi
-				echo "Calculating ${gg}${nn} $run $regions[$aa] ..."
+				echo "Calculating ${gg}${nn} $run $region ..."
 	 			dir_output=$dir_work/$region
 				if [ ! -d $dir_output ]; then
 					mkdir -p -m 755 $dir_output
