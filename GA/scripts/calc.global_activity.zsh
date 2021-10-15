@@ -56,5 +56,6 @@ end
 # ============================================================
 rm $dir_work/$mask
 # ============================================================
+find $dir_work -type f -size 0 -delete
+find $dir_fin -type f -size 0 -delete
 cp -n -r $dir_work/$region/* $dir_fin
-find $dir_fin -type f -size 0
