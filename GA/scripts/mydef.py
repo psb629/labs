@@ -346,8 +346,11 @@ class Common:
         corrmat = pd.DataFrame(index=sorted_rois, columns=sorted_rois, dtype='float64')
         for roiA in sorted_rois:
             for roiB in sorted_rois:
-                loc = tuple([subj, stage]+sorted([roiA, roiB]))
-                corrmat.loc[roiA][roiB] = df.loc[loc]['Pearson_r']
+                if roiA == roiB:
+                    corrmat.loc[roiA][roiB] = 1.
+                else:
+                    loc = tuple([subj, stage]+sorted([roiA, roiB]))
+                    corrmat.loc[roiA][roiB] = df.loc[loc]['Pearson_r']
 #             corrmat.loc[roiA][roiA] = 2.  ## Is this Yera and Yunha's fault?
 
         return corrmat
