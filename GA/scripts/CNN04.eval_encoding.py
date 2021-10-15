@@ -206,7 +206,7 @@ for subj in GA.list_subj:
 
 list_ = np.array(list_)
 
-dir_pca = join(GA.dir_work,'results','activations','vgg16','pca')
+dir_pca = join('/home/sungbeenpark/activations/vgg16/pca')
 dir_output = join(dir_pca, 'eval')
 os.makedirs(dir_output, exist_ok=True)
 
