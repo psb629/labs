@@ -115,7 +115,7 @@ def predict_fmri_fast(train_activations, test_activations, train_fmri, use_gpu=F
 
     return fmri_pred_test
 
-def get_activations(dir_pca, run, layer, nframe):
+def get_activations(dir_pca, subj, stage, run, layer, nframe):
     """This function loads neural network features/activations (preprocessed using PCA) into a
     numpy array according to a given layer.
     Parameters
@@ -130,13 +130,14 @@ def get_activations(dir_pca, run, layer, nframe):
         matrix of dimensions #train_vids x #pca_components
         containing activations of train videos
     """
+    gg = 'GA' if 'early' in stage else ('GB' if 'late' in stage else 'invalid')
 
-    train_file = join(dir_pca,'%sc.%s.nframe%03d.npy'%(run,layer,nframe))
+    train_file = join(dir_pca,'%s.%sc.%s.nframe%03d.npy'%(gg+subj,run,layer,nframe))
     train_activations = np.load(train_file)
     scaler = StandardScaler()
     train_activations = scaler.fit_transform(train_activations)
 
-    test_file = join(dir_pca,'%s.%s.nframe%03d.npy'%(run,layer,nframe))
+    test_file = join(dir_pca,'%s.%s.%s.nframe%03d.npy'%(gg+subj,run,layer,nframe))
     test_activations = np.load(test_file)
     scaler = StandardScaler()
     test_activations = scaler.fit_transform(test_activations)
@@ -176,7 +177,7 @@ def saveasnii(nii_mask, fname, data3Darray):
 
 #######################################################
 print("Loading ROI images...")
-GA.load_fan()
+ #GA.load_fan()
 
  ### yeo_17network == 1
  #dt = pd.DataFrame()
@@ -207,8 +208,6 @@ for subj in GA.list_subj:
 list_ = np.array(list_)
 
 dir_pca = join('/home/sungbeenpark/activations/vgg16/pca')
-dir_output = join(dir_pca, 'eval')
-os.makedirs(dir_output, exist_ok=True)
 
 nframe = 75
 
@@ -223,25 +222,28 @@ roi = 'fullmask'
 img_mask = GA.roi_imgs[roi]
 for i, (subj, r_train1, r_train2, r_test, layer) in enumerate(tqdm(list_)):
 
-    file_output = join(dir_output, subj, 'score.%s.%s.%s.%s%s.nii'%(r_test, roi, layer, gg, subj))
-    if exists(file_output):
-        continue
+    dir_output = join(dir_pca, 'eval', subj)
+    os.makedirs(dir_output, exist_ok=True)
+    fname = join(dir_output, 'score.%s.%s.%s.%s.nii'%(r_test, roi, layer, gg+subj))
+ #    if exists(fname):
+ #        continue
 
+    ## for문 돌때마다 데이터를 로드하지 않기 위함.
     if previous['subj']!=subj or previous['r_test']!=r_test:
         ## load real fmri data
-        file_fmri = join(GA.dir_fmri, 'preproc_data', subj,'betasLSS.%s%s.%s.nii.gz'%(gg, subj, r_test))
+        file_fmri = join(GA.dir_fmri, 'preproc_data', subj,'betasLSS.%s.%s.nii.gz'%(gg+subj, r_test))
         real_fmri = get_fmri(file_fmri, img_mask)
        
         ## load train fmri data & concatenate them
-        file_fmri = join(GA.dir_fmri, 'preproc_data', subj,'betasLSS.%s%s.%s.nii.gz'%(gg, subj, r_train1))
+        file_fmri = join(GA.dir_fmri, 'preproc_data', subj,'betasLSS.%s.%s.nii.gz'%(gg+subj, r_train1))
         train1_fmri = get_fmri(file_fmri, img_mask)
-        file_fmri = join(GA.dir_fmri, 'preproc_data', subj,'betasLSS.%s%s.%s.nii.gz'%(gg, subj, r_train2))
+        file_fmri = join(GA.dir_fmri, 'preproc_data', subj,'betasLSS.%s.%s.nii.gz'%(gg+subj, r_train2))
         train2_fmri = get_fmri(file_fmri, img_mask)
 
         concat_fmri = np.r_[train1_fmri, train2_fmri]
 
     ## load activations
-    train_activations, test_activations = get_activations(join(dir_pca, subj), r_test, layer, nframe)
+    train_activations, test_activations = get_activations(join(dir_pca, subj), subj, stage, r_test, layer, nframe)
 
     ## calculated predict fmri
     pred_fmri = predict_fmri_fast(train_activations, test_activations, concat_fmri, use_gpu=device)
@@ -252,7 +254,7 @@ for i, (subj, r_train1, r_train2, r_test, layer) in enumerate(tqdm(list_)):
     score3D = np.zeros(img_mask.shape)
     score3D[img_mask.get_fdata().astype(bool)] = score
 
-    saveasnii(img_mask, file_output, score3D)
+    saveasnii(img_mask, fname, score3D)
 
     previous['subj'] = subj
     previous['r_test'] = r_test
