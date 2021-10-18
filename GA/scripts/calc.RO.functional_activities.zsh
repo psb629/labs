@@ -6,30 +6,30 @@ nn_list=( 01 02 05 07 08 \
 		  26 27 28 29 30 \
 		  31 32 33 34 35 \
 		  36 37 38 42 44 )
+nn_list=( 01 )
 # ============================================================
-root_dir=/Volumes/GoogleDrive/내\ 드라이브/GA
- #root_dir=/home/sungbeenpark/GoogleDrive/GA
-behav_dir=$root_dir/behav_data
-fmri_dir=$root_dir/fMRI_data
-roi_dir=$fmri_dir/roi
-stats_dir=$fmri_dir/stats
+dir_root=/home/sungbeenpark/GA
+dir_stats=$dir_root/GLM.RO
+
+dir_gd=/home/sungbeenpark/GoogleDrive
+dir_roi=$dir_gd/GA/fMRI_data/roi
 # ============================================================
-work_dir=~/temp
-if [ ! -d $work_dir ]; then
-	mkdir -p -m 755 $work_dir
+dir_work=$dir_root/tmp
+if [ ! -d $dir_work ]; then
+	mkdir -p -m 755 $dir_work
 fi
 # ============================================================
- #find $stats_dir/GLM.MO/tsmean -type f -size 0 -delete
-find $work_dir -type f -size 0 -delete
+ #find $dir_stats/GLM.MO/tsmean -type f -size 0 -delete
+ #find $dir_work -type f -size 0 -delete
 # ============================================================
 ## Default mode network
-DMN_dir=$roi_dir/DMN
+dir_DMN=$dir_roi/DMN
 DMNs=( Core_aMPFC_r Core_aMPFC_l Core_PCC_r Core_PCC_l \
 	dMsub_dMPFC dMsub_LTC_l dMsub_LTC_r dMsub_TempP_l_temp dMsub_TempP_r_temp dMsub_TPJ_l dMsub_TPJ_r \
 	MTLsub_HF_l MTLsub_HF_r MTLsub_PHC_l MTLsub_PHC_r MTLsub_pIPL_l MTLsub_pIPL_r MTLsub_Rsp_l MTLsub_Rsp_r MTLsub_vMPFC )
 # ============================================================
 ## Yeo_network 1
-fan_dir=$roi_dir/fan280
+dir_fan=$dir_roi/fan280
 # No.105 FuG_L_3_2
 # No.106 FuG_R_3_2
 # No.189 MVOcC_L_5_1
@@ -47,7 +47,7 @@ fan_dir=$roi_dir/fan280
 fans=( 105 106 189 190 193 194 196 199 200 203 204 205 206 209 )
 # ============================================================
 ## Localizer
-localizer_dir=$roi_dir/localizer
+dir_localizer=$dir_roi/localizer
 localizers=( n200_c1_L_Postcentral\
 			 n200_c2_R_CerebellumIV-V\
 			 n200_c3_R_Postcentral\
@@ -70,71 +70,68 @@ end
 ## masks
 masks=()
 foreach dmn ($DMNs)
-	masks=($masks $DMN_dir/$dmn.nii)
+	masks=($masks $dir_DMN/$dmn.nii)
 end
 foreach fan ($fans)
-	masks=($masks $fan_dir/fan.roi.GA.$fan.nii.gz)
+	masks=($masks $dir_fan/fan.roi.GA.$fan.nii.gz)
 end
 foreach localizer ($localizers)
-	masks=($masks $localizer_dir/${localizer}_mask.nii)
+	masks=($masks $dir_localizer/${localizer}_mask.nii)
 end
 # ============================================================
-## copy them to work_dir
-foreach mask ($masks)
-	cp -n $mask $work_dir
-end
-# ============================================================
-## redirection paths of masks
-masks=()
-foreach dmn ($DMNs)
-	masks=($masks $work_dir/$dmn.nii)
-end
-foreach fan ($fans)
-	masks=($masks $work_dir/fan.roi.GA.$fan.nii.gz)
-end
-foreach localizer ($localizers)
-	masks=($masks $work_dir/${localizer}_mask.nii)
-end
-# ============================================================
-## check a validation by each mask
-foreach mask ($masks)
-	echo $mask
-	3dBrickStat -count -non-zero $mask
-end
+ ### copy them to dir_work
+ #foreach mask ($masks)
+ #	cp -n $mask $dir_work
+ #end
+ ## ============================================================
+ ### redirection paths of masks
+ #masks=()
+ #foreach dmn ($DMNs)
+ #	masks=($masks $dir_work/$dmn.nii)
+ #end
+ #foreach fan ($fans)
+ #	masks=($masks $dir_work/fan.roi.GA.$fan.nii.gz)
+ #end
+ #foreach localizer ($localizers)
+ #	masks=($masks $dir_work/${localizer}_mask.nii)
+ #end
+ ## ============================================================
+ ### check a validation by each mask
+ #foreach mask ($masks)
+ #	echo $mask
+ #	3dBrickStat -count -non-zero $mask
+ #end
 # ============================================================
 foreach nn ($nn_list)
 	foreach gg (GA GB)
 		subj=$gg$nn
 		foreach run (r01 r02 r03 r04 r05 r06)
-			data=$subj.bp_demean.errts.MO.$run.nii.gz
+			data=$subj.bp_demean.errts.RO.$run.nii
 			aa=0
 			foreach mask ($masks)
 				aa=$[$aa+1]
-				fname=tsmean.bp_demean.errts.MO.$subj.$run.$regions[$aa].1D
-				## 만약 최종 output 이 없으면, 계산을 위한 데이터 복사부터 시작
-				if [ ! -f $stats_dir/GLM.MO/tsmean/$regions[$aa]/$fname ]; then
-					if [ ! -f $work_dir/$data ]; then
-						echo "copying $data to $work_dir"
-						cp -n $stats_dir/GLM.MO/$nn/$data $work_dir
+				dir_output=/home/sungbeenpark/GA/GLM.RO/tsmean/$regions[$aa]
+				if [ ! -d $dir_output ]; then
+					mkdir -p -m 755 $dir_output
+				fi
+				fname=tsmean.bp_demean.errts.RO.$subj.$run.$regions[$aa].1D
+				## 최종 output이 이미 존재하는가?
+				if [ ! -e $dir_output/$fname ]; then
+					## 계산을 위한 데이터 복사부터 시작
+					if [ ! -e $dir_work/$data ]; then
+						echo "copying $data to $dir_work"
+						cp -n $dir_stats/$nn/$data $dir_work
 					fi
+					## 
 					echo "Calculating ${gg}${nn} $run $regions[$aa] ..."
-	 				output_dir=$work_dir/$regions[$aa]
- #					output_dir=$stats_dir/GLM.MO/tsmean/$regions[$aa]
-					if [ ! -d $output_dir ]; then
-						mkdir -p -m 755 $output_dir
-					fi
-					3dmaskave -quiet -mask $mask $work_dir/$data >$output_dir/$fname
- #					3dmaskave -quiet -mask $mask $stats_dir/GLM.MO/$nn/$data >$output_dir/$fname
+					3dmaskave -quiet -mask $mask $dir_work/$data >$dir_output/$fname
 				fi
 			end
-			if [ -f $work_dir/$data ]; then
-				rm $work_dir/$data
+			## 해당 subj에 대한 계산이 완료되었으므로 임시로 복사한 데이터는 삭제
+			if [ -f $dir_work/$data ]; then
+				rm $dir_work/$data
 			fi
 		end
 	end
 end
-foreach mask ($masks)
-	rm $mask
-end
-cp -n -r $work_dir/* $stats_dir/GLM.MO/tsmean/
-find $stats_dir/GLM.MO/tsmean -type f -size 0
+find $dir_output -type f -size 0
