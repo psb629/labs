@@ -157,7 +157,7 @@ class Common:
         else:
             read_type = "r"
         pkl_list = glob(join(path,'*%s*.pkl'%word))
-        df = pd.DataFrame({'name':pkl_list})
+        df = pd.DataFrame({'name':word})
         group = ['' for i in pkl_list]
         ## check the identity
         idty = ['a','b','c','d','e','f','g','h','i','j','k','l','m'
