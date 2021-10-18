@@ -47,14 +47,15 @@ foreach nn ($list_nn)
 				fi
 				3dmaskave -quiet -mask $dir_work/$mask $dir_work/$data >$dir_output/$fname
 			fi
+			if [ -e $dir_work/$data ]; then
+				rm $dir_work/$data
+			fi
 		end
-		if [ -e $dir_work/$data ]; then
-			rm $dir_work/$data
-		fi
 	end
 end
 # ============================================================
 rm $dir_work/$mask
 # ============================================================
+find $dir_work -type f -size 0 -delete
+find $dir_fin -type f -size 0 -delete
 cp -n -r $dir_work/$region/* $dir_fin
-find $dir_fin -type f -size 0

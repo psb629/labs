@@ -51,8 +51,14 @@ def do_PCA_and_save(dir_activation, subj, stage, layer, dir_save, nframe, n_comp
         x = StandardScaler().fit_transform(x)
         ipca = PCA(n_components=n_components,random_state=seed)
         x = ipca.fit_transform(x)
-        np.save(join(dir_save,"%s.%s.%s.nframe%03d"%(gg+subj,run_test,layer,nframe)), x)
-        np.save(join(dir_save,"%s.%s.%s.nframe%03d.explained_ratio"%(gg+subj,run_test,layer,nframe)), ipca.explained_variance_ratio_)
+        output = join(dir_save,"%s.%s.%s.nframe%03d"%(gg+subj,run_test,layer,nframe))
+        if exists(output):
+            continue
+        np.save(output, x)
+        output = join(dir_save,"%s.%s.%s.nframe%03d.explained_ratio"%(gg+subj,run_test,layer,nframe))
+        if exists(output):
+            continue
+        np.save(output, ipca.explained_variance_ratio_)
 
         ## train
         activations_file_list = []
@@ -72,12 +78,14 @@ def do_PCA_and_save(dir_activation, subj, stage, layer, dir_save, nframe, n_comp
         x = StandardScaler().fit_transform(x)
         ipca = PCA(n_components=n_components,random_state=seed)
         x = ipca.fit_transform(x)
-        np.save(
-                join(dir_save,"%s.%sc.%s.nframe%03d"%(gg+subj,run_test,layer,nframe))
-                , x)
-        np.save(
-                join(dir_save,"%s.%sc.%s.nframe%03d.explained_ratio"%(gg+subj,run_test,layer,nframe))
-                , ipca.explained_variance_ratio_)
+        output = join(dir_save,"%s.%sc.%s.nframe%03d"%(gg+subj,run_test,layer,nframe))
+        if exists(output):
+            continue
+        np.save(output, x)
+        output = join(dir_save,"%s.%sc.%s.nframe%03d.explained_ratio"%(gg+subj,run_test,layer,nframe))
+        if exists(output):
+            continue
+        np.save(output, ipca.explained_variance_ratio_)
 #######################################################
 layers = ['layer%02d'%(i+1) for i in range(13)]
 
@@ -91,8 +99,8 @@ stage = 'late_practice'
 # preprocessing using PCA and save
 print("-------------performing  PCA----------------------------")
 for subj, layer in tqdm(list_):
-    dir_activation = join(GA.dir_work,'results','activations','vgg16', subj)
-    dir_save = join(GA.dir_work,'results','activations','vgg16','pca', subj)
+    dir_activation = join('/home/sungbeenpark/activations/vgg16', subj)
+    dir_save = join('/home/sungbeenpark/activations/vgg16/pca', subj)
     os.makedirs(dir_save, exist_ok=True)
 
     do_PCA_and_save(dir_activation, subj, stage, layer, dir_save, nframe=75)

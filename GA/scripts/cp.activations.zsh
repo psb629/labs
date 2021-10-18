@@ -7,15 +7,9 @@ subjs=( 01 02 05 07 08 \
 		31 32 33 34 35 \
 		36 37 38 42 44 )
 
-layers=()
-foreach i in `seq -f "%02g" 1 13`
-	layers=($layers 'layer'$i)
-end
+layers=`seq -f "layer%02g" 1 13`
 
-trials=()
-foreach i in `seq -f "%02g" 1 97`
-	trials=($trials 'trial'$i)
-end
+trials=`seq -f "trial%02g" 1 97`
 
 foreach subj in $subjs
 	echo "Copying data of Subject $subj"
@@ -30,7 +24,7 @@ foreach subj in $subjs
 			foreach layer in $layers
 				fname=$gg$subj.$run.$trial.$layer.nframe075.npy
 				to=$dir_to/$fname
-				if [ ! -f $to ]; then
+				if [ ! -e $to ]; then
 					cp -n $dir_from/$fname $to
 				fi
 			end
