@@ -93,7 +93,7 @@ torch.cuda.manual_seed_all(seed)
 np.random.seed(seed)
 random.seed(seed)
 
-def get_activations_and_save(model, subj, stage, run, dir_activation, ITI=5, down_sample = 0.25, device=device):
+def get_activations_and_save(model, subj, stage, run, dir_activation, ITI=5, down_sample=0.25, device=device):
     
     ## down sampling: 60Hz * 0.25
     dir_output = join(dir_activation, subj)
@@ -150,7 +150,8 @@ def get_activations_and_save(model, subj, stage, run, dir_activation, ITI=5, dow
                 np.save(fin_output, avg_layer_activation)
 #######################################################
 ## get and save activations
-dir_activation = join(GA.dir_work,'results','activations','vgg16')
+#dir_activation = join(GA.dir_work,'results','activations','vgg16')
+dir_activation = join('/home/sungbeenpark/activations','vgg16')
 os.makedirs(dir_activation, exist_ok=True)
 
 list_ = []
