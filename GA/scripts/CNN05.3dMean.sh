@@ -14,6 +14,7 @@ dir_eval=$dir_root/vgg16/pca/eval
 # ================================================
 roi='fullmask'
 dir_fin=$dir_eval/$roi
+ #dir_fin=$dir_eval/tmp
 if [ ! -d $dir_fin ]; then
 	mkdir -p -m 755 $dir_fin
 fi
@@ -31,3 +32,15 @@ foreach run in $list_run
 		3dMean -prefix $dir_fin/$fin $list
 	end
 end
+
+ #foreach nn in $list_nn
+ #	foreach layer in $list_layer
+ #		list=()
+ #		fin=score.$nn.late_practice.$roi.$layer.nii
+ #		foreach run in $list_run
+ #			datum=score.$run.$roi.$layer.$gg$nn.nii
+ #			list+=($dir_eval/$nn/$datum)
+ #		end
+ #		3dMean -prefix $dir_fin/$fin $list
+ #	end
+ #end
