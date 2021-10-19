@@ -157,7 +157,10 @@ class Common:
         else:
             read_type = "r"
         pkl_list = glob(join(path,'*%s*.pkl'%word))
-        df = pd.DataFrame({'name':pkl_list})
+        list_=[]
+        for s in pkl_list:
+            list_.append(s.split('/')[-1])
+        df = pd.DataFrame({'file':pkl_list,'name':list_})
         group = ['' for i in pkl_list]
         ## check the identity
         idty = ['a','b','c','d','e','f','g','h','i','j','k','l','m'
