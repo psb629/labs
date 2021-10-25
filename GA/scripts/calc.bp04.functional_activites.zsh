@@ -20,6 +20,8 @@ dir_roi=/Users/clmn/Desktop/GA/fmri_data/rois
 
 dir_output=/Users/clmn/Desktop/GA/tsmean/bp04
 # ============================================================
+find $dir_output -type f -size 0 -delete
+# ============================================================
 ## Default mode network
 dir_DMN=$dir_roi/DMN
 DMNs=( Core_aMPFC_r Core_aMPFC_l Core_PCC_r Core_PCC_l \
