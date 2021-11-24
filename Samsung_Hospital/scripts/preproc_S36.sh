@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
-set list_subj = (S33 S34 S35)
-set list_date = (211021 211021 211105)
+set list_subj = (S36)
+set list_date = (211115)
 set coord = orig
 
 foreach ii (`seq -f "%02g" 1 $#list_subj`)
@@ -14,58 +14,6 @@ foreach ii (`seq -f "%02g" 1 $#list_subj`)
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
-	#########################################################
-	## convert dcm files into NIFTI files, written by Sungbeen Park
-	
-	# ========================= T1 data : 366 files =========================
-	dcm2niix_afni -o $dir_output -s y -f "${subj}_t1" $dir_data/t1
-	# added the line since S19, because of the unexpected suffix "_real"
-	# ========================= fMRI data : 18000 files =========================
-	set dir_tmp = $dir_root/tmp
-	if ( ! -d $dir_tmp ) then
-		mkdir -p -m 755 $dir_tmp
-	endif
-
-	set aa = -1
-	foreach jj (`seq -f "%05g" 0 17999`)
-		set from = IMG$jj
-		set to = EPI$jj
-		if ( -e $dir_data/epi1/$from ) then
-			@ aa = $aa + 1
-			set aa = `python -c "print('%05d'%($aa))"`
-			cp $dir_data/epi1/IMG$aa $dir_tmp/$to
-		else
-			@ bb = $jj - $aa - 1
-			set bb = `python -c "print('%05d'%($bb))"`
-			cp $dir_data/epi2/IMG$bb $dir_tmp/$to
-		endif
-	end
- 	chmod -R 755 $dir_tmp
-
-	set dir_aa = $dir_tmp/aa
-	if ( ! -d $dir_aa ) then
-		mkdir -p -m 755 $dir_aa
-	endif
-
-	## EPI00000-EPI17999에서 300 차이 나는 파일끼리 묶는다. -> 묶음당 파일 60개씩(60 anatomical slices) 총 300묶음(300 temporal data).
-	set set_time = `seq 0 299`
-	set cnt = 0
-	foreach t_ini ($set_time)
-		set set_data = `seq -f "%05g" $t_ini 300 17999`
-		foreach nn ($set_data)
-			@ cnt = $cnt + 1
-			set tt = `printf %05d $cnt`
-			cp $dir_tmp/EPI$nn $dir_aa/EPI_rearranged$tt
-		end
-	end
-
-	## 재정렬한 raw data를 한번에 nii로 변환.
-	dcm2niix_afni -o $dir_output -s y -f "${subj}_epi" $dir_aa
-	rm -rf $dir_tmp
-
-	# ========================= DTI data : 3221 files =========================
-	set raw_DTI = $data_dir/${subj}_${date}_dti
-	
 	#########################################################
 	set thresh_motion = 0.4
 	set fwhm = 4 # Full width at half maximum
