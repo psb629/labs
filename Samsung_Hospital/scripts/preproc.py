@@ -10,8 +10,8 @@ import re
 from tqdm import tqdm
 import shutil
 ##===================================================##
-subj = 'S36'
-date = '211115'
+subj = 'S37'
+date = '211117'
 ##===================================================##
 username = getpass.getuser()
 print("OS :",platform)
@@ -58,3 +58,6 @@ for t_ini in set_time:
 os.system('3dTcat -tr 2 -prefix %s/%s_epi.nii %s/*.nii'%(dir_output, subj, dir_tmp))
 shutil.rmtree(dir_tmp)
 ##===================================================##
+## T1 (365)
+dir_tmp = join(dir_raw, 't1')
+os.system('dcm2niix_afni -o %s -s y -f "%s_t1" %s'%(dir_output, subj, dir_tmp))
