@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
-set list_subj = (S36)
-set list_date = (211115)
+set list_subj = (S37)
+set list_date = (211117)
 set coord = orig
 
 foreach ii (`seq -f "%02g" 1 $#list_subj`)
