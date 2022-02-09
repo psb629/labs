@@ -52,7 +52,7 @@ def plot_correlation_matrix(correl_mat, vr=[-1,1], figsize=(15, 12), labels=None
     Parameters
     ----------
     correl_mat : ndarray
-        A three-dimensional correlation matrix composed of (node, node, layer)
+        A three-dimensional correlation matrix composed of (layer, node, node)
     vr : array_like 
         A value(coefficient) range, i.e., [vmin, vmax]. The default is [-1, 1].
     figsize : (float, float)
@@ -83,7 +83,7 @@ def plot_correlation_matrix(correl_mat, vr=[-1,1], figsize=(15, 12), labels=None
     >>>
     >>>
     """
-    nnode, nlayer = correl_mat.shape[-2:]
+    nlayer, nnode, _ = correl_mat.shape
     
     ncol = np.min([4, nlayer])
     nrow = np.ceil(nlayer/4.).astype(int)
@@ -102,7 +102,7 @@ def plot_correlation_matrix(correl_mat, vr=[-1,1], figsize=(15, 12), labels=None
 
     vmin, vmax = vr
     for i, layer in enumerate(range(nlayer)): ## early_practice windows + late_practice windows
-        img = nplt.plot_matrix(correl_mat[:,:,layer]
+        img = nplt.plot_matrix(correl_mat[layer,:,:]
                                , labels=labels, reorder=False
                                , vmax=vmax, vmin=vmin
                                , cmap=cmap
