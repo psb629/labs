@@ -5,6 +5,7 @@ jupyter
 notebook
 ipykernel
 scipy
+statannot
 sklearn
 nilearn
 matplotlib 
