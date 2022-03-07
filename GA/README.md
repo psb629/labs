@@ -76,20 +76,31 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 	- 목록
 		- `Core` : nvoxels=760
 			- `anteromedial frontal cortex (aMPFC)` : nvoxels=203
-			- `posterior cingulate (PCC)` : nvoxels=203
+				- -6 52 -2
+			- `posterior cingulate cortex (PCC)` : nvoxels=203
+				- -8 -56 26
 
-		- `Medial Temporal Lobe (MTL)` : nvoxels=1766
+		- `Medial Temporal Lobe (MTL)` subsystem : nvoxels=1766
 			- `retrosplenial cortex (RSP)` : nvoxels=203
+				- -14 -74 32
 			- `(posterior) parahippocampal cortex (PHC)` : nvoxels=203
+				- -28 -40 -12
 			- `posterior inferior parietal lobe (pIPL)` : nvoxels=L187, R170
-			- `ventromedial preforntal cortex (vmPFC)` : nvoxels=191
-			- `(anterior) parahippocampal gyrus (HF)` : nvoxels=203
+				- -44 -74 32
+			- `ventral medial preforntal cortex (vmPFC)` : nvoxels=191
+				- 0 26 -18
+			- `hippocampal formation (HF)` : nvoxels=203
+				- -22 -20 -26
 
-		- `dorsomedial sub-regions (dmsub)` : nvoxels=1166
-			- `dorsomedial prefrontal cortex (dmPFC)` : nvoxels=203
-			- `lateral temporal lobe (LTC)` : nvoxels=L196, R193
-			- `temporoparietal junction (TPJ)` : nvoxels=L203, R202
-			- `middle temporal pole (tempP)` : nvoxels=L79, R90
+		- `dorsomedial subsystem (dmsub)` : nvoxels=1166
+			- `dorsal medial prefrontal cortex (dmPFC)` : nvoxels=203
+				- 0 52 26
+			- `lateral temporal cortex (LTC)` : nvoxels=L196, R193
+				- -60 -24 -18
+			- `temporal parietal junction (TPJ)` : nvoxels=L203, R202
+				- -54 -54 28
+			- `(middle) temporal pole (tempP)` : nvoxels=L79, R90
+				- -50 14 -40
 	- 코드\
 	https://github.com/psb629/labs/blob/master/GA/scripts/DMN_ROImasks.sh
 	https://github.com/psb629/labs/tree/master/GA/scripts/DMN_ROImasks2.sh
