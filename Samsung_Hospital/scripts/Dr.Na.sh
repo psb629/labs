@@ -22,13 +22,12 @@ cd $dir_output
 ## 'LPI' means an one of the 'neurcoscience' orientation, where the x-axis is Left-to-Right, the y-axis is Posterior-to-Anterior, and the z-axis is Inferior-to-Superior:
  #3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat.deoblique+orig
 3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat+orig
-
+# ================================= unifize =================================
+## In case of Na, it needs to unifize first.
+3dUnifize -input $subj.anat.lpi+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
 # ================================= skull-striping =================================
 ## unifize -> ss : S23 has a problem with cutting brain
-3dSkullStrip -input $subj.anat.lpi+orig -prefix $subj.anat.ss -orig_vol
-# ================================= unifize =================================
-## this program can be a useful step to take BEFORE 3dSkullStrip, since the latter program can fail if the input volume is strongly shaded -- 3dUnifize will (mostly) remove such shading artifacts.
-3dUnifize -input $subj.anat.ss+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
+3dSkullStrip -input $subj.anat.unifize+orig -prefix $subj.anat.ss -orig_vol
 
 cd $dir_output
 # ================================= tlrc coordinate ==================================
