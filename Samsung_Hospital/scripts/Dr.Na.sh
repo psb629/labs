@@ -4,7 +4,10 @@ set subj = "Na"
 set coord = tlrc
 
 set dir_root = ~/Downloads/Na_220102
-set t1 = $dir_root/${subj}_T1.nii
+set t1 = $dir_root/${subj}_T1.e-2.nii
+#########################################################
+## the original data has too high intensity.
+3dcalc -a $dir_root/${subj}_T1.nii -expr "a/100" -prefix $t1
 #########################################################
 set dir_output = $dir_root/preprocessed
 if ( ! -d $dir_output ) then
@@ -20,14 +23,12 @@ cd $dir_output
 
 # ================ change the orientation of a dataset ================
 ## 'LPI' means an one of the 'neurcoscience' orientation, where the x-axis is Left-to-Right, the y-axis is Posterior-to-Anterior, and the z-axis is Inferior-to-Superior:
- #3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat.deoblique+orig
 3dresample -orient LPI -prefix $subj.anat.lpi -input $subj.anat+orig
-
 # ================================= skull-striping =================================
 ## unifize -> ss : S23 has a problem with cutting brain
 3dSkullStrip -input $subj.anat.lpi+orig -prefix $subj.anat.ss -orig_vol
 # ================================= unifize =================================
-## this program can be a useful step to take BEFORE 3dSkullStrip, since the latter program can fail if the input volume is strongly shaded -- 3dUnifize will (mostly) remove such shading artifacts.
+## In case of Na, it needs to unifize first.
 3dUnifize -input $subj.anat.ss+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
 
 cd $dir_output
