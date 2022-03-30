@@ -51,12 +51,12 @@ for network7 in range(9):
             
 for idx in dt.index:
     region = dt.loc[idx,'full_name']
+    #region = 'fan%03d'%dt.loc[idx,'label']
 
     network = dt.loc[idx,'yeo_network_name']
-    if network in roi_regions.keys():
-        roi_regions[network].append(region)
-    else:
+    if not network in roi_regions.keys():
         roi_regions[network] = []
+    roi_regions[network].append(region)
                                                         
     label = dt.loc[idx,'label']
     roi_paths[region] = join(dir_data, 'masks/fan280/fan.roi.GA.%03d.nii.gz'%int(label))
