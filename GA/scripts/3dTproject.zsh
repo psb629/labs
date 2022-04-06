@@ -9,31 +9,30 @@ nn_list=( 01 02 05 07 08 \
 # ============================================================
 dir_root=/Volumes/clmnlab/GA
 dir_fmri=$dir_root/fmri_data
-dir_behav=$dir_root/behav_data
 
-dir_mask=$fmri_dir/masks
-dir_stat=$fmri_dir/stats
-# ============================================================
-dir_output=
-if [ ! -d $work_dir ]; then
-	mkdir -p -m 755 $work_dir
-fi
+dir_local=/Users/clmn/Desktop/GA
+dir_reg=$dir_local/txt
+gmask=$dir_local/masks/full_mask.GAGB.nii.gz
 # ============================================================
 foreach nn ($nn_list)
 	foreach gg ('GA' 'GB')
 		subj=$gg$nn
 		foreach run (`seq -f "r%02g" 1 6`)
+			dir_output=/Volumes/T7-SSD2/GA/pb04.errts_tproject.RO.bp/$nn
+			if [ ! -d $dir_output ]; then
+				mkdir -p -m 755 $dir_output
+			fi
 			## main
 			3dTproject \
 				-polort 0 \
-				-input /Volumes/clmnlab/GA/fmri_data/preproc_data/GA01/pb04.GA01.r01.scale+tlrc \
-				-mask /Volumes/clmnlab/GA/fmri_data/preproc_data/GA01/full_mask.GA01+tlrc \
+				-input $dir_fmri/preproc_data/$subj/pb04.$subj.$run.scale+tlrc \
+				-mask $gmask \
 				-passband 0.01 0.1 \
-				-censor /Volumes/clmnlab/GA/fmri_data/preproc_data/GA01/motion_GA01.r01_censor.1D \
+				-censor $dir_fmri/preproc_data/$subj/motion_$subj.${run}_censor.1D \
 				-cenmode ZERO \
-				-ort /Volumes/clmnlab/GA/fmri_data/preproc_data/GA01/motion_demean.GA01.r01.1D \
-				-ort global
-				-prefix /Users/clmn/Desktop/GA/fmri_data/pb04.errts_tproject/01/errts.tproject.GA01.r01.nii
+				-ort $dir_fmri/preproc_data/$subj/motion_demean.$subj.$run.1D \
+				-ort $dir_reg/$subj.$run.SPMG2.reward.txt \
+				-prefix $dir_output/pb04.errts_tproject.RO.bp.$subj.$run.nii
 		end
 	end
 end
