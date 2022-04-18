@@ -52,15 +52,29 @@ masker = NiftiSpheresMasker(
         , radius=5
         , allow_overlap=True
         , memory=join(dir_output, 'nilearn_cache'), memory_level=1, verbose=0
+ # #dir_root = '/home/sungbeenpark/GA/tsmean/Mohr264'
+ # #dir_fmri = '/mnt/sda2/GA/fmri_data'
+ #dir_root = '/Volumes/T7-SSD2/GA'
+ #dir_fmri = join(dir_root,'pb04.errts_tproject.RO.bp')
+ #dir_output = '/Volumes/GoogleDrive/내 드라이브/GA/fMRI_data/time_series'
+ #os.makedirs(dir_output, exist_ok=True)
+ #
+ ### load atlas
+ #seeds = np.loadtxt('/Volumes/T7-SSD2/Mohr264/Mohr264.txt', dtype=int)
+ #masker = NiftiSpheresMasker(
+ #        seeds=seeds
+ #        , mask_img=join(dir_root,'masks/full_mask.GAGB.nii.gz')
+ #        , radius=5
+ #        , allow_overlap=True
+ #        , memory=join('/Users/clmn/Desktop','nilearn_cache'), memory_level=1, verbose=0
 )
 
 ## Calculating time-series mean activity for each ROI
  #stat = 'pb04.errts_tproject'
-stat = 'GLM.MO'
+stat = 'GLM.RO'
 fin = 'time_series.%s.Mohr264.pkl'%stat
 
- #path_data = glob(join(dir_fmri, stat, '??', '*.nii'))
-path_data = glob(join(dir_fmri, 'stats', stat, '??', '????.bp_demean.errts.MO.???.nii.gz'))
+path_data = glob(join(dir_fmri,'??','pb04.errts_tproject.RO.bp.G???.r??.nii'))
 
 time_series = {}
 
