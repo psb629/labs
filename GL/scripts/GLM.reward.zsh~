@@ -1,0 +1,36 @@
+#!/bin/zsh
+
+dir_fmri=/mnt/sdb2/GL/fmri_data
+
+subj='GL03'
+dir_preproc=$dir_fmri/preproc_data/$subj
+dir_output=$dir_fmri/stats/GLM.reward/$subj
+
+3dDeconvolve -input \
+	$dir_preproc/pb05.$subj.r02.scale+orig \
+	$dir_preproc/pb05.$subj.r03.scale+orig \
+	$dir_preproc/pb05.$subj.r04.scale+orig \
+	$dir_preproc/pb05.$subj.r05.scale+orig \
+	-mask $dir_preproc/full_mask.$subj+orig \
+	-censor $dir_preproc/censor_${subj}_combined_2.1D \
+	-polort A -float -local_times \
+	-num_stimts 7 \
+	-num_glt 1 -stim_times_AM2 1 /GL03_Rew.txt 'BLOCK(1,1)' -stim_label 1 Rew \
+	-stim_file 2 'motion_demean.GL03.r02_07.1D[0]' -stim_base 2 -stim_label 2 roll \
+	-stim_file 3 'motion_demean.GL03.r02_07.1D[1]' -stim_base 3 -stim_label 3 pitch \
+	-stim_file 4 'motion_demean.GL03.r02_07.1D[2]' -stim_base 4 -stim_label 4 yaw \
+	-stim_file 5 'motion_demean.GL03.r02_07.1D[3]' -stim_base 5 -stim_label 5 dS \
+	-stim_file 6 'motion_demean.GL03.r02_07.1D[4]' -stim_base 6 -stim_label 6 dL \
+	-stim_file 7 'motion_demean.GL03.r02_07.1D[5]' -stim_base 7 -stim_label 7 dP \
+	-gltsym 'SYM: Rew' -glt_label 1 Rew \
+	-fout -tout \
+	-x1D X.xmat.1D \
+	-xjpeg X.jpg \
+	-x1D_uncensored X.nocensor.xmat.1D \
+	-bucket /Users/sskim/Documents/Research/AFNI/GL/data/GL03/stats/statRew.GL03
+
+ #3dttest++ -mask /Volumes/clmnlab/GL/fmri_data/masks/full_mask.group+tlrc.HEAD \
+ #	-setA '/Volumes/clmnlab/GL/fmri_data/GL03/stats/statRewSep.GL03+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL04/stats/statRewSep.GL04+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL05/stats/statRewSep.GL05+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL06/stats/statRewSep.GL06+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL07/stats/statRewSep.GL07+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL08/stats/statRewSep.GL08+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL09/stats/statRewSep.GL09+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL10/stats/statRewSep.GL10+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL11/stats/statRewSep.GL11+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL12/stats/statRewSep.GL12+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL14/stats/statRewSep.GL14+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL15/stats/statRewSep.GL15+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL16/stats/statRewSep.GL16+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL17/stats/statRewSep.GL17+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL18/stats/statRewSep.GL18+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL19/stats/statRewSep.GL19+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL20/stats/statRewSep.GL20+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL21/stats/statRewSep.GL21+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL22/stats/statRewSep.GL22+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL24/stats/statRewSep.GL24+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL25/stats/statRewSep.GL25+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL26/stats/statRewSep.GL26+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL27/stats/statRewSep.GL27+tlrc.HEAD[RewFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL29/stats/statRewSep.GL29+tlrc.HEAD[RewFB#1_Coef]' \
+ #	-setB '/Volumes/clmnlab/GL/fmri_data/GL03/stats/statRewSep.GL03+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL04/stats/statRewSep.GL04+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL05/stats/statRewSep.GL05+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL06/stats/statRewSep.GL06+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL07/stats/statRewSep.GL07+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL08/stats/statRewSep.GL08+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL09/stats/statRewSep.GL09+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL10/stats/statRewSep.GL10+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL11/stats/statRewSep.GL11+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL12/stats/statRewSep.GL12+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL14/stats/statRewSep.GL14+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL15/stats/statRewSep.GL15+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL16/stats/statRewSep.GL16+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL17/stats/statRewSep.GL17+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL18/stats/statRewSep.GL18+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL19/stats/statRewSep.GL19+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL20/stats/statRewSep.GL20+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL21/stats/statRewSep.GL21+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL22/stats/statRewSep.GL22+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL24/stats/statRewSep.GL24+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL25/stats/statRewSep.GL25+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL26/stats/statRewSep.GL26+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL27/stats/statRewSep.GL27+tlrc.HEAD[RewnFB#1_Coef]' '/Volumes/clmnlab/GL/fmri_data/GL29/stats/statRewSep.GL29+tlrc.HEAD[RewnFB#1_Coef]' \
+ #	-paired \
+ #	-prefix /Volumes/clmnlab/GL/fmri_data/group/stats/statRewSep.group
