@@ -5,12 +5,12 @@ set fwhm = 4
 set thresh_motion = 0.4
 set npol = 4
 
-set list_subj = ( GP08 GP10 GP16 GP18 GP20 \
-				GP22 GP26 GP32 GP34 GP36 \
-				GP38 GP40 GP09 GP11 GP17 \
-				GP19 GP21 GP24 GP27 GP33 \
-				GP35 GP37 GP39 GP41 )
-set list_subj = ( GP22 )
+## except: GP16
+set list_subj = ( GP08 GP09 GP10 GP11 GP17 \
+				GP18 GP19 GP20 GP21 GP22 \
+				GP24 GP26 GP27 GP32 GP33 \
+				GP34 GP35 GP36 GP37 GP38 \
+				GP39 GP40 GP41 )
 
 set list_run = (`count -digits 2 1 3`)
 
@@ -42,6 +42,7 @@ foreach subj ($list_subj)
 	########
 	# ANAT # : 3dWarp -> 3dresample -> 3dUnifize -> 3dSkullStrip -> @auto_tlrc
 	########
+	cd $dir_output
 	
 	set dir_output = $dir_output/preprocessed
 	if ( ! -d $dir_output ) then
@@ -131,15 +132,16 @@ foreach subj ($list_subj)
 	3dWarp -deoblique -prefix $dir_output/SBREF.$subj.r03 $dir_output/temp+orig
 	rm $dir_output/temp*
 
+	# ================================= tcat & tshift ================================= #
+	cd $dir_output
+	foreach run ($list_run)
+		3dTcat -prefix preprocessed/pb00.$subj.r$run.tcat func.$subj.r$run+orig'[0..$]'
+	end
 	# ================================================================== #
 	set dir_output = $dir_output/preprocessed
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
-	# ================================= tcat & tshift ================================= #
-	foreach run ($list_run)
-		3dTcat -prefix $dir_output/pb00.$subj.r$run.tcat func.$subj.r$run+orig'[0..$]'
-	end
 	# ================================= auto block: outcount ================================= #
  	cd $dir_output
  	touch out.pre_ss_warn.txt
