@@ -21,11 +21,13 @@ afni_proc.py -subj_id $subj -script $dir_script/afni_preproc_tmp.tcsh \
 				$dir_raw/func.$subj.r03+orig.HEAD \
 				$dir_raw/func.$subj.r04+orig.HEAD \
 				$dir_raw/func.$subj.r05+orig.HEAD \
-			-blocks 'despike' 'tshift' 'align' 'volreg' 'blur' 'mask' 'scale' 'regress'\
+			-blocks 'despike' 'tshift' 'align' 'tlrc' 'volreg' 'blur' 'mask' 'scale' 'regress'\
 			-copy_anat $dir_raw/$subj.MPRAGE+orig -anat_has_skull 'yes' -anat_uniform_method 'unifize' -anat_unif_GM 'yes'\
 			-tcat_remove_first_trs 0 -tshift_opts_ts -tpattern 'alt+z2' \
+			-tlrc_base MNI152_T1_2009c+tlrc -tlrc_opts_at -init_xform AUTO_CENTER \
 			-align_opts_aea -cost 'lpc+ZZ' -giant_move -check_flip\
 			-volreg_align_e2a -volreg_align_to MIN_OUTLIER \
+			-volreg_tlrc_warp \
 			-blur_size 4.0 \
 			-regress_stim_times $dir_reg/${subj}_RewFB.txt $dir_reg/${subj}_RewnFB.txt \
 			-regress_stim_labels 'RewFB' 'RewnFB' \
