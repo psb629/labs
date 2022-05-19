@@ -22,9 +22,12 @@ dir_output=$dir_stat
 
 setA=()
 foreach nn ($list_nn) 
-	setA=($setA $dir_stat/GL$nn/stats.GL$nn+tlrc.HEAD'[RewFB+RewnFB_GLT#0_Coef]')
+	setA=($setA $dir_stat/GL$nn/stats.GL$nn+tlrc.HEAD'[Rew#1_Coef]')
 end
+
+cd $dir_output
 3dttest++ -mask $dir_root/masks/full_mask.GL+tlrc.nii\
 	-setA $setA \
-	-prefix $dir_output/tmp
+	-prefix tmp \
+	-ClustSim
 

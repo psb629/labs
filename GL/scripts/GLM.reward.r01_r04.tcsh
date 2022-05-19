@@ -24,7 +24,7 @@ set ktrs = `1d_tool.py -infile $dir_preproc/censor_${subj}_combined_2.1D \
                        -show_trs_uncensored encoded`
 # ------------------------------
 # run the regression analysis
-3dDeconvolve -input $dir_preproc/pb05.$subj.r*.scale+$coord.HEAD	\
+3dDeconvolve -input $dir_preproc/pb05.$subj.r01.scale+$coord.HEAD	\
     -censor $dir_preproc/censor_${subj}_combined_2.1D				\
 	-mask $dir_preproc/full_mask.$subj+$coord						\
  #    -ortvec $dir_preproc/bandpass_rall.1D bandpass				\
