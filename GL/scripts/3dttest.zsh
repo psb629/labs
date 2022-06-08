@@ -28,6 +28,6 @@ end
 cd $dir_output
 3dttest++ -mask $dir_root/masks/full_mask.GL+tlrc.nii\
 	-setA $setA \
-	-prefix tmp \
-	-ClustSim
+	-prefix group.beta_coef.GL.nii
+ #	-ClustSim 10
 
