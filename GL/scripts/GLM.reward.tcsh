@@ -47,6 +47,26 @@ cd $dir_output
     -errts errts.${subj}											\
     -bucket stats.$subj
 
+ #3dDeconvolve -input pb04.GL03.r01.scale+tlrc.HEAD \
+ #	-mask full_mask.GL03+tlrc \
+ #	-censor motion_GL03.r01_censor.1D \
+ #	-polort A -float -local_times \
+ #	-num_stimts 8 \
+ #	-stim_times_AM1 1 /Users/sskim/Documents/Research/AFNI/GL/data/GL03/regressors/GL03_Move.txt dmBLOCK -stim_label 1 Move \
+ #	-stim_times_AM1 2 /Users/sskim/Documents/Research/AFNI/GL/data/GL03/regressors/GL03_Stop.txt dmBLOCK -stim_label 2 Stop \
+ #	-stim_file 3 'motion_demean.GL03.r01.1D[0]' -stim_base 3 -stim_label 3 roll \
+ #	-stim_file 4 'motion_demean.GL03.r01.1D[1]' -stim_base 4 -stim_label 4 pitch \
+ #	-stim_file 5 'motion_demean.GL03.r01.1D[2]' -stim_base 5 -stim_label 5 yaw \
+ #	-stim_file 6 'motion_demean.GL03.r01.1D[3]' -stim_base 6 -stim_label 6 dS \
+ #	-stim_file 7 'motion_demean.GL03.r01.1D[4]' -stim_base 7 -stim_label 7 dL \
+ #	-stim_file 8 'motion_demean.GL03.r01.1D[5]' -stim_base 8 -stim_label 8 dP \
+ #	-num_glt 3 \
+ #	-gltsym 'SYM: Move' -glt_label 1 Move -gltsym 'SYM: Stop' \
+ #	-glt_label 2 Stop -gltsym 'SYM: Move -Stop' -glt_label 3 Move-Stop \
+ #	-fout -tout \
+ #	-x1D X.xmat.1D -xjpeg X.jpg -x1D_uncensored X.nocensor.xmat.1D \
+ #	-bucket /Users/sskim/Documents/Research/AFNI/GL/data/GL03/stats/statMove.GL03
+
  #3dDeconvolve -input $dir_preproc/pb05.$subj.r*.scale+$coord.HEAD	\
  #    -censor $dir_preproc/censor_${subj}_combined_2.1D				\
  #	-mask $dir_preproc/full_mask.$subj+$coord						\
