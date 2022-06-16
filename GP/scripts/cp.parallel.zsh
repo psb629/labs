@@ -2,8 +2,8 @@
 
 dir_current=`pwd`
 
-dir_from=/mnt/sda2/GP/raw_data
-dir_to=/mnt/ext6/GP/fmri_data/raw_data
+dir_from=/mnt/sdb2/GP/fmri_data/preproc_data
+dir_to=/mnt/ext6/GP/fmri_data/preproc_data
 
 ## make directories in the objective directory
 find $dir_from -type d >$dir_current/dir_from.txt
