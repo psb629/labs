@@ -6,7 +6,7 @@ list_nn=(03 04 05 06 07 \
 		19 20 21 22 24 \
 		25 26 27 29)
 
-dir_root=/mnt/sdb2/GL/fmri_data
+dir_root=/mnt/ext6/GL/fmri_data
 dir_stat=$dir_root/stats/GLM.reward
 dir_output=$dir_stat
 
@@ -28,7 +28,7 @@ end
 cd $dir_output
 3dttest++ -mask $dir_root/masks/full_mask.GL+tlrc.nii\
 	-setA $setA \
-	-prefix group.beta_coef.GL.nii \
-	-toz
- #	-ClustSim 10
+	-prefix GL.group.Zscore.n24.nii \
+	-ClustSim 10
+ #	-toz
 
