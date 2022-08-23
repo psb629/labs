@@ -6,9 +6,11 @@ list_nn=('08' '09' '10' '11' '17'\
 	'24' '26' '27' '32' '33'\
 	'34' '35' '36' '37' '38'\
 	'39' '40' '41')
+list_nn=('42' '43' '45' '46' '47' '48' '49' '50' '51')
+list_nn=('44')
 # ============================================================
-dir_preproc="/mnt/sdb2/GP/fmri_data/preproc_data"
 dir_root="/mnt/ext6/GP"
+dir_preproc="$dir_root/fmri_data/preproc_data"
 dir_reg="$dir_root/behav_data/regressors/AM"
 # ============================================================
 foreach nn ($list_nn)

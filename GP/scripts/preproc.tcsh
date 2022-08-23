@@ -6,29 +6,31 @@ set thresh_motion = 0.4
 set npol = 4
 
 ## except: GP16
-set list_subj = ( GP08 GP09 GP10 GP11 GP17 \
-				GP18 GP19 GP20 GP21 GP22 \
-				GP24 GP26 GP27 GP32 GP33 \
-				GP34 GP35 GP36 GP37 GP38 \
-				GP39 GP40 GP41 )
+ #set list_subj = ( GP08 GP09 GP10 GP11 GP17 \
+ #				GP18 GP19 GP20 GP21 GP22 \
+ #				GP24 GP26 GP27 GP32 GP33 \
+ #				GP34 GP35 GP36 GP37 GP38 \
+ #				GP39 GP40 GP41 GP42 GP43 \
+ #				GP45 GP46 GP47 GP48 GP49 GP50 GP51)
+set list_subj = ( GP44 )
 
 set list_run = (`count -digits 2 1 3`)
 
-set dir_root = /mnt/sda2/GP
+set dir_root = /mnt/ext6/GP
+set dir_raw = /mnt/ext6/GP_KJH/fmri_data/raw_data
 # ================================= day1 ================================= #
 set day = "day1"
 foreach subj ($list_subj)
-	set dir_output = /mnt/sdb2/GP/fmri_data/preproc_data/$subj/$day
+	set dir_output = $dir_root/fmri_data/preproc_data/$subj/$day
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
 
-	set dir_raw = $dir_root/fmri_data/$subj/$day
-	if ( ! -d $dir_raw ) then
+	if ( ! -d $dir_raw/$subj/day1 ) then
 		continue
 	endif
 
-	set MPRAGE = $dir_raw/T1*
+	set MPRAGE = $dir_raw/$subj/day1/T1*
 
 	set pname = $dir_output/$subj.MPRAGE
 	if ( ! -f $pname+orig.HEAD ) then
@@ -64,24 +66,23 @@ end
 # ================================= day2 ================================= #
 set day = "day2"
 foreach subj ($list_subj)
-	set dir_output = /mnt/sdb2/GP/fmri_data/preproc_data/$subj/$day
+	set dir_output = $dir_root/fmri_data/preproc_data/$subj/$day
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
 
-	set dir_raw = $dir_root/fmri_data/$subj/$day
-	if ( ! -d $dir_raw ) then
+	if ( ! -d $dir_raw/$subj/day2 ) then
 		continue
 	endif
 
-	set dist_PA = $dir_raw/DISTORTION_CORR_64CH_INVERT_TO_PA_*
-	set dist_AP = $dir_raw/DISTORTION_CORR_64CH_AP_*
-	set r01 = $dir_raw/RUN1_*_CMRR_00*
-	set r01_SBREF = $dir_raw/RUN1_*_SBREF_00*
-	set r02 = $dir_raw/RUN2_*_CMRR_00*
-	set r02_SBREF = $dir_raw/RUN2_*_SBREF_00*
-	set r03 = $dir_raw/RUN3_*_CMRR_00*
-	set r03_SBREF = $dir_raw/RUN3_*_SBREF_00*
+	set dist_PA = $dir_raw/$subj/day2/DISTORTION_CORR_64CH_INVERT_TO_PA_*
+	set dist_AP = $dir_raw/$subj/day2/DISTORTION_CORR_64CH_AP_*
+	set r01 = $dir_raw/$subj/day2/RUN1_*_CMRR_00*
+	set r01_SBREF = $dir_raw/$subj/day2/RUN1_*_SBREF_00*
+	set r02 = $dir_raw/$subj/day2/RUN2_*_CMRR_00*
+	set r02_SBREF = $dir_raw/$subj/day2/RUN2_*_SBREF_00*
+	set r03 = $dir_raw/$subj/day2/RUN3_*_CMRR_00*
+	set r03_SBREF = $dir_raw/$subj/day2/RUN3_*_SBREF_00*
 
 	# ================================= setp 00 : convert ================================= #
 	cd $dist_PA
@@ -165,8 +166,8 @@ foreach subj ($list_subj)
 		pb00.$subj.r${run}.despike+orig
 	end
 	# ================================= blip ================================= #
-	3dTcat -prefix blip_forward /mnt/sdb2/GP/fmri_data/preproc_data/$subj/$day/dist_AP.$subj+orig
-	3dTcat -prefix blip_reverse /mnt/sdb2/GP/fmri_data/preproc_data/$subj/$day/dist_PA.$subj+orig
+	3dTcat -prefix blip_forward $dir_root/fmri_data/preproc_data/$subj/$day/dist_AP.$subj+orig
+	3dTcat -prefix blip_reverse $dir_root/fmri_data/preproc_data/$subj/$day/dist_PA.$subj+orig
 
 	# create median datasets from forward and reverse time series
 	3dTstat -median -prefix rm.blip.med.fwd blip_forward+orig
@@ -206,9 +207,9 @@ foreach subj ($list_subj)
 	# ================================= align ================================= #
 	# - align EPI to anatomical datasets or vice versa
 	align_epi_anat.py -anat2epi \
-		-anat /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+orig \
+		-anat $dir_root/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+orig \
 		-anat_has_skull no \
-		-epi /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day2/SBREF.$subj.r02+orig \
+		-epi $dir_root/fmri_data/preproc_data/$subj/day2/SBREF.$subj.r02+orig \
 		-epi_base 0                                \
 		-epi_strip 3dAutomask                                                         \
 		-suffix _al_junk                     -check_flip                              \
@@ -218,7 +219,7 @@ foreach subj ($list_subj)
 	foreach run ($list_run)
 		# register each volume to the base
 		3dvolreg -verbose -zpad 1 -cubic \
-			-base /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day2/SBREF.$subj.r02+orig'[0]'\
+			-base $dir_root/fmri_data/preproc_data/$subj/day2/SBREF.$subj.r02+orig'[0]'\
 			-1Dfile dfile.$subj.r$run.1D -prefix rm.epi.volreg.$subj.r$run           \
 			-1Dmatrix_save mat.r$run.vr.aff12.1D  \
 			pb01.$subj.r$run.blip+orig
@@ -227,18 +228,18 @@ foreach subj ($list_subj)
 		3dcalc -overwrite -a pb01.$subj.r$run.blip+orig -expr 1 -prefix rm.$subj.epi.all1
 
 		# catenate volreg, epi2anat and tlrc transformations
-		cat_matvec -ONELINE /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc::WARP_DATA \
+		cat_matvec -ONELINE $dir_root/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc::WARP_DATA \
 			-I $subj.anat.unifize_al_junk_mat.aff12.1D \
 			-I mat.r$run.vr.aff12.1D > mat.$subj.r$run.warp.aff12.1D
 
 		# apply catenated xform : volreg, epi2anat and tlrc
-		3dAllineate -base /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc \
+		3dAllineate -base $dir_root/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc \
 			-input pb01.$subj.r$run.blip+orig \
 			-1Dmatrix_apply mat.$subj.r$run.warp.aff12.1D \
 			-mast_dxyz $res   -prefix rm.epi.nomask.$subj.r$run # $res는 original data의 resolution과 맞춤.
 
 		# warp the all-1 dataset for extents masking
-		3dAllineate -base /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc \
+		3dAllineate -base $dir_root/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc \
 			-input rm.$subj.epi.all1+orig \
 			-1Dmatrix_apply mat.$subj.r$run.warp.aff12.1D \
 			-final NN -quiet \
@@ -264,7 +265,7 @@ foreach subj ($list_subj)
 			-expr 'a*b' -prefix pb02.$subj.r$run.volreg
 	end
 	# create an anat_final dataset, aligned with stats
-	3dcopy /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc\
+	3dcopy $dir_root/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc\
 		anat_final.$subj
 
 	# ================================= blur ================================= #
@@ -292,7 +293,7 @@ foreach subj ($list_subj)
 	# ---- create subject anatomy mask, mask_anat.$subj+tlrc ----
 	#      (resampled from tlrc anat). resample은 resolution을 맞춰 sampling을 다시 하는 것. resolution을 낮추면 down sampling하는 것.
 	3dresample -master full_mask.$subj+tlrc \
-		-input /mnt/sdb2/GP/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc \
+		-input $dir_root/fmri_data/preproc_data/$subj/day1/preprocessed/$subj.anat.unifize+tlrc \
 		-prefix rm.resam.anat
 	# convert to binary anat mask; fill gaps and holes
 	3dmask_tool -dilate_input 5 -5 -fill_holes -input rm.resam.anat+tlrc -prefix mask_anat.$subj

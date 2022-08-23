@@ -1,4 +1,4 @@
-#!bin/python
+#!/bin/python
 
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ from tqdm import tqdm
 ## date
 today = date.today().strftime("%Y%m%d")
 
-dir_root = '/mnt/sda2/GP'
+dir_root = '/mnt/ext6/GP'
 dir_behav = join(dir_root, 'behav_data')
 
 dir_reg = join(dir_behav, 'regressors/AM')
@@ -35,6 +35,8 @@ list_subj = ['08', '09', '10', '11', '17'
              , '24', '26', '27', '32', '33'
              , '34', '35', '36', '37', '38'
              , '39', '40', '41']
+list_subj = ['42', '43', '45', '46', '47', '48', '49', '50', '51']
+list_subj = ['44']
 
 def convert_ID(ID):
     ##################   ##################

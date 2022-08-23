@@ -5,7 +5,7 @@ from os.path import join
 import sys
 
 subj = sys.argv[1]
-dir_root = "/mnt/sdb2/GP/fmri_data/preproc_data/%s/day2/preprocessed"%subj
+dir_root = "/mnt/ext6/GP/fmri_data/preproc_data/%s/day2/preprocessed"%subj
 dir_output = dir_root
 
 full = np.loadtxt(join(dir_root,'motion_demean.%s.1D'%subj), delimiter=' ')
