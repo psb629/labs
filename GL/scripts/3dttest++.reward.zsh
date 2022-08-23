@@ -8,8 +8,8 @@ list_nn=(03 04 05 06 07 \
 
 dir_root=/mnt/ext6/GL/fmri_data
 
-stat='2s_shifted'
-dir_stat=$dir_root/stats/GLM.reward.$stat
+stat='4s_shifted'
+dir_stat=$dir_root/stats/GLM.reward.$stat.SSKim
 dir_output=$dir_stat
 
  #setA=()
