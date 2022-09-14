@@ -1,5 +1,7 @@
 #!/bin/python
 
+## When using GLM, I want to calculate the head motion regressor one at a time, thus I extend the length of each regressor and set the value of the extended margin to zero.
+
 import numpy as np
 from os.path import join
 import sys

@@ -12,16 +12,16 @@ set npol = 4
  #				GP34 GP35 GP36 GP37 GP38 \
  #				GP39 GP40 GP41 GP42 GP43 \
  #				GP45 GP46 GP47 GP48 GP49 GP50 GP51)
-set list_subj = ( GP44 )
+set list_subj = ( GP53 GP54 GP55 )
 
 set list_run = (`count -digits 2 1 3`)
 
-set dir_root = /mnt/ext6/GP
-set dir_raw = /mnt/ext6/GP_KJH/fmri_data/raw_data
+set dir_root = "/mnt/ext6/GP"
+set dir_raw = "/mnt/ext6/GP_KJH/fmri_data/raw_data"
 # ================================= day1 ================================= #
 set day = "day1"
 foreach subj ($list_subj)
-	set dir_output = $dir_root/fmri_data/preproc_data/$subj/$day
+	set dir_output = "$dir_root/fmri_data/preproc_data/$subj/$day"
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
@@ -30,7 +30,7 @@ foreach subj ($list_subj)
 		continue
 	endif
 
-	set MPRAGE = $dir_raw/$subj/day1/T1*
+	set MPRAGE = "$dir_raw/$subj/day1/T1*"
 
 	set pname = $dir_output/$subj.MPRAGE
 	if ( ! -f $pname+orig.HEAD ) then
@@ -46,7 +46,7 @@ foreach subj ($list_subj)
 	########
 	cd $dir_output
 	
-	set dir_output = $dir_output/preprocessed
+	set dir_output = "$dir_output/preprocessed"
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
@@ -66,7 +66,7 @@ end
 # ================================= day2 ================================= #
 set day = "day2"
 foreach subj ($list_subj)
-	set dir_output = $dir_root/fmri_data/preproc_data/$subj/$day
+	set dir_output = "$dir_root/fmri_data/preproc_data/$subj/$day"
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
@@ -75,14 +75,14 @@ foreach subj ($list_subj)
 		continue
 	endif
 
-	set dist_PA = $dir_raw/$subj/day2/DISTORTION_CORR_64CH_INVERT_TO_PA_*
-	set dist_AP = $dir_raw/$subj/day2/DISTORTION_CORR_64CH_AP_*
-	set r01 = $dir_raw/$subj/day2/RUN1_*_CMRR_00*
-	set r01_SBREF = $dir_raw/$subj/day2/RUN1_*_SBREF_00*
-	set r02 = $dir_raw/$subj/day2/RUN2_*_CMRR_00*
-	set r02_SBREF = $dir_raw/$subj/day2/RUN2_*_SBREF_00*
-	set r03 = $dir_raw/$subj/day2/RUN3_*_CMRR_00*
-	set r03_SBREF = $dir_raw/$subj/day2/RUN3_*_SBREF_00*
+	set dist_PA = "$dir_raw/$subj/day2/DISTORTION_CORR_64CH_INVERT_TO_PA_*"
+	set dist_AP = "$dir_raw/$subj/day2/DISTORTION_CORR_64CH_AP_*"
+	set r01 = "$dir_raw/$subj/day2/RUN1_*_CMRR_00*"
+	set r01_SBREF = "$dir_raw/$subj/day2/RUN1_*_SBREF_00*"
+	set r02 = "$dir_raw/$subj/day2/RUN2_*_CMRR_00*"
+	set r02_SBREF = "$dir_raw/$subj/day2/RUN2_*_SBREF_00*"
+	set r03 = "$dir_raw/$subj/day2/RUN3_*_CMRR_00*"
+	set r03_SBREF = "$dir_raw/$subj/day2/RUN3_*_SBREF_00*"
 
 	# ================================= setp 00 : convert ================================= #
 	cd $dist_PA
@@ -139,7 +139,7 @@ foreach subj ($list_subj)
 		3dTcat -prefix preprocessed/pb00.$subj.r$run.tcat func.$subj.r$run+orig'[0..$]'
 	end
 	# ================================================================== #
-	set dir_output = $dir_output/preprocessed
+	set dir_output = "$dir_output/preprocessed"
 	if ( ! -d $dir_output ) then
 		mkdir -p -m 755 $dir_output
 	endif
