@@ -1,9 +1,9 @@
 %% Striatum
-tmp = niftiread('/mnt/sdb2/GL/fmri_data/stats/GLM.reward/GL.mask.striatum.nii');
+tmp = niftiread('/mnt/ext6/GL/fmri_data/masks/mask.striatum.nii');
 mask_striatum = (tmp ~= 0);
 mesh_striatum = isosurface(mask_striatum, 0.5);
 %% Whole Brain
-tmp = niftiread('/mnt/sdb2/GL/fmri_data/masks/full_mask.GL+tlrc.nii');
+tmp = niftiread('/mnt/ext6/GL/fmri_data/masks/full_mask.GL+tlrc.nii');
 mask_brain = (tmp > 0);
 mesh_brain = isosurface(smooth3(mask_brain, 'box', 11), 0.5);
 %% Statistics
@@ -11,8 +11,8 @@ mesh_brain = isosurface(smooth3(mask_brain, 'box', 11), 0.5);
 % stat_beta = tmp(:,:,:,1,2);
 % tmp = niftiread('/mnt/sdb2/GL/fmri_data/stats/GLM.reward/GL.group.zscore.nii');
 % stat_beta = tmp(:,:,:,1,1);
-tmp = niftiread('/mnt/sdb2/GL/fmri_data/stats/rew-Move.group.nii');
-stat_beta = tmp(:,:,:,1,1);
+tmp = niftiread('/mnt/ext6/GL/fmri_data/stats/GLM.reward.4s_shifted.SSKim/GL.group.Zscore.n24.nii');
+stat_beta = tmp(:,:,:,1,2);
 %%
 [num_vertex, ~] = size(mesh_striatum.vertices);
 color_map = zeros(num_vertex, 1);
