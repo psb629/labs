@@ -47,7 +47,7 @@ if [[ $do_scale = true ]]; then
 else
 	3dcalc -a $output_dir/tmp.nii -expr "a" -prefix $output_dir/${name}_T1.nii
 fi
-rm $output_dir/tmp.*
+rm $output_dir/tmp*.*
 
 if [[ $only_convert = false ]]; then
 	########

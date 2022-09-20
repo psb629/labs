@@ -8,7 +8,7 @@ endif
 
 set dir_preproc = /mnt/sda2/GL/fmri_data/$subj/preprocessed
 
-set stat = '4s_shifted'
+set stat = '2s_shifted'
 set dir_reg = /home/sungbeenpark/Github/labs/GL/behav_data/regressors/Reward.$stat
 
 # assign output directory name

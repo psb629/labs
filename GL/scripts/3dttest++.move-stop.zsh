@@ -7,13 +7,16 @@ list_nn=(03 04 05 06 07 \
 		25 26 27 29)
 
 dir_root=/mnt/ext6/GL/fmri_data
-dir_stat=$dir_root/stats/GLM.Move_Stop
+dir_stat=$dir_root/stats/GLM.Move-Stop.SSKim
 dir_output=$dir_stat
 
 setA=()
 foreach nn ($list_nn) 
 	subj=GL$nn
-	setA=($setA $dir_stat/statMove.${subj}+tlrc.HEAD'[Move-Stop_GLT#0_Coef]')
+	## source: me
+ #	setA=($setA $dir_stat/statMove.${subj}+tlrc.HEAD'[Move-Stop_GLT#0_Coef]')
+	## source: Sungshin Kim
+	setA=($setA $dir_stat/$subj/statMove.${subj}+tlrc.HEAD'[Move-Stop_GLT#0_Coef]')
 end
 
 cd $dir_output

@@ -18,7 +18,7 @@ dir_output=$dir_stat
  #
 ## make group full mask
 full_mask=$dir_mask/full_mask.GP.group.nii
-if ( ! -f $full_mask ); then
+if [ ! -f $full_mask ]; then
 	list=()
 	foreach nn ($list_DLPFC)
 		subj="GP$nn"
