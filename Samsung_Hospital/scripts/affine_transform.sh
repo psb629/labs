@@ -15,10 +15,10 @@
  #    set subj = "invalid"
  #endif
 
-set subj = "Jungmin_Lee"
-set abbrev = "LJM"
+set subj = "Jihoon_Kim"
+set abbrev = "KJH"
 echo "#################"
-echo "###### $subj ######"
+echo "$subj"
 echo "#################"
 
 set root_dir = /home/sungbeenpark/Happy_Mind
@@ -32,25 +32,36 @@ set affine_matrix = $data_dir/warp.$abbrev.anat.Xat.1D
 echo "Mt="
 cat $affine_matrix
 # ===================================================
-## A coordinate of the target (NOTE, the order would be RAI=DICOM)
- #set Xo = (18.099 19.609 6.318)
-set Xt = (50 67 33)
+## A target coordinate of Dementia  (NOTE, the order would be RAI=DICOM)
+set At = (50 67 33)
+## A target coordinate of Depression (NOTE, the order would be RAI=DICOM)
+set Bt = (41 -43 27)
 # ===================================================
 ## Affine transformation
-set Xt = ($Xt 1)
-set vec_r = ()
+set At = ($At 1)
+set Bt = ($Bt 1)
+set vec_a = ()
+set vec_b = ()
+set sign = (-1 -1 1)
 foreach ll (`count -digits 2 1 3`)
 	set line = `head -${ll} $affine_matrix |tail -1`
-	set sum = 0
+	set sum_a = 0
+	set sum_b = 0
 	foreach xx (`count -digits 2 1 4`)
-		set temp = `python -c "print($line[$xx]*$Xt[$xx])"`
-		set sum = `python -c "print('%.4f'%($temp+$sum))"`
+		set temp = `python -c "print($line[$xx]*$At[$xx])"`
+		set sum_a = `python -c "print('%.4f'%($temp+$sum_a))"`
+		set temp = `python -c "print($line[$xx]*$Bt[$xx])"`
+		set sum_b = `python -c "print('%.4f'%($temp+$sum_b))"`
 	end
-	set vec_r = ($vec_r $sum)
+	## convert the result to LPI
+	set sum_a = `python -c "print('%.4f'%($sum_a*$sign[$ll]))"`
+	set sum_b = `python -c "print('%.4f'%($sum_b*$sign[$ll]))"`
+	set vec_a = ($vec_a $sum_a)
+	set vec_b = ($vec_b $sum_b)
 end
 # ===================================================
 ## result
-echo "Xt="
-echo $Xt
-echo "Mt*Xt="
-echo $vec_r
+echo " Dementia"
+echo " $vec_a"
+echo " Depression"
+echo " $vec_b"
