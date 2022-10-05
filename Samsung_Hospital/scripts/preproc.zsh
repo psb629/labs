@@ -1,8 +1,10 @@
 #!/bin/zsh
 
+ #zmodload zsh/mapfile
+
 ## initialize arguments
 name="noname"
-only_convert=false
+convert_only=false
 decided_output_dir=false
 do_scale=false
 
@@ -23,8 +25,8 @@ while (( $# )); do
 			output_dir="$2"
 			decided_output_dir=true
 		;;
-		-only_convert)
-			only_convert=true
+		-convert_only)
+			convert_only=true
 		;;
 		-s | --scale)
 			if [[ ($2 == 'y') || ($2 == 'yes') ]]; then
@@ -49,7 +51,7 @@ else
 fi
 rm $output_dir/tmp*.*
 
-if [[ $only_convert = false ]]; then
+if [[ $convert_only = false ]]; then
 	########
 	# ANAT # : 3dWarp -> 3dresample -> 3dUnifize -> 3dSkullStrip -> @auto_tlrc
 	########
@@ -75,3 +77,46 @@ if [[ $only_convert = false ]]; then
 	## find attribute WARP_DATA in dataset; -I, invert the transformation:
 	cat_matvec $name.anat.unifize+tlrc::WARP_DATA -I > warp.$name.anat.Xat.1D
 fi
+
+# ===================================================
+## find targets' coordinates
+affine_matrix=$output_dir/warp.$name.anat.Xat.1D
+echo "Mt="; cat $affine_matrix
+elements=(`cat $affine_matrix | tr '\n' ' ' | tr -s ' ' | sed 's/ /\n/g'`)
+# ===================================================
+## A target coordinate of Dementia  (NOTE, the order would be RAI=DICOM)
+At=(50 67 33)
+## A target coordinate of Depression (NOTE, the order would be RAI=DICOM)
+Bt=(41 -43 27)
+# ===================================================
+## Affine transformation
+At=($At 1)
+Bt=($Bt 1)
+vec_a=()
+vec_b=()
+sign=(-1 -1 1)
+for row in 1 2 3
+{
+	sum_a=0
+	sum_b=0
+	for col in 1 2 3 4
+	{
+		((sum_a += $At[$col] * $elements[($row - 1) * 4 + $col]))
+		((sum_b += $Bt[$col] * $elements[($row - 1) * 4 + $col]))
+	}
+	## convert an orientation RAI to LPI
+	vec_a=($vec_a $(($sign[$row] * $sum_a)))
+	vec_b=($vec_b $(($sign[$row] * $sum_b)))
+}
+# ===================================================
+## result
+echo " ##############"
+echo " ## Dementia ##"
+echo " ##############"
+for ii in $vec_a
+	printf " %.4f\n" $ii
+echo " ################"
+echo " ## Depression ##"
+echo " ################"
+for ii in $vec_b
+	printf " %.4f\n" $ii
