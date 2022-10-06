@@ -76,47 +76,48 @@ if [[ $convert_only = false ]]; then
 	@auto_tlrc -base /usr/local/afni/abin/MNI152_T1_2009c+tlrc.HEAD -input $name.anat.unifize+orig -no_ss -init_xform AUTO_CENTER
 	## find attribute WARP_DATA in dataset; -I, invert the transformation:
 	cat_matvec $name.anat.unifize+tlrc::WARP_DATA -I > warp.$name.anat.Xat.1D
+
+	# ===================================================
+	## find targets' coordinates
+	affine_matrix=$output_dir/warp.$name.anat.Xat.1D
+	echo "Mt="; cat $affine_matrix
+	elements=(`cat $affine_matrix | tr '\n' ' ' | tr -s ' ' | sed 's/ /\n/g'`)
+	# ===================================================
+	## A target coordinate of Dementia  (NOTE, the order would be RAI=DICOM)
+	At=(50 67 33)
+	## A target coordinate of Depression (NOTE, the order would be RAI=DICOM)
+	Bt=(41 -43 27)
+	# ===================================================
+	## Affine transformation
+	At=($At 1)
+	Bt=($Bt 1)
+	vec_a=()
+	vec_b=()
+	sign=(-1 -1 1)
+	for row in 1 2 3
+	{
+		sum_a=0
+		sum_b=0
+		for col in 1 2 3 4
+		{
+			((sum_a += $At[$col] * $elements[($row - 1) * 4 + $col]))
+			((sum_b += $Bt[$col] * $elements[($row - 1) * 4 + $col]))
+		}
+		## convert an orientation RAI to LPI
+		vec_a=($vec_a $(($sign[$row] * $sum_a)))
+		vec_b=($vec_b $(($sign[$row] * $sum_b)))
+	}
+	# ===================================================
+	## result
+	echo " ##############"
+	echo " ## Dementia ##"
+	echo " ##############"
+	for ii in $vec_a
+		printf " %.4f\n" $ii
+	echo " ################"
+	echo " ## Depression ##"
+	echo " ################"
+	for ii in $vec_b
+		printf " %.4f\n" $ii
 fi
 
-# ===================================================
-## find targets' coordinates
-affine_matrix=$output_dir/warp.$name.anat.Xat.1D
-echo "Mt="; cat $affine_matrix
-elements=(`cat $affine_matrix | tr '\n' ' ' | tr -s ' ' | sed 's/ /\n/g'`)
-# ===================================================
-## A target coordinate of Dementia  (NOTE, the order would be RAI=DICOM)
-At=(50 67 33)
-## A target coordinate of Depression (NOTE, the order would be RAI=DICOM)
-Bt=(41 -43 27)
-# ===================================================
-## Affine transformation
-At=($At 1)
-Bt=($Bt 1)
-vec_a=()
-vec_b=()
-sign=(-1 -1 1)
-for row in 1 2 3
-{
-	sum_a=0
-	sum_b=0
-	for col in 1 2 3 4
-	{
-		((sum_a += $At[$col] * $elements[($row - 1) * 4 + $col]))
-		((sum_b += $Bt[$col] * $elements[($row - 1) * 4 + $col]))
-	}
-	## convert an orientation RAI to LPI
-	vec_a=($vec_a $(($sign[$row] * $sum_a)))
-	vec_b=($vec_b $(($sign[$row] * $sum_b)))
-}
-# ===================================================
-## result
-echo " ##############"
-echo " ## Dementia ##"
-echo " ##############"
-for ii in $vec_a
-	printf " %.4f\n" $ii
-echo " ################"
-echo " ## Depression ##"
-echo " ################"
-for ii in $vec_b
-	printf " %.4f\n" $ii
