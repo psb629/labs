@@ -19,51 +19,79 @@ if [ ! -d $dir_output ]; then
 	mkdir -p -m 755 $dir_output
 fi
 
+T1=`find "$dir_raw/$subj/day1" -maxdepth 1 -mindepth 1 -type d -name "T1"`
 dist_PA=`find "$dir_raw/$subj/day1" -maxdepth 1 -mindepth 1 -type d -name "DISTORTION_CORR_64CH_INVERT_TO_PA_00??"`
 dist_AP=`find "$dir_raw/$subj/day1" -maxdepth 1 -mindepth 1 -type d -name "DISTORTION_CORR_64CH_AP_00??"`
 r00=`find "$dir_raw/$subj/day1" -maxdepth 1 -mindepth 1 -type d -name "TASK_MUITIBAND8_EPI_CMRR_00??"`
 r00_SBREF=`find "$dir_raw/$subj/day1" -maxdepth 1 -mindepth 1 -type d -name "TASK_MUITIBAND8_EPI_CMRR_SBREF_00??"`
 # ================================================================== #
+cd $T1
+Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
+-gert_outdir $dir_output -gert_quit_on_err
+3dWarp -deoblique -prefix $dir_output/MPRAGE.$subj.nii $dir_output/temp+orig
+rm $dir_output/temp*
+
 cd $dist_PA
 Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
 -gert_outdir $dir_output -gert_quit_on_err
-3dWarp -deoblique -prefix $dir_output/dist_PA.$subj $dir_output/temp+orig
+3dWarp -deoblique -prefix $dir_output/dist_PA.$subj.nii $dir_output/temp+orig
 rm $dir_output/temp*
 
 cd $dist_AP
 Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
 -gert_outdir $dir_output -gert_quit_on_err
-3dWarp -deoblique -prefix $dir_output/dist_AP.$subj $dir_output/temp+orig
+3dWarp -deoblique -prefix $dir_output/dist_AP.$subj.nii $dir_output/temp+orig
 rm $dir_output/temp*
 
 cd $r00
 Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
 -gert_outdir $dir_output -gert_quit_on_err
-3dWarp -deoblique -prefix $dir_output/func.$subj.localizer $dir_output/temp+orig
+3dWarp -deoblique -prefix $dir_output/func.$subj.localizer.nii $dir_output/temp+orig
 rm $dir_output/temp*
 
 cd $r00_SBREF
 Dimon -infile_pat '*.IMA' -gert_create_dataset -gert_to3d_prefix temp \
 -gert_outdir $dir_output -gert_quit_on_err
-3dWarp -deoblique -prefix $dir_output/SBREF.$subj.localizer $dir_output/temp+orig
+3dWarp -deoblique -prefix $dir_output/SBREF.$subj.localizer.nii $dir_output/temp+orig
 rm $dir_output/temp*
 # ================================================================== #
-
 dir_output="$dir_preproc/$subj/day1/preprocessed"
 if [ ! -d $dir_output ]; then
 	mkdir -p -m 755 $dir_output
 fi
 
 cd $dir_output
+# ==================================================================
+########
+# ANAT # : 3dWarp -> 3dresample -> 3dUnifize -> 3dSkullStrip -> @auto_tlrc
+########
+
+# ================================= skull-striping =================================
+3dSkullStrip -input "$dir_preproc/$subj/day1/MPRAGE.$subj.nii" -prefix $subj.anat.ss -orig_vol
+# ================================= unifize =================================
+## this program can be a useful step to take BEFORE 3dSkullStrip, since the latter program can fail if the input volume is strongly shaded -- 3dUnifize will (mostly) remove such shading artifacts.
+3dUnifize -input $subj.anat.ss+orig -prefix $subj.anat.unifize -GM -clfrac 0.5
+# ================================== tlrc ==================================
+## warp anatomy to standard space, input dataset must be in the current directory:
+@auto_tlrc -base /usr/local/afni/abin/MNI152_T1_2009c+tlrc.HEAD -input $subj.anat.unifize+orig -no_ss -init_xform AUTO_CENTER
+## find attribute WARP_DATA in dataset; -I, invert the transformation:
+## cat_matvec $subj.anat.unifize+tlrc::WARP_DATA -I > warp.$subj.anat.Xat.1D ## == $subj.anat.unifize.Xat.1D
+3dAFNItoNIFTI -prefix anat_final.$subj.nii $subj.anat.unifize+tlrc
+
+# ==================================================================
+########
+# Func # : Despiking (3dDespike) -> Slice Timing Correction (3dTshift) -> Motion Correct EPI (3dvolreg)
+########  -> Alignment (@auto_tlrc) -> Spatial Blurring -> Nuisance Regression -> Scaling
+
 touch out.pre_ss_warn.txt
 npol=4
-3dToutcount -automask -fraction -polort $npol -legendre $dir_preproc/$subj/day1/func.$subj.localizer+orig > outcount.$subj.localizer.1D
+3dToutcount -automask -fraction -polort $npol -legendre $dir_preproc/$subj/day1/func.$subj.localizer.nii > outcount.$subj.localizer.1D
 if [ `1deval -a outcount.$subj.localizer.1D"{0}" -expr "step(a-0.4)"` ]; then
 	echo "** TR #0 outliers: possible pre-steady state TRs" >> out.$subj.pre_ss_warn.txt
 fi
 #================================ despike =================================
 ## truncate spikes in each voxel's time series:
-3dDespike -NEW -nomask -prefix pb00.$subj.localizer.despike $dir_preproc/$subj/day1/func.$subj.localizer+orig
+3dDespike -NEW -nomask -prefix pb00.$subj.localizer.despike $dir_preproc/$subj/day1/func.$subj.localizer.nii
 # ================================= tshift (pb01) =================================
 ## slice timing alignment on volumes (default is -time 0)
 ## 데이터를 얻는(slicing) 시간이 각각의 axial voxel에 대해 다르기 때문에 보정해주는 것.
@@ -72,9 +100,9 @@ fi
 ## quintic : 5th order of polynomial
 # ================================= blip: B0-distortion correction =================================
 ## copy external -blip_forward_dset dataset
-3dTcat -prefix blip_forward $dir_preproc/$subj/day1/dist_AP.$subj+orig
+3dTcat -prefix blip_forward $dir_preproc/$subj/day1/dist_AP.$subj.nii
 ## copy external -blip_reverse_dset dataset
-3dTcat -prefix blip_reverse $dir_preproc/$subj/day1/dist_PA.$subj+orig
+3dTcat -prefix blip_reverse $dir_preproc/$subj/day1/dist_PA.$subj.nii
 
 ## compute blip up/down non-linear distortion correction for EPI
 
@@ -114,7 +142,7 @@ fi
 # ================================== Align Anatomy with EPI ==================================
 ## align anatomical datasets to EPI registration base (default: anat2epi):
 align_epi_anat.py -anat2epi -anat $subj.anat.unifize+orig -anat_has_skull no \
-    -epi $dir_preproc/$subj/day1/SBREF.$subj.localizer+orig -epi_base 3 \
+    -epi $dir_preproc/$subj/day1/SBREF.$subj.localizer.nii -epi_base 3 \
     -epi_strip 3dAutomask \
     -suffix _al_junk -check_flip \
     -volreg off -tshift off -ginormous_move \
@@ -123,7 +151,7 @@ align_epi_anat.py -anat2epi -anat $subj.anat.unifize+orig -anat_has_skull no \
 ## -cost lpa (local pearson correlation)
 # ================================== register and warp (pb02) ========================
 ## register each volume to the base
-3dvolreg -verbose -zpad 1 -cubic -base $dir_preproc/$subj/day1/SBREF.$subj.localizer+orig'[0]' \
+3dvolreg -verbose -zpad 1 -cubic -base $dir_preproc/$subj/day1/SBREF.$subj.localizer.nii'[0]' \
 	-1Dfile dfile.$subj.localizer.1D -prefix rm.epi.volreg.$subj.localizer           \
 	-1Dmatrix_save mat.localizer.vr.aff12.1D  \
 	pb01.$subj.localizer.blip+orig
@@ -207,7 +235,3 @@ cat_matvec -ONELINE $subj.anat.unifize+tlrc::WARP_DATA \
 1d_tool.py -infile dfile.$subj.localizer.1D -set_nruns 1 \
 	-derivative  -collapse_cols euclidean_norm     \
 	-write motion_$subj.localizer.eucl_norm.1D
- #
- # #
- # #3dDeconvolve -input /Volumes/clmnlab/GA/fmri_data/preproc_data/GA01/pb04.GA01.r00.scale+tlrc -mask /Volumes/T7SSD1/GA/fMRI_data/roi/full/full_mask.GA01.nii.gz -censor /Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_censor.GA01.r00.1D -polort A -float -local_times -num_stimts 8 -num_glt 1 -stim_times_AM1 1 /Volumes/T7SSD1/GA/behav_data/regressors/move-stop/01_Move.txt dmBLOCK -stim_label 1 Move -stim_times_AM1 2 /Volumes/T7SSD1/GA/behav_data/regressors/move-stop/01_Stop.txt dmBLOCK -stim_label 2 Stop -stim_file 3 '/Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_demean.GA01.r00.1D[0]' -stim_base 3 -stim_label 3 roll -stim_file 4 '/Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_demean.GA01.r00.1D[1]' -stim_base 4 -stim_label 4 pitch -stim_file 5 '/Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_demean.GA01.r00.1D[2]' -stim_base 5 -stim_label 5 yaw -stim_file 6 '/Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_demean.GA01.r00.1D[3]' -stim_base 6 -stim_label 6 dS -stim_file 7 '/Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_demean.GA01.r00.1D[4]' -stim_base 7 -stim_label 7 dL -stim_file 8 '/Volumes/T7SSD1/GA/fMRI_data/preproc_data/01/motion_demean.GA01.r00.1D[5]' -stim_base 8 -stim_label 8 dP -gltsym 'SYM: Move -Stop' -glt_label 1 Move-Stop -jobs 4 -fout -tout -x1D ./X.statMove.xmat.1D -xjpeg ./X.statMove.jpg -x1D_uncensored ./X.statMove.nocensor.xmat.1D -bucket ./statMove.01
- # #

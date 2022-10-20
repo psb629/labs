@@ -8,4 +8,4 @@ list_nn=( 08 09 10 11 17 18 19 20 21 22 \
 #=============================================
 dir_script="/home/sungbeenpark/Github/labs/GP/scripts"
 #=============================================
-parallel -j8 $dir_script/preproc_localizer.zsh 'GP'{} ::: $list_nn
+parallel -j8 $dir_script/preproc_localizer.zsh "GP{}" ::: $list_nn

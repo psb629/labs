@@ -9,13 +9,16 @@ set list_nn=( 08 09 10 11 17 18 19 20 21 22 \
 			  24 26 27 32 33 34 35 36 37 38 \
 			  39 40 41 42 43 44 45 46 47 48 \
 			  49 50 51 53 54 55 )
+set list_nn=( 36 37 38 \
+			  39 40 41 42 43 )
 #=============================================
-set root_dir = /mnt/ext6/GP/fmri_data
+set root_dir = /mnt/ext7/GP/fmri_data
 #=============================================
 foreach nn ($list_nn)
 	set subj = "GP$nn"
 
-	set raw_dir = $root_dir/raw_data/$subj/day1
+ #	set raw_dir = $root_dir/raw_data/$subj/day1
+	set raw_dir = /mnt/ext4/GP/fmri_data/raw_data/$subj/day1
 	set preproc_dir = $root_dir/preproc_data/$subj/day1
 	set output_dir = $preproc_dir/preprocessed
 	if ( ! -d $output_dir ) then
