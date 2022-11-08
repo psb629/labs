@@ -22,7 +22,7 @@
  #		3dcalc -prefix $dir_root/$subj/$subj.$prop.nii \
  #			-a $dir_root/$subj/stats.$subj+tlrc.HEAD"[$prop]" -expr 'a'
 ##===========================================##
-dir_root=/mnt/ext6/GP/fmri_data/stats/GLM.movement.5s_shifted
+dir_root=/mnt/ext2/GP/fmri_data/stats/GLM.movement.0s_shifted
 list_subj=(`find $dir_root -type d -name "GP??" | sed "s;$dir_root/;;g"`)
 
 for subj in $list_subj
