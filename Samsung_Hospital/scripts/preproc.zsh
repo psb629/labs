@@ -45,6 +45,7 @@ mkdir -p -m 755 $output_dir
 
 dcm2niix_afni -o $output_dir -s y -z n -f "tmp" $data_dir
 if [[ $do_scale = true ]]; then
+ #	3dcalc -a $output_dir/tmp.nii -expr "2000*(tanh(0.004*(a-500))+1)" -prefix $output_dir/${name}_T1.nii
 	3dcalc -a $output_dir/tmp.nii -expr "a*0.01" -prefix $output_dir/${name}_T1.nii
 else
 	3dcalc -a $output_dir/tmp.nii -expr "a" -prefix $output_dir/${name}_T1.nii
