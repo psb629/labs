@@ -27,7 +27,7 @@ dir_mask="$dir_root/masks"
 
 dir_output="$dir_root/preproc_data/$phase.anaticor/$subj"
 
-dir_script="/home/sungbeenpark/Github/labs/Samsung_Hospital/scripts/afni_proc.py"
+dir_script="/home/sungbeenpark/Github/labs/Samsung_Hospital/scripts/afni_proc.py/$phase"
 if [ ! -d $dir_script ]; then
 	mkdir -p -m 755 $dir_script
 fi
