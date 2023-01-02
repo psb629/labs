@@ -39,14 +39,10 @@ for subj in $list_subj
 	fi
 	list_fname=($list_fname $fname)
 }
+
+## option #1
 parallel -j8 "{}" ::: $list_fname
 
- #list_fname=(`find $dir_script -type f -name "proc.S??" | sort`)
+## option #2
  #for fname in $list_fname
- #{
- #	subj=${fname[-3,-1]}
- #	if [ -d $dir_output/$subj ]; then
- #		continue
- #	fi
  #	$fname
- #}

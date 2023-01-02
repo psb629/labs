@@ -28,14 +28,12 @@ while (( $# )); do
 done
 
 ## ============================================================ ##
-
 dir_root=`find /mnt/ext5/SMC/fmri_data/raw_data/$phase -maxdepth 1 -type d -name "$subj*"`
 
 dir_output=$dir_root/tmp
 if [[ ! -d $dir_output ]]; then
 	mkdir -p -m 755 $dir_output
 fi
-
 ## ============================================================ ##
 ## T1
 dir_raw=`find $dir_root -maxdepth 1 -type d \( -name "$subj_*_T1" -o -name "$subj_*_t1" -o -name "t1" \)`
@@ -63,7 +61,12 @@ if [[ -d $dir_raw ]]; then
 	# Note, 일반적으로 DICOM 파일은 t 시간때의 volume(3D) 정보를 담은 하나의 파일로 생성되는거 같음.
 	# 따라서  dcm2niix 프로그램도 dcm 파일의 index를 시간순서로만 이해하고 실행됨.
 	# 그러나 SMC의 경우, 첫 300개의 파일(1~300)은 첫번째 slice(2D)의 시간순(300장)을 의미하고, 두번째 300개의 파일은 (301~601) 두번째 slice(2D)의 시간순(300장)을 의미함. 따라서 이것을 t=1일때 slices (61장), t=2일때 slices(60장)으로 재배열하면 dcm2niix가 알아서 2D slices을 먼저 묶고(3D) 시간순으로 합성하여 (3+1)D NIFTI 파일로 변환함.
-	if [[ -f $dir_raw/$subj.dcm00001.dcm ]]; then
+	## what is the prefix?
+	tmp=(`find $dir_raw -type f -name "*.dcm*0001.dcm"`)
+	tmp=$tmp[1]
+	tmp=`print $tmp | sed "s;$dir_raw/;;g"`
+	prefix=$tmp[1,-13]
+	if [[ -f $dir_raw/$prefix.dcm00001.dcm ]]; then
 		gg='%05g'
 	else
 		gg='%04g'
@@ -74,7 +77,7 @@ if [[ -d $dir_raw ]]; then
 		for slice in `seq -f $gg $time 300 18001`
 		{
 			jj=`printf %05d $ii`
-			cp $dir_raw/$subj.dcm$slice.dcm $dir_output/$jj.dcm
+			cp $dir_raw/$prefix.dcm$slice.dcm $dir_output/$jj.dcm
 		 	(( ii = $ii + 1 ))
 		}
 	}
