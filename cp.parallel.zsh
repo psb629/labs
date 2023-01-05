@@ -1,28 +1,55 @@
 #!/bin/zsh
 
+## ============================================================ ##
+## default
+
+## $# = the number of arguments
+while (( $# )); do
+	key="$1"
+	case $key in
+##		pattern)
+##			sentence
+##		;;
+		--from)
+			from="$2"
+		;;
+		--to_dir)
+			dir_to="$2"
+		;;
+	esac
+	shift ##takes one argument
+done
+label="${from[-4,-1]}"
+## ============================================================ ##
 dir_current=`pwd`
+if [ ! -d $dir_to ]; then
+	mkdir -p -m 755 $dir_to
+fi
 
-dir_from=/mnt/sdb2/GP/fmri_data/preproc_data
-dir_to=/mnt/ext6/GP/fmri_data/preproc_data
+if [ -d $from ]; then
+	## make directories in the objective directory
+	find $from -type d >"$dir_current/dir_from.$label.txt"
+	sed "s;$from;$dir_to;g" $dir_current/dir_from.$label.txt >"$dir_current/dir_to.$label.txt"
 
-## make directories in the objective directory
-find $dir_from -type d >$dir_current/dir_from.txt
-sed "s.$dir_from.$dir_to.g" $dir_current/dir_from.txt >$dir_current/dir_to.txt
-foreach dir (`cat $dir_current/dir_to.txt`)
-	if [ ! -d $dir ]; then
-		mkdir -p -m 755 $dir
-	fi
-end
+	for dir (`cat "$dir_current/dir_to.$label.txt"`)
+	{
+		if [ ! -d $dir ]; then
+			mkdir -p -m 755 $dir
+		fi
+	}
+fi
 
 ## make a list of file names to copy them
-find $dir_from -type f >$dir_current/dir_from.txt
-sed "s;$dir_from;;g" $dir_current/dir_from.txt >$dir_current/fname.txt
+find $from -type f >"$dir_current/file_from.$label.txt"
+sed "s;$from/;;g" $dir_current/file_from.$label.txt >"$dir_current/fname.$label.txt"
 
-## remove temporal files
-rm $dir_current/dir_from.txt $dir_current/dir_to.txt
-
+ ### If the number of arguments > 4000, error would be occured.
+ #xargs -n 3500 -a "$dir_current/fname.txt" -i parallel -j8 cp -n "$from/{}" "$dir_to/{}"
  #cat $dir_current/fname.txt | xargs -n3500 echo >$dir_current/tmp.txt
 
 ## If the number of arguments > 4000, error would be occured.
-parallel -j10 cp -n $dir_from{} $dir_to{} ::: `cat $dir_current/fname.txt`
+parallel -0 -j8 cp -n "$from/{}" "$dir_to/{}" ::: `cat "$dir_current/fname.$label.txt"`
 
+## remove temporal files
+rm "$dir_current/dir_from.$label.txt" "$dir_current/dir_to.$label.txt"
+rm "$dir_current/file_from.$label.txt" "$dir_current/fname.$label.txt"
