@@ -15,3 +15,11 @@
 =========================================================
 
 ## fMRI_data
+
+### preprocessing
+- [a1.convert_dcm.zsh]() -s subject -d day
+- [a2.preproc.zsh]() -s subject -d day
+
+### GLM
+- [GLM.move-stop.zsh]() -s subject
+- [GLM.reward_per_1s.zsh]() -s subject
