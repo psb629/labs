@@ -17,9 +17,9 @@
 ## fMRI_data
 
 ### preprocessing
-- [a1.convert_dcm.zsh]() -s subject -d day
-- [a2.preproc.zsh]() -s subject -d day
+- [a1.convert_dcm.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a1.convert_dcm.zsh) -s subject -d day
+- [a2.preproc.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a2.preproc.zsh) -s subject -d day
 
 ### GLM
-- [GLM.move-stop.zsh]() -s subject
-- [GLM.reward_per_1s.zsh]() -s subject
+- [GLM.move-stop.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.move-stop.zsh) -s subject
+- [GLM.reward_per_1s.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_1s.zsh) -s subject
