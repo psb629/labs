@@ -2,6 +2,7 @@
 
 ## ============================================================ ##
 do_scale=true
+is_old=false
 
 ## $# = the number of arguments
 while (( $# )); do
@@ -23,6 +24,13 @@ while (( $# )); do
 				do_scale=false
 			fi
 		;;
+		-o | --is_old)
+			if [[ ($2 == 'y') || ($2 == 'yes') ]]; then
+				is_old=true
+			elif [[ ($2 == 'n') || ($2 == 'no') ]]; then
+				is_old=false
+			fi
+		;;
 	esac
 	shift ##takes one argument
 done
@@ -41,7 +49,6 @@ if [[ -d $dir_raw ]]; then
 	dcm2niix_afni -o $dir_output -s y -f $subj.T1 $dir_raw
 else
 	fname=`find $dir_root -type f -name "S??_*_T1.PAR"`
-	print $fname
 	dcm2niix_afni -o $dir_output -s y -f $subj.T1 $fname
 fi
 
@@ -66,6 +73,9 @@ if [[ -d $dir_raw ]]; then
 	tmp=$tmp[1]
 	tmp=`print $tmp | sed "s;$dir_raw/;;g"`
 	prefix=$tmp[1,-13]
+	if [[ $prefix[-1] = '.' ]]; then
+		prefix=$prefix[1,-2]
+	fi
 	if [[ -f $dir_raw/$prefix.dcm00001.dcm ]]; then
 		gg='%05g'
 	else

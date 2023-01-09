@@ -33,6 +33,7 @@ if [[ ! -d $dir_FreeSurfer ]]; then
 	mkdir -p -m 755 $dir_FreeSurfer
 fi
 
+print $dir_raw/$subj.T1.nii
 ## FS function
 recon-all								\
 	-sid		$subj					\
@@ -46,12 +47,12 @@ recon-all								\
 	-fspath		$dir_FreeSurfer/$subj	\
 	-sid		$subj
 
-##############################################################
+############################################################
 
- #3dQwarp -allineate -blur 0 3 										\
- #	-base "/usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz"	\
- #	-source "$dir_FreeSurfer/$subj/SUMA/brain.nii.gz" 					\
- #	-prefix "$dir_FreeSurfer/$subj/SUMA/brain_qw.nii"
+3dQwarp -allineate -blur 0 3 										\
+	-base "/usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz"	\
+	-source "$dir_FreeSurfer/$subj/SUMA/brain.nii.gz" 					\
+	-prefix "$dir_FreeSurfer/$subj/SUMA/brain_qw.nii"
 
 ##############################################################
  

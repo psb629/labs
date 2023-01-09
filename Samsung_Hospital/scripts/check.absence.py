@@ -24,19 +24,21 @@ df = pd.read_csv(join(dir_csv, 'SMC_IDs.csv'), sep=',', index_col=None)
 
 ## check a validation
 list_dname = sorted(glob(join(dir_raw, 'S??_*')))
-for subj in df.tms_id:
+for ii, subj in enumerate(df.tms_id):
+    tmp = df.c0_t1[ii]
+    group = 'x' if tmp==0 else ('o' if tmp==1 else 'invalid')
     dname = [s for s in list_dname if subj in s]
     if not dname:
-        print("%s : %s.T1.nii (False), %s.func.nii (False)"%(subj, subj, subj))
+        print("%s (%s) : %s.T1.nii (False), %s.func.nii (False)"%(subj, group, subj, subj))
         continue
     exist_T1 = exists(join(dir_raw, dname[0], "%s.T1.nii"%subj))
     exist_epi = exists(join(dir_raw, dname[0], "%s.func.nii"%subj))
     if exist_epi:
         info = str(getoutput("3dinfo %s | grep 'Number of time steps = ...'"%join(dir_raw, dname[0], "%s.func.nii"%subj)))
         ts = re.findall(r'\d+', info.split('\n')[1])
-        print("%s : %s.T1.nii (%s), %s.func.nii (%s, t%s)"%(subj, subj, exist_T1, subj, exist_epi, ts[0]))
+        print("%s (%s) : %s.T1.nii (%s), %s.func.nii (%s, t%s)"%(subj, group, subj, exist_T1, subj, exist_epi, ts[0]))
     else:
-        print("%s : %s.T1.nii (%s), %s.func.nii (%s)"%(subj, subj, exist_T1, subj, exist_epi))
+        print("%s (%s) : %s.T1.nii (%s), %s.func.nii (%s)"%(subj, group, subj, exist_T1, subj, exist_epi))
 
 ## check an absence
 list_dname = sorted(glob(join(dir_preproc, 'S??')))
@@ -49,4 +51,4 @@ for subj in df.tms_id:
     if cnt == 0:
         list_.append(subj)
             
-print(list_)
+print(" Not been preprocessed:", list_)
