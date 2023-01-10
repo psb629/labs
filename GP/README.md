@@ -18,7 +18,7 @@
 
 ### preprocessing
 - [a1.convert_dcm.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a1.convert_dcm.zsh) -s subject -d day
-- (test.create_proc.zsh is necessary!)[a2.preproc.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a2.preproc.zsh) -s subject -d day
+- ([test.create_proc.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/test.create_proc.zsh) is necessary!) [a2.preproc.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a2.preproc.zsh) -s subject -d day
 
 ### GLM
 - [GLM.move-stop.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.move-stop.zsh) -s subject
