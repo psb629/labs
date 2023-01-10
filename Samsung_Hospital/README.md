@@ -11,4 +11,6 @@
 
 [s2-ii.create.proc.anaticor_with_FreeSurfer.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/s2-ii.create.proc.anaticor_with_FreeSurfer.zsh) -s subject -p phase
 
+[s3.run.afni_proc.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/s3.run.afni_proc.zsh) -p phase -F from_FreeSurfer
+
 ### GLM
