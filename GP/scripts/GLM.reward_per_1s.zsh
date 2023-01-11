@@ -24,7 +24,7 @@ dir_reg="$dir_behav/regressors/AM"
 dir_fmri="$dir_root/fmri_data"
 dir_preproc="$dir_fmri/preproc_data/$subj/day2"
 ## ============================================================ ##
-dir_output="$dir_fmri/stats/AM/reward_per_1s/$subj"
+dir_output="$dir_fmri/stats/AM/GLM.reward_per_1s/$subj"
 if [ ! -d $dir_output ]; then
 	mkdir -p -m 755 $dir_output
 fi
