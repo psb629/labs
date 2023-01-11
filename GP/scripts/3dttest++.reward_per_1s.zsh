@@ -24,7 +24,7 @@ dir_stat="$dir_fmri/stats/AM/GLM.reward_per_1s"
 
 dir_output=$dir_stat
 ## ============================================================ ##
-mask="$dir_mask/mask.group.n42.frac=0.7.nii"
+mask="$dir_mask/mask.group.day2.n42.frac=0.7.nii"
 ## ============================================================ ##
 cd $dir_output
 
