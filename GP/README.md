@@ -20,6 +20,14 @@
 - [a1.convert_dcm.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a1.convert_dcm.zsh) -s subject -d day
 - ([test.create_proc.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/test.create_proc.zsh) is necessary!) [a2.preproc.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/a2.preproc.zsh) -s subject -d day
 
-### GLM
+### making a group full mask
+- [3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dmask_tool.zsh) -f fraction (default=0.7)
+
+### GLM (1st level analysis)
 - [GLM.move-stop.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.move-stop.zsh) -s subject
 - [GLM.reward_per_1s.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_1s.zsh) -s subject
+- [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s)
+
+### group analysis (2nd level analysis)
+- [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
+- [GLM.reward_per_1s.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_1s.zsh)

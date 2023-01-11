@@ -40,17 +40,15 @@ if [ ! -d $dir_output ]; then
 fi
 ## ============================================================ ##
 ## convert motion_demean (1096,6) to motion_demean.0_margin (1096*3,6)
-~/Github/labs/GP/scripts/concatenate.motion_demean.0_margin.py -s $subj --dir_preproc $dir_preproc
+ #~/Github/labs/GP/scripts/concatenate.motion_demean.0_margin.py -s $subj --dir_preproc $dir_preproc
 
 cd $dir_output
 ## 'SPMG2' : generate 4 regeressors ( mean f(x), mean f'(x), delta f(x), delta f'(x) )
 3dDeconvolve																			\
-	-input "$dir_preproc/pb04.$subj.r0?.scale+tlrc.HEAD"								\
+	-input "$dir_preproc/pb06.$subj.r0?.scale+tlrc.HEAD"								\
 	-censor "$dir_preproc/motion_${subj}_censor.1D"										\
 	-mask "$dir_preproc/full_mask.$subj+tlrc.HEAD"										\
-   	-ortvec $dir_preproc/motion_demean.$subj.r01.0_margin.1D 'motion_demean_r01'		\
-    -ortvec $dir_preproc/motion_demean.$subj.r02.0_margin.1D 'motion_demean_r02'		\
-    -ortvec $dir_preproc/motion_demean.$subj.r03.0_margin.1D 'motion_demean_r03'		\
+    -ortvec $dir_preproc/motion_demean.1D 'motion_demean'								\
 	-polort A -float																	\
 	-allzero_OK																			\
 	-num_stimts 1																		\
@@ -58,7 +56,24 @@ cd $dir_output
 	-num_glt 1																			\
 	-gltsym 'SYM: Rew' -glt_label 1 'Rew'												\
 	-jobs 1 -fout -tout																	\
-	-x1D "X.xmat.$subj.1D" -xjpeg "X.$subj.jpg"								\
+	-x1D "X.xmat.$subj.1D" -xjpeg "X.$subj.jpg"											\
 	-bucket "stats.Rew.$subj"
+
+ #3dDeconvolve																			\
+ #	-input "$dir_preproc/pb04.$subj.r0?.scale+tlrc.HEAD"								\
+ #	-censor "$dir_preproc/motion_${subj}_censor.1D"										\
+ #	-mask "$dir_preproc/full_mask.$subj+tlrc.HEAD"										\
+ #   	-ortvec $dir_preproc/motion_demean.$subj.r01.0_margin.1D 'motion_demean_r01'	\
+ #    -ortvec $dir_preproc/motion_demean.$subj.r02.0_margin.1D 'motion_demean_r02'		\
+ #    -ortvec $dir_preproc/motion_demean.$subj.r03.0_margin.1D 'motion_demean_r03'		\
+ #	-polort A -float																	\
+ #	-allzero_OK																			\
+ #	-num_stimts 1																		\
+ #	-stim_times_AM2 1 $dir_reg/$subj.reward.txt 'BLOCK(1,1)' -stim_label 1 'Rew'		\
+ #	-num_glt 1																			\
+ #	-gltsym 'SYM: Rew' -glt_label 1 'Rew'												\
+ #	-jobs 1 -fout -tout																	\
+ #	-x1D "X.xmat.$subj.1D" -xjpeg "X.$subj.jpg"											\
+ #	-bucket "stats.Rew.$subj"
 
 echo " Calculating GLM for subject $subj completed"
