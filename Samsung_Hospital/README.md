@@ -16,5 +16,7 @@
 ### Whole Brain Correlation
 
 [a1.3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a1.3dmask_tool.zsh) -f fraction (default=0.7)
+
 [a2.3dUndump.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a2.3dUndump.zsh) -r radius (default=3) -f -fraction (default=0.7) -R ROI
+
 [a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -o phase -r radius (default=3) -R RemoveGlobalSignal (default=false) -f fraction (default=0.7)
