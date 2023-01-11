@@ -26,7 +26,7 @@ while (( $# )); do
 			phase="$2"
 		;;
 		-r | --radius)
-			phase="$2"
+			radius="$2"
 		;;
 		-f | --frac)
 			frac="$2"
