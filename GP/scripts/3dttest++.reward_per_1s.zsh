@@ -20,7 +20,7 @@ dir_root="/mnt/ext5/GP"
 
 dir_fmri="$dir_root/fmri_data"
 dir_mask="$dir_fmri/masks"
-dir_stat="$dir_fmri/stats/AM/reward_per_1s"
+dir_stat="$dir_fmri/stats/AM/GLM.reward_per_1s"
 
 dir_output=$dir_stat
 ## ============================================================ ##

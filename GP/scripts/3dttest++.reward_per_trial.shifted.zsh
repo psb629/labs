@@ -41,7 +41,7 @@ stat="${time_shift}s_shifted"
 
 dir_fmri="$dir_root/fmri_data"
 dir_mask="$dir_fmri/masks"
-dir_stat="$dir_fmri/stats/AM/reward_per_trial/$stat"
+dir_stat="$dir_fmri/stats/AM/GLM.reward_per_trial/$stat"
 
 dir_output=$dir_stat
 ## ============================================================ ##
