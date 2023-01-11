@@ -11,6 +11,10 @@
 
 [s2-ii.create.proc.anaticor_with_FreeSurfer.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/s2-ii.create.proc.anaticor_with_FreeSurfer.zsh) -s subject -p phase
 
-[s3.run.afni_proc.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/s3.run.afni_proc.zsh) -p phase -F from_FreeSurfer
+[s3.run.afni_proc.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/s3.run.afni_proc.zsh) -p phase -F from_FreeSurfer (default=yes)
 
-### GLM
+### Whole Brain Correlation
+
+[a1.3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a1.3dmask_tool.zsh) -f fraction (default=0.7)
+[a2.3dUndump.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a2.3dUndump.zsh) -r radius (default=3) -f -fraction (default=0.7) -R ROI
+[a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -o phase -r radius (default=3) -R RemoveGlobalSignal (default=false) -f fraction (default=0.7)
