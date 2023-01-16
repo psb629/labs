@@ -21,4 +21,4 @@
 
 [a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -o phase -r radius (default=3) -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
 
-([find.common_elements.py](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/find.common_elements.py) is necessary!) [a4.3dttest++.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a4.3dttest++.zsh) -R ROI -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
+([print.group.py](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/print.group.py) is necessary!) [a4.3dttest++.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a4.3dttest++.zsh) -R ROI -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
