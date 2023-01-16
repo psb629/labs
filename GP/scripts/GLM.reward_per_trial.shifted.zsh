@@ -57,7 +57,7 @@ cd $dir_output
 	-gltsym 'SYM: Rew' -glt_label 1 'Rew'												\
 	-jobs 1 -fout -tout																	\
 	-x1D "X.xmat.$subj.1D" -xjpeg "X.$subj.jpg"											\
-	-bucket "stats.Rew.$subj"
+	-bucket "stats.Rew.$subj.nii"
 
  #3dDeconvolve																			\
  #	-input "$dir_preproc/pb04.$subj.r0?.scale+tlrc.HEAD"								\

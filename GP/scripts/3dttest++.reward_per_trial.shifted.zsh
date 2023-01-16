@@ -54,11 +54,11 @@ setA=()
 for nn in $list_dlpfc
 {
 	subj="GP$nn"
-	setA=($setA $dir_stat/$subj/stats.Rew.$subj+tlrc.HEAD'[Rew#1_Coef]')
+	setA=($setA $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
 3dttest++ -mask $mask							\
 	-setA $setA									\
-	-prefix GP.dlPFC.Zscore.n$#list_dlpfc.nii	\
+	-prefix GP.dlPFC_cTBS.Zscore.n$#list_dlpfc.nii	\
 	-toz
  #	-ClustSim 10
 
@@ -67,11 +67,11 @@ setB=()
 for nn in $list_m1
 {
 	subj="GP$nn"
-	setB=($setB $dir_stat/$subj/stats.Rew.$subj+tlrc.HEAD'[Rew#1_Coef]')
+	setB=($setB $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
 3dttest++ -mask $mask					\
 	-setA $setB							\
-	-prefix GP.m1.Zscore.n$#list_m1.nii	\
+	-prefix GP.m1_cTBS.Zscore.n$#list_m1.nii	\
 	-toz
 
 ## DLPFC (20Hz)
@@ -79,12 +79,12 @@ setC=()
 for nn in $list_20
 {
 	subj="GP$nn"
-	setC=($setC $dir_stat/$subj/stats.Rew.$subj+tlrc.HEAD'[Rew#1_Coef]')
+	setC=($setC $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
 cd $dir_output
 3dttest++ -mask $mask							\
 	-setA $setC									\
-	-prefix GP.dlPfc_20.Zscore.n$#list_20.nii	\
+	-prefix GP.dlPfc_20Hz.Zscore.n$#list_20.nii	\
 	-toz
 ## ============================================================ ##
 ## Two sample t-test
