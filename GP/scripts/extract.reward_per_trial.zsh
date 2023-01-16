@@ -33,9 +33,13 @@ for dname in $list_dname
 
 	dof=`3dinfo -verb $fname'[Rew#1_Tstat]' | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
 
-	tmp=$dname/tmp.nii
-	3dcalc -a $fname'[Rew#1_Tstat]' -expr 'a' -prefix $tmp
+	## extract the coefficient
+	3dcalc -a $fname'[Rew#1_Coef]' -expr 'a' -prefix $dname/Rew#1_Coef.nii
 
-	TtoZ --t_stat_map=$tmp --dof=$dof --output_nii="$dname/Rew#1_Zstat.nii"
-	rm $tmp
+ #	## extract T-stat then transfer to Z-stat
+ #	tmp=$dname/tmp.nii
+ #	3dcalc -a $fname'[Rew#1_Tstat]' -expr 'a' -prefix $tmp
+ #
+ #	TtoZ --t_stat_map=$tmp --dof=$dof --output_nii="$dname/Rew#1_Zstat.nii"
+ #	rm $tmp
 }
