@@ -58,7 +58,7 @@ for nn in $list_dlpfc
 }
 3dttest++ -mask $mask							\
 	-setA $setA									\
-	-prefix GP.dlPFC_cTBS.Zscore.n$#list_dlpfc.nii	\
+	-prefix GP.dlPFC_cTBS.toz.n$#list_dlpfc.nii	\
 	-toz
  #	-ClustSim 10
 
@@ -69,9 +69,9 @@ for nn in $list_m1
 	subj="GP$nn"
 	setB=($setB $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
-3dttest++ -mask $mask					\
-	-setA $setB							\
-	-prefix GP.m1_cTBS.Zscore.n$#list_m1.nii	\
+3dttest++ -mask $mask						\
+	-setA $setB								\
+	-prefix GP.M1_cTBS.toz.n$#list_m1.nii	\
 	-toz
 
 ## DLPFC (20Hz)
@@ -84,22 +84,27 @@ for nn in $list_20
 cd $dir_output
 3dttest++ -mask $mask							\
 	-setA $setC									\
-	-prefix GP.dlPfc_20Hz.Zscore.n$#list_20.nii	\
+	-prefix GP.dlPFC_20Hz.toz.n$#list_20.nii	\
 	-toz
 ## ============================================================ ##
+## extract the Z stat
+3dcalc -a GP.dlPFC_cTBS.toz.n$#list_dlpfc.nii'[SetA_Zscr]' -expr 'a' -prefix GP.dlPFC_cTBS.Zscr.n$#list_dlpfc.nii
+3dcalc -a GP.M1_cTBS.toz.n$#list_m1.nii'[SetA_Zscr]' -expr 'a' -prefix GP.M1_cTBS.Zscr.n$#list_m1.nii
+3dcalc -a GP.dlPFC_20Hz.toz.n$#list_20.nii'[SetA_Zscr]' -expr 'a' -prefix GP.dlPFC_20Hz.Zscr.n$#list_20.nii
+## ============================================================ ##
 ## Two sample t-test
-3dttest++ -mask $mask							\
-	-setA $setA									\
-	-setB $setB									\
-	-prefix GP.dlPFC_cTBS-M1_cTBS.Zscore.nii	\
+3dttest++ -mask $mask						\
+	-setA $setA								\
+	-setB $setB								\
+	-prefix GP.dlPFC_cTBS-M1_cTBS.toz.nii	\
 	-toz
-3dttest++ -mask $mask							\
-	-setA $setC									\
-	-setB $setB									\
-	-prefix GP.dlPFC_20Hz-M1_cTBS.Zscore.nii	\
+3dttest++ -mask $mask						\
+	-setA $setC								\
+	-setB $setB								\
+	-prefix GP.dlPFC_20Hz-M1_cTBS.toz.nii	\
 	-toz
 3dttest++ -mask $mask							\
 	-setA $setC									\
 	-setB $setA									\
-	-prefix GP.dlPFC_20Hz-dlPFC_cTBS.Zscore.nii	\
+	-prefix GP.dlPFC_20Hz-dlPFC_cTBS.toz.nii	\
 	-toz
