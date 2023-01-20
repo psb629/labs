@@ -2,7 +2,7 @@
 
 ## ============================================================ ##
 ## default
-
+job=4
 ## $# = the number of arguments
 while (( $# )); do
 	key="$1"
@@ -15,6 +15,9 @@ while (( $# )); do
 		;;
 		--to_dir)
 			dir_to="$2"
+		;;
+		--job)
+			job="$2"
 		;;
 	esac
 	shift ##takes one argument
@@ -48,7 +51,7 @@ sed "s;$from/;;g" $dir_current/file_from.$label.txt >"$dir_current/fname.$label.
  #cat $dir_current/fname.txt | xargs -n3500 echo >$dir_current/tmp.txt
 
 ## If the number of arguments > 4000, error would be occured.
-parallel -0 -j8 cp -n "$from/{}" "$dir_to/{}" ::: `cat "$dir_current/fname.$label.txt"`
+parallel -0 -j${job} cp -n "$from/{}" "$dir_to/{}" ::: `cat "$dir_current/fname.$label.txt"`
 
 ## remove temporal files
 rm "$dir_current/dir_from.$label.txt" "$dir_current/dir_to.$label.txt"
