@@ -2223,3 +2223,1941 @@ Program 3dmerge
 3dmerge: edit and combine 3D datasets, by RW Cox
 ++ editing input dataset in memory (2280.6 MB)
 ........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+-- Wrote edited dataset: ./sphere.mean.20.r01+tlrc.BRIK
+
+++ 3dTcorrelate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Wrote dataset: ./radcor.20.r01.corr+tlrc.BRIK
+++ 3dbucket: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+
+-- running correlation on dataset pb04.GA07.r02.volreg+tlrc.HEAD ...
+
+++ merge blur: rad 20, FWHM 40
+++ 3dmerge: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ default -1dindex = 0
+++ default -1tindex = 1
+Program 3dmerge 
+3dmerge: edit and combine 3D datasets, by RW Cox
+++ editing input dataset in memory (2280.6 MB)
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+-- Wrote edited dataset: ./sphere.mean.20.r02+tlrc.BRIK
+
+++ 3dTcorrelate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Wrote dataset: ./radcor.20.r02.corr+tlrc.BRIK
+++ 3dbucket: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+
+-- running correlation on dataset pb04.GA07.r03.volreg+tlrc.HEAD ...
+
+++ merge blur: rad 20, FWHM 40
+++ 3dmerge: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ default -1dindex = 0
+++ default -1tindex = 1
+Program 3dmerge 
+3dmerge: edit and combine 3D datasets, by RW Cox
+++ editing input dataset in memory (2280.6 MB)
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+-- Wrote edited dataset: ./sphere.mean.20.r03+tlrc.BRIK
+
+++ 3dTcorrelate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Wrote dataset: ./radcor.20.r03.corr+tlrc.BRIK
+++ 3dbucket: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ have do_clean, cleaning up...
+
+foreach run ( 01 02 03 )
+3dmerge -1blur_fwhm 4.0 -doall -prefix pb05.GA07.r01.blur pb04.GA07.r01.volreg+tlrc
+++ 3dmerge: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ default -1dindex = 0
+++ default -1tindex = 1
+Program 3dmerge 
+3dmerge: edit and combine 3D datasets, by RW Cox
+++ editing input dataset in memory (2280.6 MB)
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+-- Wrote edited dataset: ./pb05.GA07.r01.blur+tlrc.BRIK
+
+end
+3dmerge -1blur_fwhm 4.0 -doall -prefix pb05.GA07.r02.blur pb04.GA07.r02.volreg+tlrc
+++ 3dmerge: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ default -1dindex = 0
+++ default -1tindex = 1
+Program 3dmerge 
+3dmerge: edit and combine 3D datasets, by RW Cox
+++ editing input dataset in memory (2280.6 MB)
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+-- Wrote edited dataset: ./pb05.GA07.r02.blur+tlrc.BRIK
+
+end
+3dmerge -1blur_fwhm 4.0 -doall -prefix pb05.GA07.r03.blur pb04.GA07.r03.volreg+tlrc
+++ 3dmerge: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ default -1dindex = 0
+++ default -1tindex = 1
+Program 3dmerge 
+3dmerge: edit and combine 3D datasets, by RW Cox
+++ editing input dataset in memory (2280.6 MB)
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+-- Wrote edited dataset: ./pb05.GA07.r03.blur+tlrc.BRIK
+
+end
+foreach run ( 01 02 03 )
+3dAutomask -prefix rm.mask_r01 pb05.GA07.r01.blur+tlrc
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ Loading dataset pb05.GA07.r01.blur+tlrc
+++ Forming automask
+ + Fixed clip level = 3905.500732
+ + Used gradual clip level = 3746.672607 .. 4067.740723
+ + Number voxels above clip level = 115567
+ + Clustering voxels ...
+ + Largest cluster has 113375 voxels
+ + Clustering voxels ...
+ + Largest cluster has 113253 voxels
+ + Filled   117 voxels in small holes; now have 113370 voxels
+ + Filled     3 voxels in large holes; now have 113373 voxels
+ + Clustering voxels ...
+ + Largest cluster has 113373 voxels
+ + Clustering non-brain voxels ...
+ + Clustering voxels ...
+ + Largest cluster has 432095 voxels
+ + Mask now has 113373 voxels
+++ 113373 voxels in the mask [out of 545468: 20.78%]
+++ first  10 x-planes are zero [from L]
+++ last   10 x-planes are zero [from R]
+++ first  11 y-planes are zero [from P]
+++ last    9 y-planes are zero [from A]
+++ first   0 z-planes are zero [from I]
+++ last   12 z-planes are zero [from S]
+++ CPU time = 0.000000 sec
+end
+3dAutomask -prefix rm.mask_r02 pb05.GA07.r02.blur+tlrc
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ Loading dataset pb05.GA07.r02.blur+tlrc
+++ Forming automask
+ + Fixed clip level = 3892.092529
+ + Used gradual clip level = 3722.704346 .. 4057.298340
+ + Number voxels above clip level = 115787
+ + Clustering voxels ...
+ + Largest cluster has 113603 voxels
+ + Clustering voxels ...
+ + Largest cluster has 113501 voxels
+ + Filled   104 voxels in small holes; now have 113605 voxels
+ + Filled     3 voxels in large holes; now have 113608 voxels
+ + Clustering voxels ...
+ + Largest cluster has 113608 voxels
+ + Clustering non-brain voxels ...
+ + Clustering voxels ...
+ + Largest cluster has 431860 voxels
+ + Mask now has 113608 voxels
+++ 113608 voxels in the mask [out of 545468: 20.83%]
+++ first  10 x-planes are zero [from L]
+++ last   10 x-planes are zero [from R]
+++ first  11 y-planes are zero [from P]
+++ last    9 y-planes are zero [from A]
+++ first   0 z-planes are zero [from I]
+++ last   12 z-planes are zero [from S]
+++ CPU time = 0.000000 sec
+end
+3dAutomask -prefix rm.mask_r03 pb05.GA07.r03.blur+tlrc
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ Loading dataset pb05.GA07.r03.blur+tlrc
+++ Forming automask
+ + Fixed clip level = 3878.659912
+ + Used gradual clip level = 3727.736084 .. 4051.659180
+ + Number voxels above clip level = 115828
+ + Clustering voxels ...
+ + Largest cluster has 113510 voxels
+ + Clustering voxels ...
+ + Largest cluster has 113404 voxels
+ + Filled   125 voxels in small holes; now have 113529 voxels
+ + Filled     3 voxels in large holes; now have 113532 voxels
+ + Clustering voxels ...
+ + Largest cluster has 113532 voxels
+ + Clustering non-brain voxels ...
+ + Clustering voxels ...
+ + Largest cluster has 431936 voxels
+ + Mask now has 113532 voxels
+++ 113532 voxels in the mask [out of 545468: 20.81%]
+++ first  10 x-planes are zero [from L]
+++ last   10 x-planes are zero [from R]
+++ first  11 y-planes are zero [from P]
+++ last    9 y-planes are zero [from A]
+++ first   0 z-planes are zero [from I]
+++ last   12 z-planes are zero [from S]
+++ CPU time = 0.000000 sec
+end
+3dmask_tool -inputs rm.mask_r01+tlrc.HEAD rm.mask_r02+tlrc.HEAD rm.mask_r03+tlrc.HEAD -union -prefix full_mask.GA07
+++ processing 3 input dataset(s), NN=2...
+++ padding all datasets by 0 (for dilations)
+++ frac 0 over 3 volumes gives min count 0
+++ voxel limits: 0 clipped, 114189 survived, 431279 were zero
+++ writing result full_mask.GA07...
+3dresample -master full_mask.GA07+tlrc -input MPRAGE.GA07_unif_ns+tlrc -prefix rm.resam.anat
+3dmask_tool -dilate_input 5 -5 -fill_holes -input rm.resam.anat+tlrc -prefix mask_anat.GA07
+++ no -frac option: defaulting to -union
+++ processing 1 input dataset(s), NN=2...
+++ padding all datasets by 5 (for dilations)
+++ frac 0 over 1 volumes gives min count 0
+++ voxel limits: 0 clipped, 149863 survived, 395605 were zero
+++ filled 0 holes (0 voxels)
+++ writing result mask_anat.GA07...
+3dmask_tool -input full_mask.GA07+tlrc mask_anat.GA07+tlrc -inter -prefix mask_epi_anat.GA07
+++ processing 2 input dataset(s), NN=2...
+++ padding all datasets by 0 (for dilations)
+++ frac 1 over 2 volumes gives min count 2
+++ voxel limits: 36252 clipped, 113900 survived, 395316 were zero
+++ writing result mask_epi_anat.GA07...
+3dABoverlap -no_automask full_mask.GA07+tlrc mask_anat.GA07+tlrc
+tee out.mask_ae_overlap.txt
+++ 3dABoverlap: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+#A=./full_mask.GA07+tlrc.BRIK  B=./mask_anat.GA07+tlrc.BRIK
+#A           #B           #(A uni B)   #(A int B)   #(A \ B)     #(B \ A)     %(A \ B)    %(B \ A)    Rx(B/A)    Ry(B/A)    Rz(B/A)
+114189       149863       150152       113900       289          35963         0.2531     23.9972     1.1650     1.1425     1.1878
+3ddot -dodice full_mask.GA07+tlrc mask_anat.GA07+tlrc
+tee out.mask_ae_dice.txt
+0.862709	
+3dresample -master full_mask.GA07+tlrc -prefix ./rm.resam.group -input /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz[0]
+3dmask_tool -dilate_input 5 -5 -fill_holes -input rm.resam.group+tlrc -prefix mask_group
+++ no -frac option: defaulting to -union
+++ processing 1 input dataset(s), NN=2...
+++ padding all datasets by 5 (for dilations)
+++ frac 0 over 1 volumes gives min count 0
+++ voxel limits: 0 clipped, 122282 survived, 423186 were zero
+++ filled 0 holes (0 voxels)
+++ writing result mask_group...
+3ddot -dodice mask_anat.GA07+tlrc mask_group+tlrc
+tee out.mask_at_dice.txt
+0.898639	
+foreach run ( 01 02 03 )
+3dTstat -prefix rm.mean_r01 pb05.GA07.r01.blur+tlrc
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+++ Output dataset ./rm.mean_r01+tlrc.BRIK
+3dcalc -a pb05.GA07.r01.blur+tlrc -b rm.mean_r01+tlrc -c mask_epi_extents+tlrc -expr c * min(200, a/b*100)*step(a)*step(b) -prefix pb06.GA07.r01.scale
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./pb06.GA07.r01.scale+tlrc.BRIK
+end
+3dTstat -prefix rm.mean_r02 pb05.GA07.r02.blur+tlrc
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+++ Output dataset ./rm.mean_r02+tlrc.BRIK
+3dcalc -a pb05.GA07.r02.blur+tlrc -b rm.mean_r02+tlrc -c mask_epi_extents+tlrc -expr c * min(200, a/b*100)*step(a)*step(b) -prefix pb06.GA07.r02.scale
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./pb06.GA07.r02.scale+tlrc.BRIK
+end
+3dTstat -prefix rm.mean_r03 pb05.GA07.r03.blur+tlrc
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+++ Output dataset ./rm.mean_r03+tlrc.BRIK
+3dcalc -a pb05.GA07.r03.blur+tlrc -b rm.mean_r03+tlrc -c mask_epi_extents+tlrc -expr c * min(200, a/b*100)*step(a)*step(b) -prefix pb06.GA07.r03.scale
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./pb06.GA07.r03.scale+tlrc.BRIK
+end
+1d_tool.py -infile dfile_rall.1D -set_nruns 3 -demean -write motion_demean.1D
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+1d_tool.py -infile dfile_rall.1D -set_nruns 3 -derivative -demean -write motion_deriv.1D
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+1d_tool.py -infile motion_demean.1D -set_nruns 3 -split_into_pad_runs mot_demean
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+1d_tool.py -infile motion_deriv.1D -set_nruns 3 -split_into_pad_runs mot_deriv
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+1d_tool.py -infile dfile_rall.1D -set_nruns 3 -show_censor_count -censor_prev_TR -censor_motion 0.4 motion_GA07
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+total number of censored TRs (simple form) = 38
+1deval -a motion_GA07_censor.1D -b outcount_GA07_censor.1D -expr a*b
+set ktrs = `1d_tool.py -infile censor_${subj}_combined_2.1D              
+                       -show_trs_uncensored encoded`
+1d_tool.py -infile censor_GA07_combined_2.1D -show_trs_uncensored encoded
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+3dDeconvolve -input pb06.GA07.r01.scale+tlrc.HEAD pb06.GA07.r02.scale+tlrc.HEAD pb06.GA07.r03.scale+tlrc.HEAD -censor censor_GA07_combined_2.1D -ortvec mot_demean.r01.1D mot_demean_r01 -ortvec mot_demean.r02.1D mot_demean_r02 -ortvec mot_demean.r03.1D mot_demean_r03 -ortvec mot_deriv.r01.1D mot_deriv_r01 -ortvec mot_deriv.r02.1D mot_deriv_r02 -ortvec mot_deriv.r03.1D mot_deriv_r03 -polort 4 -num_stimts 0 -fout -tout -x1D X.xmat.1D -xjpeg X.jpg -x1D_uncensored X.nocensor.xmat.1D -fitts fitts.GA07 -errts errts.GA07 -x1D_stop -bucket stats.GA07
+++ 3dDeconvolve extending num_stimts from 0 to 36 due to -ortvec
+++ 3dDeconvolve: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: B. Douglas Ward, et al.
+++ Auto-catenated input datasets treated as multiple imaging runs
+++ Auto-catenated datasets start at:  0 1096 2192
+++ STAT automask has 542950 voxels (out of 545468 = 99.5%)
+++ Skipping check for initial transients
+++ Input polort=4; Longest run=504.2 s; Recommended minimum polort=4 ++ OK ++
+++ Number of time points: 3288 (before censor) ; 3235 (after)
+ + Number of parameters:  51 [51 baseline ; 0 signal]
+++ Memory required for output bricks = 14,350,172,144 bytes (about 14 billion)
+++ Wrote matrix image to file X.jpg
+++ Wrote matrix values to file X.xmat.1D
+++ ========= Things you can do with the matrix file =========
+++ (a) Linear regression with ARMA(1,1) modeling of serial correlation:
+
+3dREMLfit -matrix X.xmat.1D \
+ -input "pb06.GA07.r01.scale+tlrc.HEAD pb06.GA07.r02.scale+tlrc.HEAD pb06.GA07.r03.scale+tlrc.HEAD" \
+ -fout -tout -Rbuck stats.GA07_REML -Rvar stats.GA07_REMLvar \
+ -Rfitts fitts.GA07_REML -Rerrts errts.GA07_REML -verb
+ 
+++ N.B.: 3dREMLfit command above written to file stats.REML_cmd
+++ (b) Visualization/analysis of the matrix via ExamineXmat.R
+++ (c) Synthesis of sub-model datasets using 3dSynthesize
+++ ==========================================================
+++ Wrote matrix values to file X.nocensor.xmat.1D
+++ ----- Signal+Baseline matrix condition [X] (3235x51):  4.48709  ++ VERY GOOD ++
+++ ----- Baseline-only matrix condition [X] (3235x51):  4.48709  ++ VERY GOOD ++
+++ ----- stim_base-only matrix condition [X] (3235x36):  3.65316  ++ VERY GOOD ++
+++ ----- polort-only matrix condition [X] (3235x15):  1.018  ++ VERY GOOD ++
+++ 3dDeconvolve exits: -x1D_stop option was invoked
+3dTproject -polort 0 -input pb06.GA07.r01.scale+tlrc.HEAD pb06.GA07.r02.scale+tlrc.HEAD pb06.GA07.r03.scale+tlrc.HEAD -censor censor_GA07_combined_2.1D -cenmode ZERO -ort X.nocensor.xmat.1D -prefix errts.GA07.tproject
+++ 3dTproject: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Cox the Algebraic (Linear)
+++ have 3 input dataset names
+++ Auto-catenated dataset has 3 runs
+++ input time points = 3288 ; censored = 53 ; remaining = 3235
+++ Setting up regressors
+++ 3 Blocks * 1 polynomials -- 3 polort regressors
+ + -- 51 other fixed ort regressors
+++ 3235 retained time points MINUS 54 regressors ==> 3181 D.O.F. left
+++ no -mask option ==> processing all 545468 voxels in dataset
+++ Compute pseudo-inverse of fixed orts
+++ Loading dataset
+[7m*+ WARNING:[0m 3dTproject input data :: 2702 vectors are constant
+++ Starting project-orization
+++ Convert results to output dataset
+++ Output dataset ./errts.GA07.tproject+tlrc.BRIK
+++ ===== clock time = 9m 42s 863ms
+if ( 0 != 0 ) then
+1d_tool.py -show_cormat_warnings -infile X.xmat.1D
+tee out.cormat_warn.txt
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+-- no warnings for correlation matrix (cut = 0.400) --
+1d_tool.py -show_df_info -infile X.xmat.1D
+tee out.df_info.txt
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+
+initial DF                   : 3288 : 100.0%
+
+DF used for regs of interest :    0 :   0.0%
+DF used for censoring        :   53 :   1.6%
+DF used for polort           :   15 :   0.5%
+DF used for motion           :   36 :   1.1%
+total DF used                :  104 :   3.2%
+
+final DF                     : 3184 :  96.8%
+
+3dTcat -prefix all_runs.GA07 pb06.GA07.r01.scale+tlrc.HEAD pb06.GA07.r02.scale+tlrc.HEAD pb06.GA07.r03.scale+tlrc.HEAD
+++ 3dTcat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ elapsed time = 480.7 s
+3dTstat -mean -prefix rm.signal.all all_runs.GA07+tlrc[0..411,418..466,471..977,983..1060,1063..1346,1348..1384,1389..1469,1472..1494,1499..1514,1517..1887,1890..2156,2160..2518,2521..2757,2760..3001,3004..3111,3118..3252,3259..3287]
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+++ Output dataset ./rm.signal.all+tlrc.BRIK
+3dTstat -stdev -prefix rm.noise.all errts.GA07.tproject+tlrc[0..411,418..466,471..977,983..1060,1063..1346,1348..1384,1389..1469,1472..1494,1499..1514,1517..1887,1890..2156,2160..2518,2521..2757,2760..3001,3004..3111,3118..3252,3259..3287]
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+++ Output dataset ./rm.noise.all+tlrc.BRIK
+3dcalc -a rm.signal.all+tlrc -b rm.noise.all+tlrc -expr a/b -prefix TSNR.GA07
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./TSNR.GA07+tlrc.BRIK
+3dTnorm -norm2 -prefix rm.errts.unit errts.GA07.tproject+tlrc
+++ 3dTnorm: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RW Cox
+++ Output dataset ./rm.errts.unit+tlrc.BRIK
+3dmaskave -quiet -mask full_mask.GA07+tlrc rm.errts.unit+tlrc
+++ 3dmaskave: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
++++ 114189 voxels survive the mask
+3dTstat -sos -prefix - mean.errts.unit.1D'
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+[7m*+ WARNING:[0m Input dataset is not 3D+time; assuming TR=1.0
+echo -- GCOR = `cat out.gcor.1D`
+cat out.gcor.1D
+-- GCOR =  0.09119
+3dmaskave -quiet -mask full_mask.GA07+tlrc errts.GA07.tproject+tlrc
+++ 3dmaskave: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
++++ 114189 voxels survive the mask
+3dTcorr1D -prefix corr_brain errts.GA07.tproject+tlrc mean.errts.1D
+++ 3dTcorr1D: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+ + reading dataset file errts.GA07.tproject+tlrc
+ + reading 1D file mean.errts.1D
+ + loading dataset ./errts.GA07.tproject+tlrc.BRIK into memory
+++ Start correlations: 545468 voxels X 1 time series(3288); 1 threads
+[7m*+ WARNING:[0m THD_Tcorr1D: 2702 voxels skipped because were constant in time
+++ Wrote dataset: ./corr_brain+tlrc.BRIK
+3dTstat -sum -prefix sum_baseline.1D X.nocensor.xmat.1D
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+[7m*+ WARNING:[0m Input dataset is not 3D+time; assuming TR=1.0
+++ Output dataset ./sum_baseline.1D
+touch blur_est.GA07.1D
+mkdir files_ACF
+touch blur.epits.1D
+foreach run ( 01 02 03 )
+set trs = `1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded 
+                          -show_trs_run $run`
+1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded -show_trs_run 01
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+if ( 0..411,418..466,471..977,983..1060,1063..1095 ==  ) continue
+3dFWHMx -detrend -mask mask_epi_anat.GA07+tlrc -ACF files_ACF/out.3dFWHMx.ACF.epits.r01.1D all_runs.GA07+tlrc[0..411,418..466,471..977,983..1060,1063..1095]
+++ 3dFWHMx: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: The Bob
+++ Number of voxels in mask = 113900
+++ detrending start: 73 baseline funcs, 1079 time points
+ + detrending done (0.00 CPU s thus far)
+++ start ACF calculations out to radius = 17.80 mm
+ + ACF done (0.00 CPU s thus far)
+++ ACF 1D file [radius ACF mixed_model gaussian_NEWmodel] written to files_ACF/out.3dFWHMx.ACF.epits.r01.1D
+++ 1dplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RWC et al.
+pnmtopng: 43 colors found
+ + and 1dplot-ed to file files_ACF/out.3dFWHMx.ACF.epits.r01.1D.png
+end
+set trs = `1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded 
+                          -show_trs_run $run`
+1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded -show_trs_run 02
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+if ( 1096..1346,1348..1384,1389..1469,1472..1494,1499..1514,1517..1887,1890..2156,2160..2191 ==  ) continue
+3dFWHMx -detrend -mask mask_epi_anat.GA07+tlrc -ACF files_ACF/out.3dFWHMx.ACF.epits.r02.1D all_runs.GA07+tlrc[1096..1346,1348..1384,1389..1469,1472..1494,1499..1514,1517..1887,1890..2156,2160..2191]
+++ 3dFWHMx: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: The Bob
+++ Number of voxels in mask = 113900
+++ detrending start: 73 baseline funcs, 1078 time points
+ + detrending done (0.00 CPU s thus far)
+++ start ACF calculations out to radius = 17.94 mm
+ + ACF done (0.00 CPU s thus far)
+++ ACF 1D file [radius ACF mixed_model gaussian_NEWmodel] written to files_ACF/out.3dFWHMx.ACF.epits.r02.1D
+++ 1dplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RWC et al.
+pnmtopng: 42 colors found
+ + and 1dplot-ed to file files_ACF/out.3dFWHMx.ACF.epits.r02.1D.png
+end
+set trs = `1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded 
+                          -show_trs_run $run`
+1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded -show_trs_run 03
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+if ( 2192..2518,2521..2757,2760..3001,3004..3111,3118..3252,3259..3287 ==  ) continue
+3dFWHMx -detrend -mask mask_epi_anat.GA07+tlrc -ACF files_ACF/out.3dFWHMx.ACF.epits.r03.1D all_runs.GA07+tlrc[2192..2518,2521..2757,2760..3001,3004..3111,3118..3252,3259..3287]
+++ 3dFWHMx: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: The Bob
+++ Number of voxels in mask = 113900
+++ detrending start: 73 baseline funcs, 1078 time points
+ + detrending done (0.00 CPU s thus far)
+++ start ACF calculations out to radius = 18.00 mm
+ + ACF done (0.00 CPU s thus far)
+++ ACF 1D file [radius ACF mixed_model gaussian_NEWmodel] written to files_ACF/out.3dFWHMx.ACF.epits.r03.1D
+++ 1dplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RWC et al.
+pnmtopng: 43 colors found
+ + and 1dplot-ed to file files_ACF/out.3dFWHMx.ACF.epits.r03.1D.png
+end
+set blurs = ( `3dTstat -mean -prefix - blur.epits.1D'{0..$(2)}'\'` )
+3dTstat -mean -prefix - blur.epits.1D{0..$(2)}'
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+[7m*+ WARNING:[0m Input dataset is not 3D+time; assuming TR=1.0
+echo average epits FWHM blurs: 0 0 0 0
+average epits FWHM blurs: 0 0 0 0
+echo 0 0 0 0   # epits FWHM blur estimates
+set blurs = ( `3dTstat -mean -prefix - blur.epits.1D'{1..$(2)}'\'` )
+3dTstat -mean -prefix - blur.epits.1D{1..$(2)}'
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+[7m*+ WARNING:[0m Input dataset is not 3D+time; assuming TR=1.0
+echo average epits ACF blurs: 0.817883 3.42351 12.8222 8.62603
+average epits ACF blurs: 0.817883 3.42351 12.8222 8.62603
+echo 0.817883 3.42351 12.8222 8.62603   # epits ACF blur estimates
+touch blur.errts.1D
+foreach run ( 01 02 03 )
+set trs = `1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded 
+                          -show_trs_run $run`
+1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded -show_trs_run 01
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+if ( 0..411,418..466,471..977,983..1060,1063..1095 ==  ) continue
+3dFWHMx -detrend -mask mask_epi_anat.GA07+tlrc -ACF files_ACF/out.3dFWHMx.ACF.errts.r01.1D errts.GA07.tproject+tlrc[0..411,418..466,471..977,983..1060,1063..1095]
+++ 3dFWHMx: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: The Bob
+++ Number of voxels in mask = 113900
+++ detrending start: 73 baseline funcs, 1079 time points
+ + detrending done (0.00 CPU s thus far)
+++ start ACF calculations out to radius = 17.55 mm
+ + ACF done (0.00 CPU s thus far)
+++ ACF 1D file [radius ACF mixed_model gaussian_NEWmodel] written to files_ACF/out.3dFWHMx.ACF.errts.r01.1D
+++ 1dplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RWC et al.
+pnmtopng: 43 colors found
+ + and 1dplot-ed to file files_ACF/out.3dFWHMx.ACF.errts.r01.1D.png
+end
+set trs = `1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded 
+                          -show_trs_run $run`
+1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded -show_trs_run 02
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+if ( 1096..1346,1348..1384,1389..1469,1472..1494,1499..1514,1517..1887,1890..2156,2160..2191 ==  ) continue
+3dFWHMx -detrend -mask mask_epi_anat.GA07+tlrc -ACF files_ACF/out.3dFWHMx.ACF.errts.r02.1D errts.GA07.tproject+tlrc[1096..1346,1348..1384,1389..1469,1472..1494,1499..1514,1517..1887,1890..2156,2160..2191]
+++ 3dFWHMx: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: The Bob
+++ Number of voxels in mask = 113900
+++ detrending start: 73 baseline funcs, 1078 time points
+ + detrending done (0.00 CPU s thus far)
+++ start ACF calculations out to radius = 17.70 mm
+ + ACF done (0.00 CPU s thus far)
+++ ACF 1D file [radius ACF mixed_model gaussian_NEWmodel] written to files_ACF/out.3dFWHMx.ACF.errts.r02.1D
+++ 1dplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RWC et al.
+pnmtopng: 43 colors found
+ + and 1dplot-ed to file files_ACF/out.3dFWHMx.ACF.errts.r02.1D.png
+end
+set trs = `1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded 
+                          -show_trs_run $run`
+1d_tool.py -infile X.xmat.1D -show_trs_uncensored encoded -show_trs_run 03
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+if ( 2192..2518,2521..2757,2760..3001,3004..3111,3118..3252,3259..3287 ==  ) continue
+3dFWHMx -detrend -mask mask_epi_anat.GA07+tlrc -ACF files_ACF/out.3dFWHMx.ACF.errts.r03.1D errts.GA07.tproject+tlrc[2192..2518,2521..2757,2760..3001,3004..3111,3118..3252,3259..3287]
+++ 3dFWHMx: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: The Bob
+++ Number of voxels in mask = 113900
+++ detrending start: 73 baseline funcs, 1078 time points
+ + detrending done (0.00 CPU s thus far)
+++ start ACF calculations out to radius = 17.73 mm
+ + ACF done (0.00 CPU s thus far)
+++ ACF 1D file [radius ACF mixed_model gaussian_NEWmodel] written to files_ACF/out.3dFWHMx.ACF.errts.r03.1D
+++ 1dplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: RWC et al.
+pnmtopng: 43 colors found
+ + and 1dplot-ed to file files_ACF/out.3dFWHMx.ACF.errts.r03.1D.png
+end
+set blurs = ( `3dTstat -mean -prefix - blur.errts.1D'{0..$(2)}'\'` )
+3dTstat -mean -prefix - blur.errts.1D{0..$(2)}'
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+[7m*+ WARNING:[0m Input dataset is not 3D+time; assuming TR=1.0
+echo average errts FWHM blurs: 0 0 0 0
+average errts FWHM blurs: 0 0 0 0
+echo 0 0 0 0   # errts FWHM blur estimates
+set blurs = ( `3dTstat -mean -prefix - blur.errts.1D'{1..$(2)}'\'` )
+3dTstat -mean -prefix - blur.errts.1D{1..$(2)}'
+++ 3dTstat: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: KR Hammett & RW Cox
+[7m*+ WARNING:[0m Input dataset is not 3D+time; assuming TR=1.0
+echo average errts ACF blurs: 0.831506 3.4044 11.5238 8.47574
+average errts ACF blurs: 0.831506 3.4044 11.5238 8.47574
+echo 0.831506 3.4044 11.5238 8.47574   # errts ACF blur estimates
+gen_epi_review.py -script @epi_review.GA07 -dsets pb00.GA07.r01.tcat+orig.HEAD pb00.GA07.r02.tcat+orig.HEAD pb00.GA07.r03.tcat+orig.HEAD
+gen_ss_review_scripts.py -exit0 -mot_limit 0.4 -out_limit 0.05 -errts_dset errts.GA07.tproject+tlrc.HEAD -mask_dset mask_epi_anat.GA07+tlrc.HEAD -ss_review_dset out.ss_review.GA07.txt -write_uvars_json out.ss_review_uvars.json
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+** failed to guess at any stats dset, resting state?
+   (else X-matrix file "X.xmat.1D" may not apply)
+++ writing ss review basic:          @ss_review_basic
+** no stats_dset dset, cannot drive view_stats, skipping...
+** no mask_dset dset, cannot drive view_stats, skipping...
+++ writing ss review driver:         @ss_review_driver
+++ writing ss review drive commands: @ss_review_driver_commands
+rm -fr rm.blip.med.fwd+orig.BRIK rm.blip.med.fwd+orig.HEAD rm.blip.med.masked.fwd+orig.BRIK.gz rm.blip.med.masked.fwd+orig.HEAD rm.blip.med.masked.rev+orig.BRIK.gz rm.blip.med.masked.rev+orig.HEAD rm.blip.med.rev+orig.BRIK rm.blip.med.rev+orig.HEAD rm.epi.1.r01+tlrc.BRIK.gz rm.epi.1.r01+tlrc.HEAD rm.epi.1.r02+tlrc.BRIK.gz rm.epi.1.r02+tlrc.HEAD rm.epi.1.r03+tlrc.BRIK.gz rm.epi.1.r03+tlrc.HEAD rm.epi.all1+orig.BRIK.gz rm.epi.all1+orig.HEAD rm.epi.mean+tlrc.BRIK.gz rm.epi.mean+tlrc.HEAD rm.epi.min.r01+tlrc.BRIK.gz rm.epi.min.r01+tlrc.HEAD rm.epi.min.r02+tlrc.BRIK.gz rm.epi.min.r02+tlrc.HEAD rm.epi.min.r03+tlrc.BRIK.gz rm.epi.min.r03+tlrc.HEAD rm.epi.nomask.r01+tlrc.BRIK rm.epi.nomask.r01+tlrc.HEAD rm.epi.nomask.r02+tlrc.BRIK rm.epi.nomask.r02+tlrc.HEAD rm.epi.nomask.r03+tlrc.BRIK rm.epi.nomask.r03+tlrc.HEAD rm.epi.volreg.r01+orig.BRIK rm.epi.volreg.r01+orig.HEAD rm.epi.volreg.r02+orig.BRIK rm.epi.volreg.r02+orig.HEAD rm.epi.volreg.r03+orig.BRIK rm.epi.volreg.r03+orig.HEAD rm.errts.unit+tlrc.BRIK rm.errts.unit+tlrc.HEAD rm.mask_r01+tlrc.BRIK.gz rm.mask_r01+tlrc.HEAD rm.mask_r02+tlrc.BRIK.gz rm.mask_r02+tlrc.HEAD rm.mask_r03+tlrc.BRIK.gz rm.mask_r03+tlrc.HEAD rm.mean_r01+tlrc.BRIK rm.mean_r01+tlrc.HEAD rm.mean_r02+tlrc.BRIK rm.mean_r02+tlrc.HEAD rm.mean_r03+tlrc.BRIK rm.mean_r03+tlrc.HEAD rm.noise.all+tlrc.BRIK rm.noise.all+tlrc.HEAD rm.out.cen.r01.1D rm.out.cen.r02.1D rm.out.cen.r03.1D rm.resam.anat+tlrc.BRIK rm.resam.anat+tlrc.HEAD rm.resam.group+tlrc.BRIK rm.resam.group+tlrc.HEAD rm.signal.all+tlrc.BRIK rm.signal.all+tlrc.HEAD awpy
+if ( -e @ss_review_basic ) then
+./@ss_review_basic
+tee out.ss_review.GA07.txt
+
+subject ID                : GA07
+AFNI version              : AFNI_21.2.04
+AFNI package              : linux_ubuntu_16_64
+TR                        : 0.46
+TRs removed (per run)     : 0
+num stim classes provided : 0
+final anatomy dset        : anat_final.GA07+tlrc.HEAD
+final stats dset          : NO_STATS
+final errts dset          : errts.GA07.tproject+tlrc.HEAD
+orig voxel counts         : 86	98	78
+orig voxel resolution     : 2.682927	2.682927	2.682927
+orig volume center        : 1.234795	2.976254	10.665459
+final voxel resolution    : 2.500000	2.500000	2.500000
+
+motion limit              : 0.4
+num TRs above mot limit   : 21
+average motion (per TR)   : 0.0835803
+average censored motion   : 0.0795063
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+max motion displacement   : 4.5182
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+max censored displacement : 4.5182
+outlier limit             : 0.05
+average outlier frac (TR) : 0.00244111
+num TRs above out limit   : 20
+flip guess                : NO_FLIP
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+num runs found            : 3
+num TRs per run           : 1096 1096 1096
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+num TRs per run (applied) : 1079 1078 1078
+num TRs per run (censored): 17 18 18
+fraction censored per run : 0.0155109 0.0164234 0.0164234
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+TRs total (uncensored)    : 3288
+TRs total                 : 3235
+degrees of freedom used   : 51
+degrees of freedom left   : 3184
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+TRs censored              : 53
+censor fraction           : 0.016119
+num regs of interest      : 0
+
+TSNR average              : 140.224
+global correlation (GCOR) : 0.09119
+anat/EPI mask Dice coef   : 0.862709
+anat/templ mask Dice coef : 0.898639
+blur estimates (ACF)      : 0.831506 3.4044 11.5238
+blur estimates (FWHM)     : 0 0 0
+
+
+apqc_make_tcsh.py -review_style pythonic -subj_dir . -uvar_json out.ss_review_uvars.json
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+++ Found 40 files for QCing.
+++ Done making (executable) script to generate HTML QC:
+    ./@ss_review_html
+tcsh @ss_review_html
+tee out.review_html
+*+ Found main dset (template):  /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay vr_base_min_outlier+orig.HEAD -olay vr_base_min_outlier+orig.HEAD -ulay_range_nz 0 8740.167969 -func_range 8740.167969 -box_focus_slices AMASK_FOCUS_ULAY -cbar gray_scale -pbar_posonly -pbar_saveim QC_GA07/media/qc_00_vorig_EPI.pbar.jpg -pbar_comm_range 98%ile in vol -pbar_for dset -prefix QC_GA07/media/qc_00_vorig_EPI -save_ftype JPEG -blowup 4 -opacity 9 -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   vr_base_min_outlier+orig.HEAD
+++ Found input file:   vr_base_min_outlier+orig.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_POOdPwDk8lG
+++ Converted 0 to labels
+++ Final subbrick indices: -1 -1 -1
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay to be visualized within user range:
+   [0, 8740.167969]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_POOdPwDk8lG/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_POOdPwDk8lG/tmp_olay.nii
+++ User-entered function range value value (8740.167969)
+++ Dimensions (xyzt): 86 98 78 1
+++ (initial) Slice spacing ordered (x,y,z) is:  12 14 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=13..72  y=10..78  z=5..61
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_POOdPwDk8lG/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_POOdPwDk8lG/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_MVrE3IchNbcfMnlz5-B29Q argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 235980 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.576271 -9.096886 -4.090637
+++ Will have the ref box central gapord: 8 9 8
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :228 
+[1] 196088
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_POOdPwDk8lG++ Writing palette image to QC_GA07/media/qc_00_vorig_EPI.pbar.jpg
+++ Writing one 2768x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_00_vorig_EPI.sag.jpg'
+++ Writing one 2432x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_00_vorig_EPI.cor.jpg'
+++ Writing one 2432x392 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_00_vorig_EPI.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:8:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:9:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:8:1:black crop=0:0,0:0 -com SET_PBAR_ALL    +99 1 gray_scale -com PBAR_SAVEIM QC_GA07/media/qc_00_vorig_EPI.pbar.jpg dim=64x512H -com SET_SUBBRICKS   -1 -1 -1 -com SET_ULAY_RANGE A.all 0 8740.167969 -com SET_FUNC_RANGE  8740.167969 -com SET_THRESHNEW   0 * -com SET_FUNC_ALPHA  No -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.576271 -9.096886 -4.090637 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_00_vorig_EPI.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_00_vorig_EPI.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_00_vorig_EPI.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_POOdPwDk8lG 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_POOdPwDk8lG'.
+
+[1]    Done                          Xvfb :228 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_00_vorig_EPI*
+
+++ Prepare for running @djunct_edgy_align_check (ver = 1.45)
+++ Copy refbox (/usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz) to workdir
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_ummn7zEA8cm/REFBOX.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_ummn7zEA8cm/eac_0_cp.nii
+++ 3dAllineate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Zhark the Registrator
+++ Source dataset: /mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__workdir_EAC_ummn7zEA8cm/eac_0_cp.nii
+++ Base dataset:   (not given)
+++ Loading datasets into memory
+ +        -cmass x y z shifts =    0.000    0.000    0.000
+ +  shift search range is +/- =   60.990   73.028   60.990
+++ OpenMP thread count = 15
+++ ========== Applying transformation to 1 sub-bricks ==========
+++ wsinc5 interpolation setup:
+ +   taper function  = Min sidelobe 3 term
+ +   taper cut point = 0.000
+ +   window radius   = 5 voxels
+ +   window shape    = Cubical
+ +   The above can be altered via the AFNI_WSINC5_* environment variables.
+ +  (To avoid this message, 'setenv AFNI_WSINC5_SILENT YES'.)
+ +   wsinc5 CUBE(5) mask has 1000 points
+++ Output dataset QC_GA07/media/__workdir_EAC_ummn7zEA8cm/eac_1_grid2olay.nii
+++ 3dAllineate: total CPU time = 0.0 sec  Elapsed = 4.1
+++ ###########################################################
+++ Output dataset ./eac_2_ulay_shrp.nii
+++ Just copy olay, bc ulay will get regridded
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+[7m** FATAL ERROR:[0m can't open dataset anat_final.GA07+tlrc.HEAD
+** Program compile date = Jul 28 2021
+QC_GA07/media/__workdir_EAC_ummn7zEA8cm: No such file or directory.
+++ Prepare for running @djunct_edgy_align_check (ver = 1.45)
+++ Copy refbox (/usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz) to workdir
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_2L75ivuFO02/REFBOX.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_2L75ivuFO02/eac_0_cp.nii
+++ Output dataset ./eac_1_ulay_shrp.nii
+++ 3dAllineate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Zhark the Registrator
+[7m** FATAL ERROR:[0m can't open -master dataset 'QC_GA07/media/__workdir_EAC_2L75ivuFO02/eac_1_ulay_shrp.nii' :-(
+** Program compile date = Jul 28 2021
+QC_GA07/media/__workdir_EAC_2L75ivuFO02: No such file or directory.
+++ 3dmaskave: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
++++ 545468 voxels in the entire dataset (no mask)
+++ 29 voxels in the boxes+balls
+++ 29 voxels in the mask INTERSECT boxes+balls
+++ 3dTcorr1D: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+ + reading dataset file errts.GA07.tproject+tlrc.HEAD
+ + reading 1D file _tmp_ave_ts.txt
+ + loading dataset ./errts.GA07.tproject+tlrc.BRIK into memory
+++ Start correlations: 545468 voxels X 1 time series(3288); 1 threads
+[7m*+ WARNING:[0m THD_Tcorr1D: 2702 voxels skipped because were constant in time
+++ Wrote dataset: ./_tmp_corr_vol.nii
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -box_focus_slices /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -olay _tmp_corr_vol.nii -cbar Reds_and_Blues_Inv -ulay_range 0% 120% -func_range 0.6 -thr_olay 0.3 -olay_alpha Yes -olay_boxed Yes -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_03_vstat_seed_lh-PCC.pbar.jpg -pbar_comm_range Pearson r -pbar_comm_thr alpha+boxed on -prefix QC_GA07/media/qc_03_vstat_seed_lh-PCC -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
+++ Found input file:   _tmp_corr_vol.nii
+++ Found focus refbox file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
++* NB: focus box vol has >1 slice, so we select [0]th.
+++ Using blowup factor: 2
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_92U7kVaIgdu
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.22448,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 120%] -> [0.000000, 1296.724320]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_92U7kVaIgdu/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_92U7kVaIgdu/tmp_olay.nii
+++ User-entered function range value value (0.6)
+++ Dimensions (xyzt): 193 229 193 5
+++ (initial) Slice spacing ordered (x,y,z) is:  27 32 27
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=24..168  y=25..205  z=6..160
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_92U7kVaIgdu/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_92U7kVaIgdu/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_Ovh9mTb4vprXaBh5lvJo_A argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0 scale factor = 0.162420
+++ Computing output statistics
+++ Output dataset /tmp/3dcalc_AFN_Ovh9mTb4vprXaBh5lvJo_A+tlrc.BRIK
+++ 4067975 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 1 17 5
+++ Will have the ref box central gapord: 20 25 22
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :865 
+[1] 196604
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_92U7kVaIgdu++ Writing palette image to QC_GA07/media/qc_03_vstat_seed_lh-PCC.pbar.jpg
+++ Writing one 3218x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_03_vstat_seed_lh-PCC.sag.jpg'
+++ Writing one 2714x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_03_vstat_seed_lh-PCC.cor.jpg'
+++ Writing one 2714x458 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_03_vstat_seed_lh-PCC.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:20:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:25:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:22:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_03_vstat_seed_lh-PCC.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 1296.724320 -com SET_FUNC_RANGE  0.6 -com SET_THRESHNEW   0.3 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  Yes -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 1 17 5 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_03_vstat_seed_lh-PCC.sag blowup=2 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_03_vstat_seed_lh-PCC.cor blowup=2 -com SAVE_JPEG axialimage    QC_GA07/media/qc_03_vstat_seed_lh-PCC.axi blowup=2 -com QUITT QC_GA07/media/__tmp_chauf_92U7kVaIgdu 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_92U7kVaIgdu'.
+
+[1]  + Done                          Xvfb :865 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_03_vstat_seed_lh-PCC*
+
+++ 3dmaskave: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
++++ 545468 voxels in the entire dataset (no mask)
+++ 34 voxels in the boxes+balls
+++ 34 voxels in the mask INTERSECT boxes+balls
+++ 3dTcorr1D: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+ + reading dataset file errts.GA07.tproject+tlrc.HEAD
+ + reading 1D file _tmp_ave_ts.txt
+ + loading dataset ./errts.GA07.tproject+tlrc.BRIK into memory
+++ Start correlations: 545468 voxels X 1 time series(3288); 1 threads
+[7m*+ WARNING:[0m THD_Tcorr1D: 2702 voxels skipped because were constant in time
+++ Wrote dataset: ./_tmp_corr_vol.nii
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -box_focus_slices /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -olay _tmp_corr_vol.nii -cbar Reds_and_Blues_Inv -ulay_range 0% 120% -func_range 0.6 -thr_olay 0.3 -olay_alpha Yes -olay_boxed Yes -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.pbar.jpg -pbar_comm_range Pearson r -pbar_comm_thr alpha+boxed on -prefix QC_GA07/media/qc_04_vstat_seed_rh-cort-vis -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
+++ Found input file:   _tmp_corr_vol.nii
+++ Found focus refbox file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
++* NB: focus box vol has >1 slice, so we select [0]th.
+++ Using blowup factor: 2
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_1vI0N5q2rmT
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.22448,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 120%] -> [0.000000, 1296.724320]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_1vI0N5q2rmT/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_1vI0N5q2rmT/tmp_olay.nii
+++ User-entered function range value value (0.6)
+++ Dimensions (xyzt): 193 229 193 5
+++ (initial) Slice spacing ordered (x,y,z) is:  27 32 27
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=24..168  y=25..205  z=6..160
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_1vI0N5q2rmT/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_1vI0N5q2rmT/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_KpYr4hGNIXsn1EkTiVmc7A argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0 scale factor = 0.162420
+++ Computing output statistics
+++ Output dataset /tmp/3dcalc_AFN_KpYr4hGNIXsn1EkTiVmc7A+tlrc.BRIK
+++ 4067975 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 1 17 5
+++ Will have the ref box central gapord: 20 25 22
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :684 
+[1] 196864
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_1vI0N5q2rmT++ Writing palette image to QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.pbar.jpg
+++ Writing one 3218x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.sag.jpg'
+++ Writing one 2714x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.cor.jpg'
+++ Writing one 2714x458 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:20:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:25:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:22:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 1296.724320 -com SET_FUNC_RANGE  0.6 -com SET_THRESHNEW   0.3 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  Yes -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 1 17 5 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.sag blowup=2 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.cor blowup=2 -com SAVE_JPEG axialimage    QC_GA07/media/qc_04_vstat_seed_rh-cort-vis.axi blowup=2 -com QUITT QC_GA07/media/__tmp_chauf_1vI0N5q2rmT 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_1vI0N5q2rmT'.
+
+[1]  + Done                          Xvfb :684 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_04_vstat_seed_rh-cort-vis*
+
+++ 3dmaskave: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
++++ 545468 voxels in the entire dataset (no mask)
+++ 36 voxels in the boxes+balls
+++ 36 voxels in the mask INTERSECT boxes+balls
+++ 3dTcorr1D: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+ + reading dataset file errts.GA07.tproject+tlrc.HEAD
+ + reading 1D file _tmp_ave_ts.txt
+ + loading dataset ./errts.GA07.tproject+tlrc.BRIK into memory
+++ Start correlations: 545468 voxels X 1 time series(3288); 1 threads
+[7m*+ WARNING:[0m THD_Tcorr1D: 2702 voxels skipped because were constant in time
+++ Wrote dataset: ./_tmp_corr_vol.nii
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -box_focus_slices /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -olay _tmp_corr_vol.nii -cbar Reds_and_Blues_Inv -ulay_range 0% 120% -func_range 0.6 -thr_olay 0.3 -olay_alpha Yes -olay_boxed Yes -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.pbar.jpg -pbar_comm_range Pearson r -pbar_comm_thr alpha+boxed on -prefix QC_GA07/media/qc_05_vstat_seed_lh-cort-aud -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
+++ Found input file:   _tmp_corr_vol.nii
+++ Found focus refbox file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
++* NB: focus box vol has >1 slice, so we select [0]th.
+++ Using blowup factor: 2
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_2xQECDF9Sdk
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.22448,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 120%] -> [0.000000, 1296.724320]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_2xQECDF9Sdk/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_2xQECDF9Sdk/tmp_olay.nii
+++ User-entered function range value value (0.6)
+++ Dimensions (xyzt): 193 229 193 5
+++ (initial) Slice spacing ordered (x,y,z) is:  27 32 27
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=24..168  y=25..205  z=6..160
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_2xQECDF9Sdk/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_2xQECDF9Sdk/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_KwTVd1himqIYPNJENonQGw argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0 scale factor = 0.162420
+++ Computing output statistics
+++ Output dataset /tmp/3dcalc_AFN_KwTVd1himqIYPNJENonQGw+tlrc.BRIK
+++ 4067975 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 1 17 5
+++ Will have the ref box central gapord: 20 25 22
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :550 
+[1] 197147
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_2xQECDF9Sdk++ Writing palette image to QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.pbar.jpg
+++ Writing one 3218x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.sag.jpg'
+++ Writing one 2714x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.cor.jpg'
+++ Writing one 2714x458 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:20:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:25:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:22:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 1296.724320 -com SET_FUNC_RANGE  0.6 -com SET_THRESHNEW   0.3 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  Yes -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 1 17 5 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.sag blowup=2 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.cor blowup=2 -com SAVE_JPEG axialimage    QC_GA07/media/qc_05_vstat_seed_lh-cort-aud.axi blowup=2 -com QUITT QC_GA07/media/__tmp_chauf_2xQECDF9Sdk 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_2xQECDF9Sdk'.
+
+[1]  + Done                          Xvfb :550 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_05_vstat_seed_lh-cort-aud*
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_plot_1D.py:373: UserWarning: FixedFormatter should only be used together with FixedLocator
+  pp.set_xticklabels(['']*nlabs)
+++ FOR: motion_GA07_enorm.1D: 1 arrays with 3288 pts
+++ FOR: outcount_rall.1D: 1 arrays with 3288 pts
+++ Lists of names and yvars match length
+*+ No input x-axis; making values based on length of data: [0..3287]
+++ Plotting: enorm (~mm)
+++ Plotting: outlier frac
+++ Done! Figure created:
+	 QC_GA07/media/qc_06_mot_enormoutlr.jpg
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_plot_1D.py:373: UserWarning: FixedFormatter should only be used together with FixedLocator
+  pp.set_xticklabels(['']*nlabs)
+/usr/local/afni/abin/afnipy/lib_plot_1D.py:373: UserWarning: FixedFormatter should only be used together with FixedLocator
+  pp.set_xticklabels(['']*nlabs)
+/usr/local/afni/abin/afnipy/lib_plot_1D.py:373: UserWarning: FixedFormatter should only be used together with FixedLocator
+  pp.set_xticklabels(['']*nlabs)
+/usr/local/afni/abin/afnipy/lib_plot_1D.py:373: UserWarning: FixedFormatter should only be used together with FixedLocator
+  pp.set_xticklabels(['']*nlabs)
+/usr/local/afni/abin/afnipy/lib_plot_1D.py:373: UserWarning: FixedFormatter should only be used together with FixedLocator
+  pp.set_xticklabels(['']*nlabs)
+++ FOR: dfile_rall.1D: 6 arrays with 3288 pts
+++ Lists of names and yvars match length
+*+ No input x-axis; making values based on length of data: [0..3287]
+++ Plotting: dP
+(mm)
+++ Plotting: dL
+(mm)
+++ Plotting: dS
+(mm)
+++ Plotting: yaw
+(deg)
+++ Plotting: pitch
+(deg)
+++ Plotting: roll
+(deg)
+++ Done! Figure created:
+	 QC_GA07/media/qc_07_mot_VR6.jpg
+++ 3dGrayplot: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+ + Loading dataset ./errts.GA07.tproject+tlrc.HEAD
+ + Number of voxels in mask = 113900
+++ THD_dset_to_vectim: allocated 1498012800 bytes
+ + 3dGrayplot: Elapsed = 490.6 s
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay mask_epi_anat.GA07+tlrc.HEAD -olay mask_epi_anat.GA07+tlrc.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar gray_scale -func_range 3.29 -blowup 1 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_08_mot_grayplot.pbar.jpg -pbar_comm_range for normal distr, bounds of 0.001 prob tail -prefix __tmp_ZXCV_img -save_ftype JPEG -montx 1 -monty 1 -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   mask_epi_anat.GA07+tlrc.HEAD
+++ Found input file:   mask_epi_anat.GA07+tlrc.HEAD
+++ Using blowup factor: 1
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: ./__tmp_chauf_SMNbX2PX44G
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay to be visualized within user range:
+  [0%, 98%] -> [0.000000, 1.000000]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ././__tmp_chauf_SMNbX2PX44G/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ././__tmp_chauf_SMNbX2PX44G/tmp_olay.nii
+++ User-entered function range value value (3.29)
+++ Dimensions (xyzt): 77 92 77 1
+++ (initial) Slice spacing ordered (x,y,z) is:  77 92 77
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=0..76  y=0..91  z=0..76
+++ THD_zeropad: all pad values are zero - just copying dataset
+++ 3dAutobox: output dataset = ./__tmp_chauf_SMNbX2PX44G/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=./__tmp_chauf_SMNbX2PX44G/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_dJt3VV9GpKEOcbXRqyGisQ argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 545468 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.5 19.25 18
+++ Will have the ref box central gapord: 77 92 77
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :347 
+[1] 198771
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/__tmp_chauf_SMNbX2PX44G++ Writing palette image to QC_GA07/media/qc_08_mot_grayplot.pbar.jpg
+++ Writing one 92x77 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > ./__tmp_ZXCV_img.sag.jpg'
+++ Writing one 77x77 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > ./__tmp_ZXCV_img.cor.jpg'
+++ Writing one 77x92 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > ./__tmp_ZXCV_img.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=1x1:77:0:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=1x1:92:0:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=1x1:77:0:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 gray_scale -com PBAR_SAVEIM QC_GA07/media/qc_08_mot_grayplot.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 1.000000 -com SET_FUNC_RANGE  3.29 -com SET_THRESHNEW   0 * -com SET_FUNC_ALPHA  No -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.5 19.25 18 -com SAVE_JPEG sagittalimage ./__tmp_ZXCV_img.sag blowup=1 -com SAVE_JPEG coronalimage  ./__tmp_ZXCV_img.cor blowup=1 -com SAVE_JPEG axialimage    ./__tmp_ZXCV_img.axi blowup=1 -com QUITT ./__tmp_chauf_SMNbX2PX44G 
+
+
++* Removing temporary image directory './__tmp_chauf_SMNbX2PX44G'.
+
+[1]    Done                          Xvfb :347 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: ./__tmp_ZXCV_img*
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+++ FOR: motion_GA07_enorm.1D: 1 arrays with 3288 pts
+++ FOR: outcount_rall.1D: 1 arrays with 3288 pts
+*+ No ylabels entered
+*+ No input x-axis; making values based on length of data: [0..3287]
+++ Will scale each time series by censor_hline
+++ Apply scale: 2.5
+++ Apply scale: 20.0
+++ Will apply same y-axis range '[0.0, 3.0]' to all dsets
+++ Plotting: 
+++ Plotting: 
+++ Done! Figure created:
+	 __tmp_img_enorm.jpg
+\n+* Removing temporary files '__tmp_gluing*'\n
+
+++ DONE! Image output:
+       QC_GA07/media/qc_08_mot_grayplot.jpg
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+++ Check summary of degrees of freedom in: QC_GA07/media/qc_09_regr_df.dat
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -box_focus_slices /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -olay corr_brain+tlrc.HEAD -cbar Reds_and_Blues_Inv -ulay_range 0% 120% -func_range 0.6 -thr_olay 0.3 -olay_alpha Yes -olay_boxed Yes -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_10_regr_corr_errts.pbar.jpg -pbar_comm_range Pearson r -pbar_comm_thr alpha+boxed on -prefix QC_GA07/media/qc_10_regr_corr_errts -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
+++ Found input file:   corr_brain+tlrc.HEAD
+++ Found focus refbox file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
++* NB: focus box vol has >1 slice, so we select [0]th.
+++ Using blowup factor: 2
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_5aE11U5NbSZ
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.22448,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 120%] -> [0.000000, 1296.724320]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_5aE11U5NbSZ/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_5aE11U5NbSZ/tmp_olay.nii
+++ User-entered function range value value (0.6)
+++ Dimensions (xyzt): 193 229 193 5
+++ (initial) Slice spacing ordered (x,y,z) is:  27 32 27
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=24..168  y=25..205  z=6..160
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_5aE11U5NbSZ/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_5aE11U5NbSZ/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_TBZZj1CKKAHs4HNAH4S-Lg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0 scale factor = 0.162420
+++ Computing output statistics
+++ Output dataset /tmp/3dcalc_AFN_TBZZj1CKKAHs4HNAH4S-Lg+tlrc.BRIK
+++ 4067975 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 1 17 5
+++ Will have the ref box central gapord: 20 25 22
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :246 
+[1] 199043
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_5aE11U5NbSZ++ Writing palette image to QC_GA07/media/qc_10_regr_corr_errts.pbar.jpg
+++ Writing one 3218x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_10_regr_corr_errts.sag.jpg'
+++ Writing one 2714x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_10_regr_corr_errts.cor.jpg'
+++ Writing one 2714x458 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_10_regr_corr_errts.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:20:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:25:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:22:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_10_regr_corr_errts.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 1296.724320 -com SET_FUNC_RANGE  0.6 -com SET_THRESHNEW   0.3 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  Yes -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 1 17 5 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_10_regr_corr_errts.sag blowup=2 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_10_regr_corr_errts.cor blowup=2 -com SAVE_JPEG axialimage    QC_GA07/media/qc_10_regr_corr_errts.axi blowup=2 -com QUITT QC_GA07/media/__tmp_chauf_5aE11U5NbSZ 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_5aE11U5NbSZ'.
+
+[1]  + Done                          Xvfb :246 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_10_regr_corr_errts*
+
+++ Prepare for running adjunct_apqc_tsnr_general (ver = 1.1)
+++ MODE: 10
+++ olay_alpha has known value: No
+*+ Setting pbar file extension: jpg
+
+
+++ My command:
+   @chauffeur_afni -ulay /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -olay TSNR.GA07+tlrc.HEAD -ulay_range 0% 120% -func_range 221 -box_focus_slices /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz -set_subbricks 0 0 0 -pbar_posonly -blowup 2 -cbar   221=red  194=oran-red  168=orange  142=oran-yell  115=yell-oran  89=yellow  63=lt-blue2  37=blue  0=none -cbar_ncolors 8 -cbar_topval EMPTY -opacity 4 -olay_alpha No -olay_boxed No -thr_olay 0 -pbar_saveim QC_GA07/media/qc_11_regr_tsnr_fin.pbar -pbar_comm_range 95%ile in mask -pbar_comm_gen  cbar: hot color range (5-95%ile TSNR in mask):  63 - 221 -prefix QC_GA07/media/qc_11_regr_tsnr_fin -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean -pass -pass
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
+++ Found input file:   TSNR.GA07+tlrc.HEAD
+++ Found focus refbox file:   /usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz
++* NB: focus box vol has >1 slice, so we select [0]th.
+++ Using blowup factor: 2
+++ Using opacity:  4
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_fluTtXEIFKV
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.22448,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 120%] -> [0.000000, 1296.724320]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_fluTtXEIFKV/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_fluTtXEIFKV/tmp_olay.nii
+++ User-entered function range value value (221)
+++ Dimensions (xyzt): 193 229 193 5
+++ (initial) Slice spacing ordered (x,y,z) is:  27 32 27
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=24..168  y=25..205  z=6..160
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_fluTtXEIFKV/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_fluTtXEIFKV/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_Fv73KEftiMCwhvXbkT4Ptg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0 scale factor = 0.162420
+++ Computing output statistics
+++ Output dataset /tmp/3dcalc_AFN_Fv73KEftiMCwhvXbkT4Ptg+tlrc.BRIK
+++ 4067975 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 1 17 5
+++ Will have the ref box central gapord: 20 25 22
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :921 
+[1] 199350
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_fluTtXEIFKV++ Writing palette image to QC_GA07/media/qc_11_regr_tsnr_fin.pbar.jpg
+++ Writing one 3218x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_11_regr_tsnr_fin.sag.jpg'
+++ Writing one 2714x386 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_11_regr_tsnr_fin.cor.jpg'
+++ Writing one 2714x458 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_11_regr_tsnr_fin.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=4 mont=7x1:20:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=4 mont=7x1:25:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=4 mont=7x1:22:1:black crop=0:0,0:0 -com SET_PBAR_ALL    +8    221=red  194=oran-red  168=orange  142=oran-yell  115=yell-oran  89=yellow  63=lt-blue2  37=blue  0=none -com PBAR_SAVEIM QC_GA07/media/qc_11_regr_tsnr_fin.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 1296.724320 -com SET_FUNC_RANGE  221 -com SET_THRESHNEW   0 * -com SET_FUNC_ALPHA  No -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 1 17 5 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_11_regr_tsnr_fin.sag blowup=2 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_11_regr_tsnr_fin.cor blowup=2 -com SAVE_JPEG axialimage    QC_GA07/media/qc_11_regr_tsnr_fin.axi blowup=2 -com QUITT QC_GA07/media/__tmp_chauf_fluTtXEIFKV 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_fluTtXEIFKV'.
+
+[1]  + Done                          Xvfb :921 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_11_regr_tsnr_fin*
+
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay radcor.pb00.tcat/epi.ulay.r01+orig.HEAD -ulay_range 0% 110% -olay radcor.pb00.tcat/radcor.20.r01.corr+orig.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar Reds_and_Blues_Inv -func_range 0.7 -thr_olay 0.4 -olay_alpha Yes -olay_boxed No -blowup 4 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_12_radcor_rc_tcat_r01.pbar.jpg -pbar_comm_range ulay is 0th vol of EPI -pbar_comm_thr alpha on -prefix QC_GA07/media/qc_12_radcor_rc_tcat_r01 -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   radcor.pb00.tcat/epi.ulay.r01+orig.HEAD
+++ Found input file:   radcor.pb00.tcat/radcor.20.r01.corr+orig.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_1rqY3Qulql1
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.12244,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 110%] -> [0.000000, 10020.021880]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_1rqY3Qulql1/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_1rqY3Qulql1/tmp_olay.nii
+++ User-entered function range value value (0.7)
+++ Dimensions (xyzt): 86 98 78 1
+++ (initial) Slice spacing ordered (x,y,z) is:  12 14 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=5..78  y=2..95  z=1..76
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_1rqY3Qulql1/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_1rqY3Qulql1/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_oAj1E4Ssdq-2WQ5VLCGpDg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 528656 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ -0.106667 4.317764 12.00693
+++ Will have the ref box central gapord: 10 13 10
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :566 
+[1] 199599
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_1rqY3Qulql1++ Writing palette image to QC_GA07/media/qc_12_radcor_rc_tcat_r01.pbar.jpg
+++ Writing one 2768x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r01.sag.jpg'
+++ Writing one 2432x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r01.cor.jpg'
+++ Writing one 2432x392 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r01.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:10:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:13:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:10:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_12_radcor_rc_tcat_r01.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 10020.021880 -com SET_FUNC_RANGE  0.7 -com SET_THRESHNEW   0.4 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ -0.106667 4.317764 12.00693 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_12_radcor_rc_tcat_r01.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_12_radcor_rc_tcat_r01.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_12_radcor_rc_tcat_r01.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_1rqY3Qulql1 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_1rqY3Qulql1'.
+
+[1]    Done                          Xvfb :566 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_12_radcor_rc_tcat_r01*
+
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay radcor.pb00.tcat/epi.ulay.r02+orig.HEAD -ulay_range 0% 110% -olay radcor.pb00.tcat/radcor.20.r02.corr+orig.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar Reds_and_Blues_Inv -func_range 0.7 -thr_olay 0.4 -olay_alpha Yes -olay_boxed No -blowup 4 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_12_radcor_rc_tcat_r02.pbar.jpg -pbar_comm_range ulay is 0th vol of EPI -pbar_comm_thr alpha on -prefix QC_GA07/media/qc_12_radcor_rc_tcat_r02 -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   radcor.pb00.tcat/epi.ulay.r02+orig.HEAD
+++ Found input file:   radcor.pb00.tcat/radcor.20.r02.corr+orig.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_Ed9plj6nByg
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.12244,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 110%] -> [0.000000, 9959.410120]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_Ed9plj6nByg/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_Ed9plj6nByg/tmp_olay.nii
+++ User-entered function range value value (0.7)
+++ Dimensions (xyzt): 86 98 78 1
+++ (initial) Slice spacing ordered (x,y,z) is:  12 14 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=6..78  y=2..95  z=1..76
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_Ed9plj6nByg/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_Ed9plj6nByg/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_aj3jR9tzHCAttIX-B5UMEg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 521512 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.576263 4.317764 12.00693
+++ Will have the ref box central gapord: 10 13 10
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :570 
+[1] 199831
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_Ed9plj6nByg++ Writing palette image to QC_GA07/media/qc_12_radcor_rc_tcat_r02.pbar.jpg
+++ Writing one 2768x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r02.sag.jpg'
+++ Writing one 2432x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r02.cor.jpg'
+++ Writing one 2432x392 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r02.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:10:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:13:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:10:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_12_radcor_rc_tcat_r02.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 9959.410120 -com SET_FUNC_RANGE  0.7 -com SET_THRESHNEW   0.4 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.576263 4.317764 12.00693 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_12_radcor_rc_tcat_r02.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_12_radcor_rc_tcat_r02.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_12_radcor_rc_tcat_r02.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_Ed9plj6nByg 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_Ed9plj6nByg'.
+
+[1]    Done                          Xvfb :570 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_12_radcor_rc_tcat_r02*
+
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay radcor.pb00.tcat/epi.ulay.r03+orig.HEAD -ulay_range 0% 110% -olay radcor.pb00.tcat/radcor.20.r03.corr+orig.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar Reds_and_Blues_Inv -func_range 0.7 -thr_olay 0.4 -olay_alpha Yes -olay_boxed No -blowup 4 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_12_radcor_rc_tcat_r03.pbar.jpg -pbar_comm_range ulay is 0th vol of EPI -pbar_comm_thr alpha on -prefix QC_GA07/media/qc_12_radcor_rc_tcat_r03 -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   radcor.pb00.tcat/epi.ulay.r03+orig.HEAD
+++ Found input file:   radcor.pb00.tcat/radcor.20.r03.corr+orig.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_Y2BxsEz2T86
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.12244,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 110%] -> [0.000000, 9951.553040]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_Y2BxsEz2T86/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_Y2BxsEz2T86/tmp_olay.nii
+++ User-entered function range value value (0.7)
+++ Dimensions (xyzt): 86 98 78 1
+++ (initial) Slice spacing ordered (x,y,z) is:  12 14 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=6..78  y=3..95  z=1..76
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_Y2BxsEz2T86/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_Y2BxsEz2T86/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_mg9QIHCAQ6uxdwBsU_N3Wg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 515964 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.576263 4.317734 12.00693
+++ Will have the ref box central gapord: 10 13 10
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :383 
+[1] 200052
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_Y2BxsEz2T86++ Writing palette image to QC_GA07/media/qc_12_radcor_rc_tcat_r03.pbar.jpg
+++ Writing one 2768x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r03.sag.jpg'
+++ Writing one 2432x312 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r03.cor.jpg'
+++ Writing one 2432x392 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_12_radcor_rc_tcat_r03.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:10:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:13:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:10:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_12_radcor_rc_tcat_r03.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 9951.553040 -com SET_FUNC_RANGE  0.7 -com SET_THRESHNEW   0.4 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.576263 4.317734 12.00693 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_12_radcor_rc_tcat_r03.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_12_radcor_rc_tcat_r03.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_12_radcor_rc_tcat_r03.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_Y2BxsEz2T86 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_Y2BxsEz2T86'.
+
+[1]    Done                          Xvfb :383 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_12_radcor_rc_tcat_r03*
+
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay radcor.pb04.volreg/epi.ulay.r01+tlrc.HEAD -ulay_range 0% 110% -olay radcor.pb04.volreg/radcor.20.r01.corr+tlrc.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar Reds_and_Blues_Inv -func_range 0.7 -thr_olay 0.4 -olay_alpha Yes -olay_boxed No -blowup 4 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_13_radcor_rc_volreg_r01.pbar.jpg -pbar_comm_range ulay is 0th vol of EPI -pbar_comm_thr alpha on -prefix QC_GA07/media/qc_13_radcor_rc_volreg_r01 -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   radcor.pb04.volreg/epi.ulay.r01+tlrc.HEAD
+++ Found input file:   radcor.pb04.volreg/radcor.20.r01.corr+tlrc.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_Qm68XR3scOv
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.12244,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 110%] -> [0.000000, 10461.710788]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_Qm68XR3scOv/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_Qm68XR3scOv/tmp_olay.nii
+++ User-entered function range value value (0.7)
+++ Dimensions (xyzt): 77 92 77 1
+++ (initial) Slice spacing ordered (x,y,z) is:  11 13 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=0..76  y=0..91  z=0..76
+++ THD_zeropad: all pad values are zero - just copying dataset
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_Qm68XR3scOv/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_Qm68XR3scOv/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_g8MsVNbzhGw5TprOMxzYTg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 545468 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.5 19.25 18
+++ Will have the ref box central gapord: 11 13 11
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :288 
+[1] 200297
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_Qm68XR3scOv++ Writing palette image to QC_GA07/media/qc_13_radcor_rc_volreg_r01.pbar.jpg
+++ Writing one 2600x308 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r01.sag.jpg'
+++ Writing one 2180x308 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r01.cor.jpg'
+++ Writing one 2180x368 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r01.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:11:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:13:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:11:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_13_radcor_rc_volreg_r01.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 10461.710788 -com SET_FUNC_RANGE  0.7 -com SET_THRESHNEW   0.4 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.5 19.25 18 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_13_radcor_rc_volreg_r01.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_13_radcor_rc_volreg_r01.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_13_radcor_rc_volreg_r01.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_Qm68XR3scOv 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_Qm68XR3scOv'.
+
+[1]    Done                          Xvfb :288 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_13_radcor_rc_volreg_r01*
+
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay radcor.pb04.volreg/epi.ulay.r02+tlrc.HEAD -ulay_range 0% 110% -olay radcor.pb04.volreg/radcor.20.r02.corr+tlrc.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar Reds_and_Blues_Inv -func_range 0.7 -thr_olay 0.4 -olay_alpha Yes -olay_boxed No -blowup 4 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_13_radcor_rc_volreg_r02.pbar.jpg -pbar_comm_range ulay is 0th vol of EPI -pbar_comm_thr alpha on -prefix QC_GA07/media/qc_13_radcor_rc_volreg_r02 -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   radcor.pb04.volreg/epi.ulay.r02+tlrc.HEAD
+++ Found input file:   radcor.pb04.volreg/radcor.20.r02.corr+tlrc.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_BHxTKooQdXN
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.12244,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 110%] -> [0.000000, 10385.366234]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_BHxTKooQdXN/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_BHxTKooQdXN/tmp_olay.nii
+++ User-entered function range value value (0.7)
+++ Dimensions (xyzt): 77 92 77 1
+++ (initial) Slice spacing ordered (x,y,z) is:  11 13 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=0..76  y=0..91  z=0..76
+++ THD_zeropad: all pad values are zero - just copying dataset
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_BHxTKooQdXN/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_BHxTKooQdXN/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_K1x8E-Cew5hYBgLugMb6hg argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 545468 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.5 19.25 18
+++ Will have the ref box central gapord: 11 13 11
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :190 
+[1] 200535
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_BHxTKooQdXN++ Writing palette image to QC_GA07/media/qc_13_radcor_rc_volreg_r02.pbar.jpg
+++ Writing one 2600x308 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r02.sag.jpg'
+++ Writing one 2180x308 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r02.cor.jpg'
+++ Writing one 2180x368 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r02.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:11:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:13:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:11:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_13_radcor_rc_volreg_r02.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 10385.366234 -com SET_FUNC_RANGE  0.7 -com SET_THRESHNEW   0.4 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.5 19.25 18 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_13_radcor_rc_volreg_r02.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_13_radcor_rc_volreg_r02.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_13_radcor_rc_volreg_r02.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_BHxTKooQdXN 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_BHxTKooQdXN'.
+
+[1]    Done                          Xvfb :190 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_13_radcor_rc_volreg_r02*
+
+++ olay_alpha has known value: Yes
+++ pbar name has known extension: jpg
+++ My command:
+   @chauffeur_afni -ulay radcor.pb04.volreg/epi.ulay.r03+tlrc.HEAD -ulay_range 0% 110% -olay radcor.pb04.volreg/radcor.20.r03.corr+tlrc.HEAD -box_focus_slices AMASK_FOCUS_OLAY -cbar Reds_and_Blues_Inv -func_range 0.7 -thr_olay 0.4 -olay_alpha Yes -olay_boxed No -blowup 4 -set_subbricks 0 0 0 -opacity 9 -pbar_saveim QC_GA07/media/qc_13_radcor_rc_volreg_r03.pbar.jpg -pbar_comm_range ulay is 0th vol of EPI -pbar_comm_thr alpha on -prefix QC_GA07/media/qc_13_radcor_rc_volreg_r03 -save_ftype JPEG -montx 7 -monty 1 -montgap 1 -montcolor black -set_xhairs OFF -label_mode 1 -label_size 3 -do_clean
+
+++ Using AFNI ver : AFNI_21.2.04
+++ chauffeur ver  : 6.26
+
+------------------ start of optionizing ------------------
+
+++ Found input file:   radcor.pb04.volreg/epi.ulay.r03+tlrc.HEAD
+++ Found input file:   radcor.pb04.volreg/radcor.20.r03.corr+tlrc.HEAD
+++ Using blowup factor: 4
+++ Using opacity:  9
+++ Making temporary work directory to copy vis files: QC_GA07/media/__tmp_chauf_TBNQBeXn9uo
+++ Converted 0 to labels
+++ Final subbrick indices: 0 0 0
+++ Copy ulay to visualize (volumetric) within user's range:
+++ Ulay range calc for >100%ile ulay max:
+   calculating 98%ile value, and then
+   multiplying it by a scale factor = 1.12244,
+   in order to produce the 98%ile value
+++ Ulay to be visualized within user range:
+  [0%, 110%] -> [0.000000, 10393.073144]
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_TBNQBeXn9uo/tmp_ulay.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__tmp_chauf_TBNQBeXn9uo/tmp_olay.nii
+++ User-entered function range value value (0.7)
+++ Dimensions (xyzt): 77 92 77 1
+++ (initial) Slice spacing ordered (x,y,z) is:  11 13 11
+++ 3dAutomask: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Emperor Zhark
+++ 3dAutobox: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Auto bbox: x=0..76  y=0..91  z=0..76
+++ THD_zeropad: all pad values are zero - just copying dataset
+++ 3dAutobox: output dataset = QC_GA07/media/__tmp_chauf_TBNQBeXn9uo/ulay_box_0.nii
+++ 3dmaskdump: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Executing 3dcalc()
+ argv[0]=3dcalc argv[1]=-a argv[2]=QC_GA07/media/__tmp_chauf_TBNQBeXn9uo/ulay_box_0.nii[0] argv[3]=-expr argv[4]=a argv[5]=-byte argv[6]=-session argv[7]=/tmp argv[8]=-prefix argv[9]=3dcalc_AFN_v-cKNMaJeUlojulp9wyMUw argv[10]=-verbose
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Computing sub-brick 0
+++ Scaling output to type byte brick(s)
+++ Sub-brick 0: no scale factor
+++ Computing output statistics
+++ 545468 voxels in the entire dataset (no mask)
+++ 1 voxels in the boxes and/or balls
+++ Using only the boxes+balls mask
+++ How many coors? 3
+++ Will have the ref box central coors : SET_DICOM_XYZ 2.5 19.25 18
+++ Will have the ref box central gapord: 11 13 11
+
+------------------- end of optionizing -------------------
+
+ -- trying to start Xvfb :347 
+[1] 200759
++/mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__tmp_chauf_TBNQBeXn9uo++ Writing palette image to QC_GA07/media/qc_13_radcor_rc_volreg_r03.pbar.jpg
+++ Writing one 2600x308 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r03.sag.jpg'
+++ Writing one 2180x308 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r03.cor.jpg'
+++ Writing one 2180x368 image to filter '/usr/local/fsl/bin/cjpeg -quality 95 > QC_GA07/media/qc_13_radcor_rc_volreg_r03.axi.jpg'
+
+AFNI QUITTs!
+
++++ Command Echo:
+   afni -q -no1D -noplugins -no_detach -com SWITCH_UNDERLAY tmp_ulay.nii -com SWITCH_OVERLAY  tmp_olay.nii -com SEE_OVERLAY     + -com OPEN_WINDOW sagittalimage opacity=9 mont=7x1:11:1:black crop=0:0,0:0 -com OPEN_WINDOW coronalimage  opacity=9 mont=7x1:13:1:black crop=0:0,0:0 -com OPEN_WINDOW axialimage    opacity=9 mont=7x1:11:1:black crop=0:0,0:0 -com SET_PBAR_ALL    -99 1 Reds_and_Blues_Inv -com PBAR_SAVEIM QC_GA07/media/qc_13_radcor_rc_volreg_r03.pbar.jpg dim=64x512H -com SET_SUBBRICKS   0 0 0 -com SET_ULAY_RANGE A.all 0.000000 10393.073144 -com SET_FUNC_RANGE  0.7 -com SET_THRESHNEW   0.4 * -com SET_FUNC_ALPHA  Yes -com SET_FUNC_BOXED  No -com SET_FUNC_RESAM  NN.NN -com SET_XHAIRS      OFF -com SET_XHAIR_GAP   -1 -com SET_DICOM_XYZ 2.5 19.25 18 -com SAVE_JPEG sagittalimage QC_GA07/media/qc_13_radcor_rc_volreg_r03.sag blowup=4 -com SAVE_JPEG coronalimage  QC_GA07/media/qc_13_radcor_rc_volreg_r03.cor blowup=4 -com SAVE_JPEG axialimage    QC_GA07/media/qc_13_radcor_rc_volreg_r03.axi blowup=4 -com QUITT QC_GA07/media/__tmp_chauf_TBNQBeXn9uo 
+
+
++* Removing temporary image directory 'QC_GA07/media/__tmp_chauf_TBNQBeXn9uo'.
+
+[1]    Done                          Xvfb :347 -screen 0 1024x768x24
+
+++ DONE (good exit)
+   see: QC_GA07/media/qc_13_radcor_rc_volreg_r03*
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+++ Check for corr matrix warnings in: QC_GA07/media/qc_14_warns_xmat.dat
+++ Check for censor fraction warnings (general): QC_GA07/media/qc_15_warns_cen_total.dat
+++ Prepare for running @djunct_edgy_align_check (ver = 1.45)
+++ Copy refbox (vr_base_min_outlier_ts_ns+orig) to workdir
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_2XRjAJaeshZ/REFBOX.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_2XRjAJaeshZ/eac_0_cp.nii
+++ 3dAllineate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Zhark the Registrator
+++ Source dataset: /mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__workdir_EAC_2XRjAJaeshZ/eac_0_cp.nii
+++ Base dataset:   (not given)
+++ Loading datasets into memory
+ +        -cmass x y z shifts =    0.000    0.000    0.000
+ +  shift search range is +/- =   73.204   83.538   66.314
+++ OpenMP thread count = 15
+++ ========== Applying transformation to 1 sub-bricks ==========
+++ wsinc5 interpolation setup:
+ +   taper function  = Min sidelobe 3 term
+ +   taper cut point = 0.000
+ +   window radius   = 5 voxels
+ +   window shape    = Cubical
+ +   The above can be altered via the AFNI_WSINC5_* environment variables.
+ +  (To avoid this message, 'setenv AFNI_WSINC5_SILENT YES'.)
+ +   wsinc5 CUBE(5) mask has 1000 points
+++ Output dataset QC_GA07/media/__workdir_EAC_2XRjAJaeshZ/eac_1_grid2olay.nii
+++ 3dAllineate: total CPU time = 0.0 sec  Elapsed = 9.4
+++ ###########################################################
+++ Output dataset ./eac_2_ulay_shrp.nii
+++ Just copy olay, bc ulay will get regridded
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+[7m** FATAL ERROR:[0m can't open dataset MPRAGE.GA07_unif_al_junk+orig
+** Program compile date = Jul 28 2021
+QC_GA07/media/__workdir_EAC_2XRjAJaeshZ: No such file or directory.
+++ Prepare for running @djunct_edgy_align_check (ver = 1.45)
+++ Copy refbox (vr_base_min_outlier_ts_ns+orig) to workdir
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_K9uaxViQiWe/REFBOX.nii
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+++ Output dataset ./QC_GA07/media/__workdir_EAC_K9uaxViQiWe/eac_0_cp.nii
+++ 3dAllineate: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: Zhark the Registrator
+++ Source dataset: /mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/media/__workdir_EAC_K9uaxViQiWe/eac_0_cp.nii
+++ Base dataset:   (not given)
+++ Loading datasets into memory
+ +        -cmass x y z shifts =    0.000    0.000    0.000
+ +  shift search range is +/- =   73.204   83.538   66.314
+++ OpenMP thread count = 15
+++ ========== Applying transformation to 1 sub-bricks ==========
+++ wsinc5 interpolation setup:
+ +   taper function  = Min sidelobe 3 term
+ +   taper cut point = 0.000
+ +   window radius   = 5 voxels
+ +   window shape    = Cubical
+ +   The above can be altered via the AFNI_WSINC5_* environment variables.
+ +  (To avoid this message, 'setenv AFNI_WSINC5_SILENT YES'.)
+ +   wsinc5 CUBE(5) mask has 1000 points
+++ Output dataset QC_GA07/media/__workdir_EAC_K9uaxViQiWe/eac_1_grid2olay.nii
+++ 3dAllineate: total CPU time = 0.0 sec  Elapsed = 12.4
+++ ###########################################################
+++ Output dataset ./eac_2_ulay_shrp.nii
+++ Just copy olay, bc ulay will get regridded
+++ 3dcalc: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+++ Authored by: A cast of thousands
+[7m** FATAL ERROR:[0m can't open dataset MPRAGE.GA07_unif_flip_al_junk+orig
+** Program compile date = Jul 28 2021
+QC_GA07/media/__workdir_EAC_K9uaxViQiWe: No such file or directory.
+++ Check basic summary quants from proc in: QC_GA07/media/qc_18_qsumm_ssrev.dat
+
+
+# +++++++++++ Check output of @ss_review_basic +++++++++++ #
+
+
+subject ID                : GA07
+AFNI version              : AFNI_21.2.04
+AFNI package              : linux_ubuntu_16_64
+TR                        : 0.46
+TRs removed (per run)     : 0
+num stim classes provided : 0
+final anatomy dset        : anat_final.GA07+tlrc.HEAD
+final stats dset          : NO_STATS
+final errts dset          : errts.GA07.tproject+tlrc.HEAD
+orig voxel counts         : 86	98	78
+orig voxel resolution     : 2.682927	2.682927	2.682927
+orig volume center        : 1.234795	2.976254	10.665459
+final voxel resolution    : 2.500000	2.500000	2.500000
+
+motion limit              : 0.4
+num TRs above mot limit   : 21
+average motion (per TR)   : 0.0835803
+average censored motion   : 0.0795063
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+max motion displacement   : 4.5182
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+max censored displacement : 4.5182
+outlier limit             : 0.05
+average outlier frac (TR) : 0.00244111
+num TRs above out limit   : 20
+flip guess                : NO_FLIP
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+num runs found            : 3
+num TRs per run           : 1096 1096 1096
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+num TRs per run (applied) : 1079 1078 1078
+num TRs per run (censored): 17 18 18
+fraction censored per run : 0.0155109 0.0164234 0.0164234
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+TRs total (uncensored)    : 3288
+TRs total                 : 3235
+degrees of freedom used   : 51
+degrees of freedom left   : 3184
+
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+TRs censored              : 53
+censor fraction           : 0.016119
+num regs of interest      : 0
+
+TSNR average              : 140.224
+global correlation (GCOR) : 0.09119
+anat/EPI mask Dice coef   : 0.862709
+anat/templ mask Dice coef : 0.898639
+blur estimates (ACF)      : 0.831506 3.4044 11.5238
+blur estimates (FWHM)     : 0 0 0
+
+
+apqc_make_html.py -qc_dir QC_GA07
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+
+++ Done! Wrote QC HTML.  To check, consider:
+
+   afni_open -b QC_GA07/index.html
+
+echo \nconsider running: \n\n    afni_open -b /mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/index.html\n
+
+consider running: 
+
+    afni_open -b /mnt/ext5/GA/fmri_data/preproc_data/GA07/QC_GA07/index.html
+
+endif
+cd ..
+echo execution finished: `date`
+date
+execution finished: Thu Jan 19 09:30:17 PM KST 2023
