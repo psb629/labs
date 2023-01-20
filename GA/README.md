@@ -8,6 +8,7 @@ data_dir = https://drive.google.com/drive/folders/1yEdRzP-z1fc78sWKCj7NQARx_5E4v
 script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 # Behavioral Analysis
+
 [extract.regressor.reward_per_trial.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.reward_per_trial.py) -s subject -t time_shift (default=0s)
 
 ## Raw Data
@@ -28,10 +29,13 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 # fMRI Analysis
 
 ## preprocessing (GP-like versionl, since Jan.18.2023)
+
 [a1.convert_dcm.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a1.convert_dcm.zsh) -s subject
+
 [a2.preproc.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a2.preproc.zsh) -s suject
 
 ## make a group full_mask
+
 [3dmask_tool.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dmask_tool.zsh) -f fraction (default=0.7)
 
 ## GLM results
@@ -45,7 +49,9 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 4. 4targets
 
 5. rewards
+
 [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s)
+
 [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
 
 ## ROIs

@@ -415,3 +415,28 @@ end
 ++ opened source dataset 'pb02.GA42.r03.tshift+orig'
 ++ Processing -nwarp 
 ++ Warping:.[R].................................................Z
+++ Output dataset ./pb03.GA42.r03.blip+orig.BRIK
+++ total Elapsed time = 561.5 sec
+end
+3dbucket -prefix vr_base_min_outlier pb03.GA42.r01.blip+orig[31]
+++ 3dbucket: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+align_epi_anat.py -anat2epi -anat MPRAGE.GA42_unif+orig -save_skullstrip -suffix _al_junk -epi vr_base_min_outlier+orig -epi_base 0 -epi_strip 3dAutomask -cost lpa -giant_move -check_flip -volreg off -tshift off
+/usr/local/afni/abin/afnipy/lib_afni1D.py:1302: SyntaxWarning: 'str' object is not callable; perhaps you missed a comma?
+  print('** uncensor from vec: nt = %d, but nocen len = %d' \
+#++ align_epi_anat version: 1.62
+#++ turning off volume registration
+#Script is running (command trimmed):
+  3dAttribute DELTA ./vr_base_min_outlier+orig
+#Script is running (command trimmed):
+  3dAttribute DELTA ./vr_base_min_outlier+orig
+#Script is running:
+  3dAttribute DELTA /mnt/ext5/GA/fmri_data/preproc_data/GA42/MPRAGE.GA42_unif+orig
+#++ Multi-cost is lpa
+#++ Removing all the temporary files
+#Script is running:
+  \rm -f ./__tt_vr_base_min_outlier*
+#Script is running:
+  \rm -f ./__tt_MPRAGE.GA42_unif*
+#Script is running (command trimmed):
+  3dcopy ./MPRAGE.GA42_unif+orig ./MPRAGE.GA42_unif_unflipped+orig
+++ 3dcopy: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]

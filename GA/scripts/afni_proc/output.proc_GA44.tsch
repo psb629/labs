@@ -245,3 +245,10 @@ end
 ++ Elapsed despike time =  9s 509ms
 
 ++ FINAL: 412626464 data points, 16871968 edits [4.089%], 1793328 big edits [0.435%]
+++ Output dataset ./pb01.GA44.r03.despike+orig.BRIK
+end
+foreach run ( 01 02 03 )
+3dTshift -tzero 0 -quintic -prefix pb02.GA44.r01.tshift pb01.GA44.r01.despike+orig
+++ 3dTshift: AFNI version=AFNI_21.2.04 (Jul 28 2021) [64-bit]
+[7m*+ WARNING:[0m dataset is already aligned in time!
+[7m*+ WARNING:[0m ==>> output dataset is just a copy of input dataset
