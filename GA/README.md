@@ -11,6 +11,8 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 [extract.regressor.reward_per_trial.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.reward_per_trial.py) -s subject -t time_shift (default=0s)
 
+[extract.regressor.movement.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.movement.py) -s subject -t time_shift (default=0s)
+
 ## Raw Data
 ```zsh
 (GA) $data_dir/behav_data/$subj-fmri.mat
@@ -52,7 +54,15 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s)
 
+[extract.reward_per_trial.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.reward_per_trial.zsh) -t time_shift (default=0s)
+
 [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
+
+6. cursor trajectory
+
+[GLM.movement.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.movement.shifted.zsh) -s subject -t time_shift (default=0s)
+
+[extract.movement.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.movement.zsh) -t time_shift (default=0s)
 
 ## ROIs
 

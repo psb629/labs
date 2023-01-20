@@ -41,9 +41,9 @@ for subj in $list_subj
 {
 	setA=($setA $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
-3dttest++ -mask $mask							\
-	-setA $setA									\
-	-prefix GP.dlPFC_cTBS.toz.n$#list_dlpfc.nii	\
+3dttest++ -mask $mask					\
+	-setA $setA							\
+	-prefix GA.toz.n$#list_dlpfc.nii	\
 	-ClustSim 4
 ## ============================================================ ##
 ## extract the Z stat
