@@ -3,6 +3,7 @@
 ## ============================================================ ##
 ## default
 time_shift=0
+analysis='GLM'
 ## ============================================================ ##
 ## $# = the number of arguments
 while (( $# )); do
@@ -15,21 +16,29 @@ while (( $# )); do
 			## string
 			time_shift="$2"
 		;;
+		-a | --analysis)
+			analysis="$2"
+		;;
 	esac
 	shift ##takes one argument
 done
 tmp=`printf "%.1f\n" $time_shift`
 time_shift=$tmp
+if [[ $analysis = 'GLM' ]]; then
+	pp='stats'
+elif [[ $analysis = '3dREMLfit' ]]; then
+	pp='funcR'
+fi
 ## ============================================================ ##
 dir_root="/mnt/ext5/GP/fmri_data/stats"
-dir_stat="$dir_root/AM/GLM.reward_per_trial/${time_shift}s_shifted"
+dir_stat="$dir_root/AM/$analysis.reward_per_trial/${time_shift}s_shifted"
 ## ============================================================ ##
 list_dname=(`find $dir_stat -maxdepth 1 -type d -name "GP??"`)
 ## ============================================================ ##
  #conda activate GA
 for dname in $list_dname
 {
-	fname=`find $dname -type f -name "stats.Rew.GP??.nii"`
+	fname=`find $dname -type f -name "$pp.Rew.GP??.nii"`
 
 	dof=`3dinfo -verb $fname'[Rew#1_Tstat]' | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
 
