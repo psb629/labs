@@ -76,20 +76,19 @@ def func_AMregressor(datum):
     nblock = 8
     assert 1+ntrial*nblock==tpr
 
+    ## onset times
     onsettime = datum['LearnTrialStartTime'][0]
-    idx_editpoint = [i+1 for i,t in enumerate(onsettime[:-2]) if (onsettime[i]>onsettime[i+1])]
-    assert (np.diff(idx_editpoint)==tpr).all() # Are you sure the fact that 145 trials per run?
+    tmp = np.where(np.diff(onsettime)<0)[0]
+    idx_endpoint = tmp[:nrun] if tmp.shape[0]>=nrun else np.concatenate(([-1],tmp))
+    tmp = np.zeros((nrun, tpr), dtype=float)
+    for run, idx_end in enumerate(idx_endpoint):
+        tmp[run,:] = onsettime[idx_end+1:idx_end+1+tpr]*0.001
+    onsettime=tmp
+    assert ~(onsettime==0).sum()
 
     ## target ID
     tmp = datum['targetID'][0]
     targetID = tmp[tmp!=0][:tpr*nrun]    # 291 trials = 97 trial/run * 3 runs
-
-    ## onset times
-    tmp = np.zeros((nrun, tpr), dtype=float)
-    for run in range(nrun):
-        idx = idx_editpoint[run]
-        tmp[run,:] = onsettime[idx:idx+tpr]*0.001
-    onsettime=tmp
 
     ## counting how many times did they hit the target
     hit_or_not = np.zeros((tpr*nrun, nS), dtype=bool) # (# of trials/run, # if frames/trial)
