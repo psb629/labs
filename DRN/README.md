@@ -6,6 +6,7 @@
 	```
 	$ ubuntu-drivers devices
 	```
+
 2. Install recommended driver
 	```
 	$ sudo ubuntu-drivers autoinstall
@@ -17,14 +18,36 @@
 	```
 	$ sudo apt install nvidia-driver-???
 	```
+
 3. Reboot your system
 	```
 	$ sudo reboot
 	```
 
-### Check a version of NVIDIA
+### Check softwares
+- An architecture name of a graphic card 
+	```
+	dpkg -s libc6 | Arch
+	```
+
+- A version of Ubuntu
+	```
+	lsb_release
+	```
+
+- A version of NVIDIA Driver & CUDA
 	```
 	$ nvidia-smi
+	```
+
+- A version of python3
+	```
+	$ python3 --version
+	```
+
+- A version of pytorch
+	```
+	$ python3 -m pip list | grep torch
 	```
 
 ### Install pytorch
