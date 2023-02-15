@@ -38,7 +38,7 @@ shift = float(sys.argv[idx+1]) if idx else 0
 dir_root = '/mnt/ext5/GA'
 dir_behav = join(dir_root, 'behav_data')
 
-dir_reg = join(dir_behav, 'regressors/boxcar/4targets')
+dir_reg = join(dir_behav, 'regressors/IM/4targets')
 makedirs(dir_reg, exist_ok=True)
 ## ==================================================== ##
 ## the number of trials per run
