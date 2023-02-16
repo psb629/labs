@@ -38,6 +38,10 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 [a2.preproc.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a2.preproc.zsh) -s suject -p phase
 
+## extract a global signal within a group full mask
+
+[extract.global_signal.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.global_signal.zsh) -s subject -p phase
+
 ## make a group full_mask
 
 [3dmask_tool.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dmask_tool.zsh) -f fraction (default=0.7)
@@ -45,6 +49,10 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 ## GLM results
 
 1. move-stop
+
+([extract.global_signal.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.global_signal.zsh) is necessary!)[GLM.move-stop.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.move-stop.zsh) -s subject -GSR global_signal_regression (default='no')
+
+[3dttest++.move-stop.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.move-stop.zsh) -GSR global_signal_regression (default='no')
 
 2. disp_14sensors
 
