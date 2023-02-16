@@ -104,6 +104,14 @@ else:
 targetID, onsettime = onset_times(datum)
 targetID = targetID.reshape(nrun,tpr)[:,1:]
 onsettime = onsettime[:,1:]
+np.savetxt(
+    join(dir_reg, '%s.4targets.practice.txt'%(subj))
+    , X=onsettime[:3], fmt='%.4f', delimiter=' ', newline='\n'
+)
+np.savetxt(
+    join(dir_reg, '%s.4targets.unpractice.txt'%(subj))
+    , X=onsettime[3:], fmt='%.4f', delimiter=' ', newline='\n'
+)
 
 for tID in [1,5,21,25]:
     onset = onsettime[targetID==tID].reshape(6,-1)
