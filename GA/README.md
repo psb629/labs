@@ -13,6 +13,8 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 [extract.regressor.movement.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.movement.py) -s subject -t time_shift (default=0s)
 
+[extract.regressor.4targets.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.4targets.py) -s subject -t time_shift (default=0s)
+
 ## Raw Data
 ```zsh
 (GA) $data_dir/behav_data/$subj-fmri.mat
@@ -34,7 +36,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 [a1.convert_dcm.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a1.convert_dcm.zsh) -s subject
 
-[a2.preproc.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a2.preproc.zsh) -s suject
+[a2.preproc.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a2.preproc.zsh) -s suject -p phase
 
 ## make a group full_mask
 

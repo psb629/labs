@@ -5,8 +5,7 @@
 res=2.683
 fwhm=4
 thresh_motion=0.4
-list_run=('r01' 'r02' 'r03')
-
+## ============================================================ ##
 ## $# = the number of arguments
 while (( $# )); do
 	key="$1"
@@ -18,35 +17,61 @@ while (( $# )); do
 			## string
 			subj="$2"
 		;;
+		-p | --phase)
+			case $2 in
+				0 | 'localizer')
+					phase='localizer'
+					list_run=('r00')
+				;;
+				1 | 'prac' | 'practice')
+					phase='prac'
+					list_run=('r01' 'r02' 'r03')
+				;;
+				2 | 'unprac' | 'unpractice')
+					phase='unprac'
+					list_run=('r04' 'r05' 'r06')
+				;;
+				*)
+					phase=false
+				;;
+			esac
+		;;
 	esac
 	shift ##takes one argument
 done
+if [ $phase = false ]; then
+	exit
+fi
 ## ============================================================ ##
 dir_root="/mnt/ext5/GA/fmri_data"
 dir_raw="$dir_root/raw_data/$subj"
-dir_preproc="$dir_root/preproc_data/$subj"
+dir_preproc="$dir_root/preproc_data/$subj/$phase"
 
-dir_script="/home/sungbeenpark/Github/labs/GA/scripts/afni_proc"
+dir_script="/home/sungbeenpark/Github/labs/GA/scripts/afni_proc/$phase"
 if [[ ! -d $dir_script ]]; then
 	mkdir -p -m 755 $dir_script
 fi
 
 dir_output=$dir_preproc
 ## ============================================================ ##
+dsets=()
+for run in $list_run
+{
+	dsets=($dsets $dir_raw/func.$subj.$run.nii)
+}
+print $dsets
+## ============================================================ ##
 cd $dir_script
 afni_proc.py																			\
 	-subj_id				$subj														\
-	-script					proc_$subj.tsch												\
+	-script					proc_$subj.$phase.tsch										\
 	-out_dir				$dir_output													\
 	-blocks					despike tshift align tlrc volreg blur mask scale regress	\
 	-copy_anat				$dir_raw/MPRAGE.$subj.nii									\
 	-anat_has_skull			yes															\
 	-anat_uniform_method	unifize														\
 	-anat_unif_GM			yes															\
-	-dsets																				\
-							$dir_raw/func.$subj.r01.nii									\
-							$dir_raw/func.$subj.r02.nii									\
-							$dir_raw/func.$subj.r03.nii									\
+	-dsets					$dsets														\
 	-radial_correlate_blocks															\
 							tcat volreg													\
 	-blip_forward_dset		$dir_raw/dist_AP.$subj.nii									\
