@@ -1,4 +1,4 @@
-[subjects list]()
+[subjects list](https://docs.google.com/spreadsheets/d/1CHrMf4PZVMOKx0OU1QyDeHqPXUr98Q3Y/edit?usp=sharing&ouid=113558884998217828683&rtpof=true&sd=true)
 
 =========================================================
 ### Install NVIDIA driver
@@ -32,7 +32,7 @@
 
 - A version of Ubuntu
 	```
-	lsb_release
+	lsb_release -a
 	```
 
 - A version of NVIDIA Driver & CUDA
@@ -51,6 +51,9 @@
 	```
 
 ### Install pytorch
+1. 
+
+2. Install a pytorch package
 	```
 	conda install pytorch==1.8.1 torchvision==0.9.1 torchaudio==0.8.1 cudatoolkit=11.3 -c pytorch -c conda-forge
 	```
