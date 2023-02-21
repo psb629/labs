@@ -66,4 +66,5 @@ afni_proc.py																			\
 	-regress_est_blur_epits																\
 	-regress_est_blur_errts																\
 	-html_review_style			pythonic
+ #	-execute
  #	-regress_run_clustsim	'yes
