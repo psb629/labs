@@ -54,9 +54,9 @@ afni_proc.py																			\
 	-tlrc_base				MNI152_2009_template_SSW.nii.gz								\
 	-tlrc_NL_warp																		\
 	-align_opts_aea																		\
-	-cost					lpa															\
-	-giant_move																			\
-	-check_flip																			\
+							-cost			lpa											\
+							-giant_move													\
+							-check_flip													\
 	-volreg_align_to		MIN_OUTLIER													\
 	-volreg_align_e2a																	\
 	-volreg_tlrc_warp																	\
