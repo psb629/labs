@@ -56,10 +56,10 @@ for nn in $list_dlpfc
 	subj="GP$nn"
 	setA=($setA $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
-3dttest++ -mask $mask							\
-	-setA $setA									\
-	-prefix GP.dlPFC_cTBS.toz.n$#list_dlpfc.nii	\
-	-toz
+3dttest++ -mask $mask						\
+	-setA $setA								\
+	-prefix dlPFC_cTBS.n$#list_dlpfc.nii
+ #	-toz
  #	-ClustSim 10
 
 ## m1
@@ -69,10 +69,10 @@ for nn in $list_m1
 	subj="GP$nn"
 	setB=($setB $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
-3dttest++ -mask $mask						\
-	-setA $setB								\
-	-prefix GP.M1_cTBS.toz.n$#list_m1.nii	\
-	-toz
+3dttest++ -mask $mask					\
+	-setA $setB							\
+	-prefix M1_cTBS.n$#list_m1.nii
+ #	-toz
 
 ## DLPFC (20Hz)
 setC=()
@@ -82,29 +82,46 @@ for nn in $list_20
 	setC=($setC $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
 }
 cd $dir_output
-3dttest++ -mask $mask							\
-	-setA $setC									\
-	-prefix GP.dlPFC_20Hz.toz.n$#list_20.nii	\
-	-toz
+3dttest++ -mask $mask					\
+	-setA $setC							\
+	-prefix dlPFC_20Hz.n$#list_20.nii
+ #	-toz
 ## ============================================================ ##
-## extract the Z stat
-3dcalc -a GP.dlPFC_cTBS.toz.n$#list_dlpfc.nii'[SetA_Zscr]' -expr 'a' -prefix GP.dlPFC_cTBS.Zscr.n$#list_dlpfc.nii
-3dcalc -a GP.M1_cTBS.toz.n$#list_m1.nii'[SetA_Zscr]' -expr 'a' -prefix GP.M1_cTBS.Zscr.n$#list_m1.nii
-3dcalc -a GP.dlPFC_20Hz.toz.n$#list_20.nii'[SetA_Zscr]' -expr 'a' -prefix GP.dlPFC_20Hz.Zscr.n$#list_20.nii
+## extract the t stat
+pname=$dir_output/"dlPFC_cTBS.Tstat.n$#list_dlpfc.nii"
+3dcalc -a dlPFC_cTBS.n$#list_dlpfc.nii'[SetA_Tstat]' -expr 'a' -prefix $pname
+dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+TtoZ --t_stat_map=$pname --dof=$dof --output_nii=$dir_output/"dlPFC_cTBS.Zscr.n$#list_dlpfc.nii"
+
+pname="$dir_output/M1_cTBS.Tstat.n$#list_m1.nii"
+3dcalc -a M1_cTBS.n$#list_m1.nii'[SetA_Tstat]' -expr 'a' -prefix $pname
+dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+TtoZ --t_stat_map=$pname --dof=$dof --output_nii=$dir_output/"M1_cTBS.Zscr.n$#list_m1.nii"
+
+pname=$dir_output/"dlPFC_20Hz.Tstat.n$#list_20.nii"
+3dcalc -a dlPFC_20Hz.n$#list_20.nii'[SetA_Tstat]' -expr 'a' -prefix $pname
+dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+TtoZ --t_stat_map=$pname --dof=$dof --output_nii=$dir_output/"dlPFC_20Hz.Zscr.n$#list_20.nii"
+
+## ============================================================ ##
+## extract the mean beta
+3dcalc -a dlPFC_cTBS.n$#list_dlpfc.nii'[SetA_mean]' -expr 'a' -prefix dlPFC_cTBS.mean.n$#list_dlpfc.nii
+3dcalc -a M1_cTBS.n$#list_m1.nii'[SetA_mean]' -expr 'a' -prefix M1_cTBS.mean.n$#list_m1.nii
+3dcalc -a dlPFC_20Hz.n$#list_20.nii'[SetA_mean]' -expr 'a' -prefix dlPFC_20Hz.mean.n$#list_20.nii
 ## ============================================================ ##
 ## Two sample t-test
-3dttest++ -mask $mask						\
-	-setA $setA								\
-	-setB $setB								\
-	-prefix GP.dlPFC_cTBS-M1_cTBS.toz.nii	\
-	-toz
-3dttest++ -mask $mask						\
-	-setA $setC								\
-	-setB $setB								\
-	-prefix GP.dlPFC_20Hz-M1_cTBS.toz.nii	\
-	-toz
-3dttest++ -mask $mask							\
-	-setA $setC									\
-	-setB $setA									\
-	-prefix GP.dlPFC_20Hz-dlPFC_cTBS.toz.nii	\
-	-toz
+3dttest++ -mask $mask					\
+	-setA $setA							\
+	-setB $setB							\
+	-prefix dlPFC_cTBS-M1_cTBS.nii		\
+ #	-toz
+3dttest++ -mask $mask					\
+	-setA $setC							\
+	-setB $setB							\
+	-prefix dlPFC_20Hz-M1_cTBS.nii		\
+ #	-toz
+3dttest++ -mask $mask					\
+	-setA $setC							\
+	-setB $setA							\
+	-prefix dlPFC_20Hz-dlPFC_cTBS.nii	\
+ #	-toz
