@@ -34,6 +34,6 @@ for dir_run in list_dir_run:
     for fname in list_fname:
         img = Image.open(fname)
 #         print(img.size)
-        step = fname.split('/')[-1].split('.')[0]
+        step = int(fname.split('/')[-1].split('.')[0])
         img_resized = img.resize((128,72))
-        img_resized.save(join(dir_output, fname.split('/')[-1]))
+        img_resized.save(join(dir_output, '%05d.png'%step))
