@@ -25,7 +25,7 @@ elif ('--pixels' in sys.argv):
     idx = sys.argv.index('--pixels')
     pxl=str(sys.argv[idx+1])
 else:
-    pxl = '(128,72)'
+    pxl='(128,72)'
 w,h = np.array(re.findall('\d+', pxl)).astype(int)
 # ======================================================== #
 dir_root = join("/mnt/ext5/DRN/behav_data", subj)
@@ -33,7 +33,7 @@ if not exists(dir_root):
     raise Exception(" %s doesn't exist!"%dir_root)
 # ======================================================== #
 list_dir_run = sorted(glob(join(dir_root, "Run?")))
-dir_resize = join(dir_root, 'resized')
+dir_resize = join(dir_root, 'resized_%dx%d'%(w,h))
 # ======================================================== #
 for dir_run in list_dir_run:
     run = dir_run.split('/')[-1]
