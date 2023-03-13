@@ -34,7 +34,7 @@ list_subj=(`ls $dir_stat | grep "G.[0-9][0-9]"`)
 ## ============================================================ ##
 mask="$dir_mask/mask.group.GA.n30.frac=0.7.nii"
 ## ============================================================ ##
-cd $dir_output
+cd $dir_stat
 
 setA=()
 for subj in $list_subj

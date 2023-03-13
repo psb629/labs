@@ -29,22 +29,22 @@ list_dname=(`find $dir_stat -maxdepth 1 -type d -name "GA??"`)
  #conda activate GA
 for dname in $list_dname
 {
-	output="$dname/Rew#1_Coef.nii"
-	if [[ -f $output ]]; then
-		continue
-	fi
-
 	fname=`find $dname -type f -name "stats.Rew.GA??.nii"`
 
-	dof=`3dinfo -verb $fname'[Rew#1_Tstat]' | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
-
 	## extract the coefficient
-	3dcalc -a $fname'[Rew#1_Coef]' -expr 'a' -prefix $output
+	output="$dname/Rew#1_Coef.nii"
+	if [[ ! -f $output ]]; then
+		3dcalc -a $fname'[Rew#1_Coef]' -expr 'a' -prefix $output
+	fi
 
- #	## extract T-stat then transfer to Z-stat
- #	tmp=$dname/tmp.nii
- #	3dcalc -a $fname'[Rew#1_Tstat]' -expr 'a' -prefix $tmp
- #
- #	TtoZ --t_stat_map=$tmp --dof=$dof --output_nii="$dname/Rew#1_Zstat.nii"
- #	rm $tmp
+	## extract T-stat then transfer to Z-stat
+	output="$dname/Rew#1_Zstat.nii"
+	if [[ ! -f $output ]]; then
+		tmp=$dname/tmp.nii
+		3dcalc -a $fname'[Rew#1_Tstat]' -expr 'a' -prefix $tmp
+
+		dof=`3dinfo -verb $fname'[Rew#1_Tstat]' | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+		TtoZ --t_stat_map=$tmp --dof=$dof --output_nii=$output
+		rm $tmp
+	fi
 }
