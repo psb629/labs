@@ -13,7 +13,7 @@
 - [3dTproject.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dTproject.zsh) -s subject
 
 ### making a group full mask
-- [3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dmask_tool.zsh) -f fraction (default=0.7)
+- [mk.mask.group.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/mk.mask.group.zsh) -f fraction (default=0.7)
 
 ### 1st level analysis
 #### GLM
