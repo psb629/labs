@@ -76,4 +76,6 @@
 
 - [s3.3dTproject.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/s3.3dTproject.zsh) -s subject
 
+- [mk.mask.group.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/mk.mask.group.zsh)
+
 ### GLM
