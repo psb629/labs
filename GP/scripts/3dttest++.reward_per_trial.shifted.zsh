@@ -61,19 +61,15 @@ fi
 case $run in
 	1 | 'r01')
 		run='r01'
-		input=$dir_preproc/pb06.$subj.r01.scale+tlrc.HEAD
 	;;
 	2 | 'r02')
 		run='r02'
-		input=$dir_preproc/pb06.$subj.r02.scale+tlrc.HEAD
 	;;
 	3 | 'r03')
 		run='r03'
-		input=$dir_preproc/pb06.$subj.r03.scale+tlrc.HEAD
 	;;
 	*)
 		run='rall'
-		input=$dir_preproc/pb06.$subj.r0?.scale+tlrc.HEAD
 	;;
 esac
 ## ============================================================ ##
