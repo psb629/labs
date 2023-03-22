@@ -1,41 +1,81 @@
 #!/bin/zsh
 
 ## ============================================================ ##
-## default
-time_shift=0
-## ============================================================ ##
 ## $# = the number of arguments
 while (( $# )); do
 	key="$1"
 	case $key in
-##		pattern)
-##			sentence
-##		;;
 		-t | --time_shift)
-			## string
-			time_shift="$2"
+			tt="$2"
+		;;
+		-r | --run)
+			run="$2"
+		;;
+		-g | --group)
+			group="$2"
 		;;
 	esac
 	shift ##takes one argument
 done
-tmp=`printf "%.1f\n" $time_shift`
-time_shift=$tmp
 ## ============================================================ ##
-list_dlpfc=( \
-	09 10 18 21 22 24 \
-	27 34 35 36 38 42 \
-	57 59 62 66 67	  \
-	)
-list_m1=( \
-	08 11 17 19 20 26 \
-	32 33 37 39 40 41 \
-	56 58 61 63 65	  \
-	)
-## GP50은 GP27과 동일인물
-list_20=( \
-	43 44 45 46 47 48 \
-	49 51 53 54 55 \
-	)
+if [ ! $tt ]; then
+	tt=0
+fi
+time_shift=`printf "%.1f\n" $tt`
+## ============================================================ ##
+case $group in
+	'dlpfc_cTBS' | 'dlPFC_cTBS' | 'DLPFC_cTBS')
+		group='DLPFC_cTBS'
+		list_nn=(
+			09 10 18 21 22 24 \
+			27 34 35 36 38 42 \
+			57 59 62 66 67	  \
+		)
+	;;
+	'm1_cTBS' | 'M1_cTBS')
+		group='M1_cTBS'
+		list_nn=(
+			08 11 17 19 20 26 \
+			32 33 37 39 40 41 \
+			56 58 61 63 65	  \
+		)
+	;;
+	'dlpfc_20Hz' | 'dlPFC_20Hz' | 'DLPFC_20Hz')
+		group='DLPFC_20Hz'
+		## GP50은 GP26과 동일인물
+		list_nn=(
+			43 44 45 46 47 48 \
+			49 51 53 54 55 \
+		)
+	;;
+	*)
+		group=false
+	;;
+esac
+if [ $group = false ]; then
+	print " You need to put the right value for -g"
+	print " e.g.) -g DLPFC_cTBS"
+	exit
+fi
+## ============================================================ ##
+case $run in
+	1 | 'r01')
+		run='r01'
+		input=$dir_preproc/pb06.$subj.r01.scale+tlrc.HEAD
+	;;
+	2 | 'r02')
+		run='r02'
+		input=$dir_preproc/pb06.$subj.r02.scale+tlrc.HEAD
+	;;
+	3 | 'r03')
+		run='r03'
+		input=$dir_preproc/pb06.$subj.r03.scale+tlrc.HEAD
+	;;
+	*)
+		run='rall'
+		input=$dir_preproc/pb06.$subj.r0?.scale+tlrc.HEAD
+	;;
+esac
 ## ============================================================ ##
 dir_root="/mnt/ext5/GP"
 stat="${time_shift}s_shifted"
@@ -48,81 +88,49 @@ dir_output=$dir_stat
 ## ============================================================ ##
 mask="$dir_mask/mask.group.day2.n42.frac=0.7.nii"
 ## ============================================================ ##
-cd $dir_output
-
-## DLPFC (dlpfc)
+## one sample t-test
 setA=()
-for nn in $list_dlpfc
+for nn in $list_nn
 {
 	subj="GP$nn"
-	setA=($setA $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
+	setA=($setA "$dir_stat/$subj/stats.Rew.$subj.$run.nii[Rew#1_Coef]")
 }
-3dttest++ -mask $mask						\
-	-setA $setA								\
-	-prefix dlPFC_cTBS.n$#list_dlpfc.nii
+pname="$dir_output/$run.$group.n$#list_nn.nii"
+3dttest++ -mask $mask	\
+	-setA $setA			\
+	-prefix $pname
  #	-toz
  #	-ClustSim 10
-
-## m1
-setB=()
-for nn in $list_m1
+## ============================================================ ##
+fname=$pname
+for pp in 'mean' 'Tstat'
 {
-	subj="GP$nn"
-	setB=($setB $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
+	prop=$pp
+	if [ $pp = 'mean' ]; then
+		prop='Coef'
+	fi
+	pname="$dir_output/$prop.$run.$group.n$#list_nn.nii"
+	3dcalc -a "${fname}[SetA_$pp]" -expr 'a' -prefix $pname
+	if [ $pp = 'Tstat' ]; then
+		dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+		TtoZ --t_stat_map=$pname --dof=$dof \
+			--output_nii="$dir_output/Zstat.$run.$group.n$#list_nn.nii"
+	fi
 }
-3dttest++ -mask $mask					\
-	-setA $setB							\
-	-prefix M1_cTBS.n$#list_m1.nii
- #	-toz
-
-## DLPFC (20Hz)
-setC=()
-for nn in $list_20
-{
-	subj="GP$nn"
-	setC=($setC $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
-}
-cd $dir_output
-3dttest++ -mask $mask					\
-	-setA $setC							\
-	-prefix dlPFC_20Hz.n$#list_20.nii
- #	-toz
 ## ============================================================ ##
-## extract the t stat
-pname=$dir_output/"dlPFC_cTBS.Tstat.n$#list_dlpfc.nii"
-3dcalc -a dlPFC_cTBS.n$#list_dlpfc.nii'[SetA_Tstat]' -expr 'a' -prefix $pname
-dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
-TtoZ --t_stat_map=$pname --dof=$dof --output_nii=$dir_output/"dlPFC_cTBS.Zscr.n$#list_dlpfc.nii"
-
-pname="$dir_output/M1_cTBS.Tstat.n$#list_m1.nii"
-3dcalc -a M1_cTBS.n$#list_m1.nii'[SetA_Tstat]' -expr 'a' -prefix $pname
-dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
-TtoZ --t_stat_map=$pname --dof=$dof --output_nii=$dir_output/"M1_cTBS.Zscr.n$#list_m1.nii"
-
-pname=$dir_output/"dlPFC_20Hz.Tstat.n$#list_20.nii"
-3dcalc -a dlPFC_20Hz.n$#list_20.nii'[SetA_Tstat]' -expr 'a' -prefix $pname
-dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
-TtoZ --t_stat_map=$pname --dof=$dof --output_nii=$dir_output/"dlPFC_20Hz.Zscr.n$#list_20.nii"
-
-## ============================================================ ##
-## extract the mean beta
-3dcalc -a dlPFC_cTBS.n$#list_dlpfc.nii'[SetA_mean]' -expr 'a' -prefix dlPFC_cTBS.mean.n$#list_dlpfc.nii
-3dcalc -a M1_cTBS.n$#list_m1.nii'[SetA_mean]' -expr 'a' -prefix M1_cTBS.mean.n$#list_m1.nii
-3dcalc -a dlPFC_20Hz.n$#list_20.nii'[SetA_mean]' -expr 'a' -prefix dlPFC_20Hz.mean.n$#list_20.nii
-## ============================================================ ##
-## Two sample t-test
-3dttest++ -mask $mask					\
-	-setA $setA							\
-	-setB $setB							\
-	-prefix dlPFC_cTBS-M1_cTBS.nii		\
- #	-toz
-3dttest++ -mask $mask					\
-	-setA $setC							\
-	-setB $setB							\
-	-prefix dlPFC_20Hz-M1_cTBS.nii		\
- #	-toz
-3dttest++ -mask $mask					\
-	-setA $setC							\
-	-setB $setA							\
-	-prefix dlPFC_20Hz-dlPFC_cTBS.nii	\
- #	-toz
+ ### Two sample t-test
+ #3dttest++ -mask $mask					\
+ #	-setA $setA							\
+ #	-setB $setB							\
+ #	-prefix dlPFC_cTBS-M1_cTBS.nii		\
+ # #	-toz
+ #3dttest++ -mask $mask					\
+ #	-setA $setC							\
+ #	-setB $setB							\
+ #	-prefix dlPFC_20Hz-M1_cTBS.nii		\
+ # #	-toz
+ #3dttest++ -mask $mask					\
+ #	-setA $setC							\
+ #	-setB $setA							\
+ #	-prefix dlPFC_20Hz-dlPFC_cTBS.nii	\
+ # #	-toz

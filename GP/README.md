@@ -27,9 +27,9 @@
 1. GLM
 - [GLM.move-stop.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.move-stop.zsh) -s subject
 - [GLM.reward_per_1s.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_1s.zsh) -s subject
-- [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s)
+- ([extract.lines.from_txt.py](https://github.com/psb629/labs/blob/master/GP/scripts/extract.lines.from_txt.py) is necessary!)[GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -r run (default='all')
 - [GLM.movement.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/GLM.movement.shifted.zsh) -s subject -t time_shift (default=0s)
-- [extract.reward_per_trial.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/extract.reward_per_trial.zsh) -t time_shift (default=0s)
+- [extract.reward_per_trial.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/extract.reward_per_trial.zsh) -t time_shift (default=0s) -a analysis (default='GLM') -r run (default='all')
 
 2. REML
 - [3dREMLfit.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dREMLfit.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s)
@@ -38,7 +38,7 @@
 1. GLM
 - [3dttest++.move-stop.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dttest++.move-stop.zsh)
 - [3dttest++.reward_per_1s.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dttest++.reward_per_1s.zsh)
-- [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
+- [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s) -r run (default='all') -g group
 - [3dttest++.movement.shifted.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/3dttest++.movement.shifted.zsh) -t time_shift (default=0s)
 
 2. REML
