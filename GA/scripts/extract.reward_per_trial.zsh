@@ -1,9 +1,6 @@
 #!/bin/zsh
 
 ## ============================================================ ##
-## default
-time_shift=0
-## ============================================================ ##
 ## $# = the number of arguments
 while (( $# )); do
 	key="$1"
@@ -11,40 +8,72 @@ while (( $# )); do
 ##		pattern)
 ##			sentence
 ##		;;
+		-s | --subject)
+			subj="$2"
+		;;
 		-t | --time_shift)
-			## string
-			time_shift="$2"
+			tt="$2"
+		;;
+		-r | --run)
+			run="$2"
+		;;
+		-a | --analysis)
+			analysis="$2"
 		;;
 	esac
 	shift ##takes one argument
 done
-tmp=`printf "%.1f\n" $time_shift`
-time_shift=$tmp
+## ============================================================ ##
+if [ ! $tt ]; then
+	tt=0
+fi
+time_shift=`printf "%.1f\n" $tt`
+stat="${time_shift}s_shifted"
+## ============================================================ ##
+case $analysis in
+	'GLM' | 'glm')
+		analysis='GLM'
+	;;
+	'3dREMLfit' | '3dremlfit')
+		analysis='3dREMLfit'
+	;;
+	*)
+		analysis='GLM'
+	;;
+esac
+## ============================================================ ##
+case $run in
+	1 | 'r01')
+		run='r01'
+		rr=1
+	;;
+	2 | 'r02')
+		run='r02'
+		rr=2
+	;;
+	3 | 'r03')
+		run='r03'
+		rr=3
+	;;
+	*)
+		run='rall'
+	;;
+esac
 ## ============================================================ ##
 dir_root="/mnt/ext5/GA/fmri_data/stats"
-dir_stat="$dir_root/AM/GLM.reward_per_trial/${time_shift}s_shifted"
-## ============================================================ ##
-list_dname=(`find $dir_stat -maxdepth 1 -type d -name "GA??"`)
+dir_stat="$dir_root/AM/$analysis.reward_per_trial/$stat/$subj"
+
+dir_output=$dir_stat
 ## ============================================================ ##
  #conda activate GA
-for dname in $list_dname
+fname="$dir_stat/stats.Rew.$subj.$run.nii"
+for prop in 'Rew#1_Coef' 'Rew#1_Tstat'
 {
-	fname=`find $dname -type f -name "stats.Rew.GA??.nii"`
-
-	## extract the coefficient
-	output="$dname/Rew#1_Coef.nii"
-	if [[ ! -f $output ]]; then
-		3dcalc -a $fname'[Rew#1_Coef]' -expr 'a' -prefix $output
-	fi
-
-	## extract T-stat then transfer to Z-stat
-	output="$dname/Rew#1_Zstat.nii"
-	if [[ ! -f $output ]]; then
-		tmp=$dname/tmp.nii
-		3dcalc -a $fname'[Rew#1_Tstat]' -expr 'a' -prefix $tmp
-
-		dof=`3dinfo -verb $fname'[Rew#1_Tstat]' | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
-		TtoZ --t_stat_map=$tmp --dof=$dof --output_nii=$output
-		rm $tmp
+	pname="$dir_output/$prop.$run.$subj.nii"
+	3dcalc -a "${fname}[$prop]" -expr 'a' -prefix $pname
+	if [ $prop = 'Rew#1_Tstat' ]; then
+		dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+		TtoZ --t_stat_map=$pname --dof=$dof \
+			--output_nii="$dir_output/Rew#1_Zstat.$run.$subj.nii"
 	fi
 }

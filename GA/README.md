@@ -64,7 +64,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 - ([extract.lines.from_txt.py](https://github.com/psb629/labs/blob/master/GA/scripts/extract.lines.from_txt.py) is necessary!) [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GA/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -r run (default='all')
 
-- [extract.reward_per_trial.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.reward_per_trial.zsh) -t time_shift (default=0s)
+- [extract.reward_per_trial.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/extract.reward_per_trial.zsh) -s subject -t time_shift (default=0s) -a analysis (default='GLM') -r run (default='all')
 
 - [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s) -r run (default='all')
 
