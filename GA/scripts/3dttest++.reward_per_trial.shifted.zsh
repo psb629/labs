@@ -1,26 +1,40 @@
 #!/bin/zsh
 
 ## ============================================================ ##
-## default
-time_shift=0
-## ============================================================ ##
 ## $# = the number of arguments
 while (( $# )); do
 	key="$1"
 	case $key in
-##		pattern)
-##			sentence
-##		;;
 		-t | --time_shift)
-			## string
-			time_shift="$2"
+			tt="$2"
+		;;
+		-r | --run)
+			run="$2"
 		;;
 	esac
 	shift ##takes one argument
 done
-tmp=`printf "%.1f\n" $time_shift`
-time_shift=$tmp
+## ============================================================ ##
+if [ ! $tt ]; then
+	tt=0
+fi
+time_shift=`printf "%.1f\n" $tt`
 stat="${time_shift}s_shifted"
+## ============================================================ ##
+case $run in
+	1 | 'r01')
+		run='r01'
+	;;
+	2 | 'r02')
+		run='r02'
+	;;
+	3 | 'r03')
+		run='r03'
+	;;
+	*)
+		run='rall'
+	;;
+esac
 ## ============================================================ ##
 dir_root="/mnt/ext5/GA"
 
@@ -30,21 +44,52 @@ dir_stat="$dir_fmri/stats/AM/GLM.reward_per_trial/$stat"
 
 dir_output=$dir_stat
 ## ============================================================ ##
-list_subj=(`ls $dir_stat | grep "G.[0-9][0-9]"`)
+list_subj=(`ls $dir_stat | grep "GA[0-9][0-9]"`)
 ## ============================================================ ##
 mask="$dir_mask/mask.group.GA.n30.frac=0.7.nii"
 ## ============================================================ ##
-cd $dir_stat
-
+## one sample t-test
 setA=()
 for subj in $list_subj
 {
-	setA=($setA $dir_stat/$subj/stats.Rew.$subj.nii'[Rew#1_Coef]')
+	setA=($setA "$dir_stat/$subj/stats.Rew.$subj.$run.nii[Rew#1_Coef]")
 }
-3dttest++ -mask $mask							\
-	-setA $setA									\
-	-prefix group.Clustsim.n$#list_subj.nii	\
-	-ClustSim 4
+pname="$dir_output/$run.prac.n$#list_subj.nii"
+3dttest++ -mask $mask	\
+	-setA $setA			\
+	-prefix $pname
+ #	-toz
+ #	-ClustSim 10
 ## ============================================================ ##
-## extract the Z stat
-3dcalc -a group.Clustsim.n$#list_subj.nii'[SetA_Zscr]' -expr 'a' -prefix group.Zscr.n$#list_subj.nii
+fname=$pname
+for pp in 'mean' 'Tstat'
+{
+	prop=$pp
+	if [ $pp = 'mean' ]; then
+		prop='Coef'
+	fi
+	pname="$dir_output/$prop.$run.prac.n$#list_subj.nii"
+	3dcalc -a "${fname}[SetA_$pp]" -expr 'a' -prefix $pname
+	if [ $pp = 'Tstat' ]; then
+		dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
+		TtoZ --t_stat_map=$pname --dof=$dof \
+			--output_nii="$dir_output/Zstat.$run.prac.n$#list_subj.nii"
+	fi
+}
+## ============================================================ ##
+ ### Two sample t-test
+ #3dttest++ -mask $mask					\
+ #	-setA $setA							\
+ #	-setB $setB							\
+ #	-prefix dlPFC_cTBS-M1_cTBS.nii		\
+ # #	-toz
+ #3dttest++ -mask $mask					\
+ #	-setA $setC							\
+ #	-setB $setB							\
+ #	-prefix dlPFC_20Hz-M1_cTBS.nii		\
+ # #	-toz
+ #3dttest++ -mask $mask					\
+ #	-setA $setC							\
+ #	-setB $setA							\
+ #	-prefix dlPFC_20Hz-dlPFC_cTBS.nii	\
+ # #	-toz

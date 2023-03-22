@@ -34,25 +34,25 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 ## preprocessing (GP-like versionl, since Jan.18.2023)
 
-[a1.convert_dcm.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a1.convert_dcm.zsh) -s subject
+- [a1.convert_dcm.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a1.convert_dcm.zsh) -s subject
 
-[a2.preproc.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a2.preproc.zsh) -s suject -p phase
+- [a2.preproc.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/a2.preproc.zsh) -s suject -p phase
 
 ## extract a global signal within a group full mask
 
-[extract.global_signal.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.global_signal.zsh) -s subject -p phase
+- [extract.global_signal.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.global_signal.zsh) -s subject -p phase
 
 ## make a group full_mask
 
-[3dmask_tool.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dmask_tool.zsh) -f fraction (default=0.7)
+- [3dmask_tool.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dmask_tool.zsh) -f fraction (default=0.7)
 
 ## GLM results
 
 1. move-stop
 
-([extract.global_signal.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.global_signal.zsh) is necessary!) [GLM.move-stop.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.move-stop.zsh) -s subject -GSR global_signal_regression (default='no')
+- ([extract.global_signal.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.global_signal.zsh) is necessary!) [GLM.move-stop.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.move-stop.zsh) -s subject -GSR global_signal_regression (default='no')
 
-[3dttest++.move-stop.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.move-stop.zsh) -GSR global_signal_regression (default='no')
+- [3dttest++.move-stop.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.move-stop.zsh) -GSR global_signal_regression (default='no')
 
 2. disp_14sensors
 
@@ -62,17 +62,17 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 5. rewards
 
-[GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s)
+- ([extract.lines.from_txt.py](https://github.com/psb629/labs/blob/master/GA/scripts/extract.lines.from_txt.py) is necessary!) [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GA/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -r run (default='all')
 
-[extract.reward_per_trial.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.reward_per_trial.zsh) -t time_shift (default=0s)
+- [extract.reward_per_trial.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.reward_per_trial.zsh) -t time_shift (default=0s)
 
-[3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
+- [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s) -r run (default='all')
 
 6. cursor trajectory
 
-[GLM.movement.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.movement.shifted.zsh) -s subject -t time_shift (default=0s)
+- [GLM.movement.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/GLM.movement.shifted.zsh) -s subject -t time_shift (default=0s)
 
-[extract.movement.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.movement.zsh) -t time_shift (default=0s)
+- [extract.movement.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/extract.movement.zsh) -t time_shift (default=0s)
 
 ## ROIs
 
