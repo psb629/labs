@@ -13,6 +13,9 @@
 
 [s3.run.afni_proc.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/s3.run.afni_proc.zsh) -p phase -F from_FreeSurfer (default=yes)
 
+### Check the validation
+[check.absence.py](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/check.absence.py) -p phase
+
 ### Whole Brain Correlation
 
 [a1.3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a1.3dmask_tool.zsh) -f fraction (default=0.7)
