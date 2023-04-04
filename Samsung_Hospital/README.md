@@ -18,9 +18,15 @@
 
 ### Whole Brain Correlation
 
+- Make a group mask
+
 [a1.3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a1.3dmask_tool.zsh) -f fraction (default=0.7)
 
+- Make an ROI mask
+
 [a2.3dUndump.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a2.3dUndump.zsh) -r radius (default=3) -f -fraction (default=0.7) -R ROI
+
+- Calculate Pearson's correlation
 
 [a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/Samsung_Hospital/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -o phase -r radius (default=3) -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
 
