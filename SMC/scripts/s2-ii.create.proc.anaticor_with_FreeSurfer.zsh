@@ -33,19 +33,20 @@ if [[ ! -d $dir_FreeSurfer ]]; then
 	mkdir -p -m 755 $dir_FreeSurfer
 fi
 
-print $dir_raw/$subj.T1.nii
-## FS function
-recon-all								\
-	-sid		$subj					\
-	-sd			$dir_FreeSurfer			\
-	-i			$dir_raw/$subj.T1.nii	\
-	-all								\
-
-## AFNI-SUMA function: convert FS output
-@SUMA_Make_Spec_FS						\
-	-NIFTI								\
-	-fspath		$dir_FreeSurfer/$subj	\
-	-sid		$subj
+if [ ! -d "$dir_FreeSurfer/SUMA" ]; then
+	## FS function
+	recon-all								\
+		-sid		$subj					\
+		-sd			$dir_FreeSurfer			\
+		-i			$dir_raw/$subj.T1.nii	\
+		-all								\
+	
+	## AFNI-SUMA function: convert FS output
+	@SUMA_Make_Spec_FS						\
+		-NIFTI								\
+		-fspath		$dir_FreeSurfer/$subj	\
+		-sid		$subj
+fi
 
 ############################################################
 
