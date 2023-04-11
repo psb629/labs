@@ -14,7 +14,7 @@ if ('-p' in sys.argv):
     idx = sys.argv.index('-p')
     phase = sys.argv[idx+1]
 
-dir_csv = '/home/sungbeenpark/Github/labs/Samsung_Hospital'
+dir_csv = '/home/sungbeenpark/Github/labs/SMC'
 
 dir_root = '/mnt/ext5/SMC/fmri_data'
 dir_raw = join(dir_root, 'raw_data/%s'%phase)

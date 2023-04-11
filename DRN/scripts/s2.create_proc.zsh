@@ -46,7 +46,8 @@ afni_proc.py																			\
 							$dir_raw/func.r06.$subj.nii									\
 	-radial_correlate_blocks															\
 							tcat volreg													\
-	-blip_forward_dset		$dir_raw/func.r01.$subj.nii'[2]'							\
+	-tcat_remove_first_trs	12															\
+	-blip_forward_dset		$dir_raw/func.r01.$subj.nii'[12]'							\
 	-blip_reverse_dset		$dir_raw/dist_PA.$subj.nii									\
 	-tlrc_base				MNI152_2009_template_SSW.nii.gz								\
 	-tlrc_NL_warp																		\
