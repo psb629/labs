@@ -4,6 +4,8 @@
 
 ## Behav_data
 
+### extracting reward AM2 regressors with a time shift
+- [Behavior.regressor.ipynb](https://github.com/psb629/labs/blob/master/GL/scripts/Behavior.regressor.ipynb)
 
 =========================================================
 
