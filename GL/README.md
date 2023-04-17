@@ -21,6 +21,7 @@
 #### GLM
 - [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -c condition (default='On')
 - [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
+- [extract.Rew#1_Coef.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/extract.Rew#1_Coef.shifted.zsh)  -s subject -t time_shift (default=0s) -c condition (default='On')
 
 ### extracting a BOLD signal from a voxel which has maximux beta value
 - [3dExtrema.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dExtrema.zsh) -s subject -a area -R ROI
