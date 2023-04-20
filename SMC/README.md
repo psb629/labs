@@ -19,15 +19,16 @@
 ### Whole Brain Correlation
 
 - Make a group mask
-
 [a1.3dmask_tool.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a1.3dmask_tool.zsh) -f fraction (default=0.7)
 
 - Make an ROI mask
-
 [a2.3dUndump.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a2.3dUndump.zsh) -r radius (default=3) -f -fraction (default=0.7) -R ROI
 
 - Calculate Pearson's correlation
-
 [a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -o phase -r radius (default=3) -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
 
+- Post-Pre changes were calculated for 12 participants in the stim group and 8 participants in the sham group using 3dttest++
 ([print.group.py](https://github.com/psb629/labs/blob/master/SMC/scripts/print.group.py) is necessary!) [a4.3dttest++.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a4.3dttest++.zsh) -R ROI -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
+
+- Calculation of correlation between behavioral changes of 20 subjects and functional MRI changes across the whole brain
+[a5.3dTcorr1D.wholebrain.r.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a5.3dTcorr1D.wholebrain.r.zsh) -R ROI -G RemoveGlobalSignal (default=false) -f fraction (default=0.7)
