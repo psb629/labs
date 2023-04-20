@@ -50,7 +50,8 @@ class ContinuousPolicyValue(BaseNetwork):
 
     def forward(self, x):
         x, (conv1, conv2, conv3) = super(ContinuousPolicyValue, self).forward(x)
-        x_reshaped = x.reshape(-1)
+#         x_reshaped = x.reshape(-1)
+        x_reshaped = x
         x = F.relu(self.l(x_reshaped))
 
         mu = torch.clamp(self.mu(x), min=-5.0, max=5.0)
