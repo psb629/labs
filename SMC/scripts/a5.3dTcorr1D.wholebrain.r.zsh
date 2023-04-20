@@ -78,6 +78,6 @@ for behav in $list_1D
 	sname=${behav[$#dir_behav+2,-5]}
 	3dTcorr1D	\
 		-mask $mask	\
-		-prefix "$dir_stat/3dTcorr1D.n$#list_nn.$sname.nii"	\
+		-prefix "$dir_stat/3dTcorr1D.$ROI.$sname.GlobalSignalRemoved=$RGS.nii"	\
 		$bucket $behav
 }
