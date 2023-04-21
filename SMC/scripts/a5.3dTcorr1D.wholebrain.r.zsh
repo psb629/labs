@@ -58,7 +58,7 @@ fi
 list_1D=(`find $dir_behav -type f -name "*.txt"`)
 ##############################################################
 ## Make a bucket file
-pname="$dir_stat/bucket.$ROI.n${#list_fname}.post-pre.GlobalSignalRemoved=$RGS.nii"
+pname="$dir_stat/bucket.$ROI.n${#list_nn}.post-pre.GlobalSignalRemoved=$RGS.nii"
 if [ ! -f $pname ]; then
 	list_fname=()
 	for nn in $list_nn
