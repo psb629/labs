@@ -7,7 +7,6 @@ subj=false
 phase=false
 radius=3
 RGS=false
-frac=0.7
 ##############################################################
 ## $# = the number of arguments
 while (( $# )); do
@@ -27,9 +26,6 @@ while (( $# )); do
 		;;
 		-r | --radius)
 			radius="$2"
-		;;
-		-f | --frac)
-			frac="$2"
 		;;
 		-G | --RemoveGlobalSignal)
 			if [[ ($2 == 'y') || ($2 == 'yes') ]]; then
@@ -86,5 +82,5 @@ output="$dir_output/3dmaskave.$ROI.$subj.$phase.GlobalSignalRemoved=$RGS.t$times
 ## calculate the whole-brain correlation
 3dTcorr1D																			\
 	-prefix "$dir_output/3dTcorr1D.$ROI.$subj.$phase.GlobalSignalRemoved=$RGS.nii"	\
-	-mask "$dir_mask/mask.group.n56.frac=$frac.nii"									\
+	-mask "$dir_mask/mask.group.n56.frac=0.7.nii"									\
 	$fname $output

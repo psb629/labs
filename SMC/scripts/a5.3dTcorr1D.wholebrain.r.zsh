@@ -4,7 +4,6 @@
 ## default
 ROI=false
 RGS=false
-frac=0.7
 ##############################################################
 ## Valid participants list
 list_nn=(\
@@ -21,9 +20,6 @@ while (( $# )); do
 ##		pattern)
 ##			sentence
 ##		;;
-		-f | --frac)
-			frac="$2"
-		;;
 		-R | --ROI)
 			ROI="$2"
 		;;
