@@ -22,12 +22,15 @@ if ('-g' in sys.argv):
 if ('-G' in sys.argv):
     idx = sys.argv.index('-G')
     tmp = str(sys.argv[idx+1])
-    RGS = 'true' if ((tmp=='y')|(tmp=='yes')) else ('false' if ((tmp=='n')|(tmp=='no')) else 'invalid')
+    RGS = tmp
+if ('--dir_fmri' in sys.argv):
+    idx = sys.argv.index('--dir_fmri')
+    tmp = str(sys.argv[idx+1])
+    dir_fmri = tmp
 
-dir_csv = '/home/sungbeenpark/Github/labs/Samsung_Hospital'
+dir_csv = '/home/sungbeenpark/Github/labs/SMC'
 
-dir_root = '/mnt/ext5/SMC/fmri_data'
-dir_stat = join(dir_root, 'stats/correlations/%s'%ROI)
+dir_stat = join(dir_fmri, 'stats/correlations/%s'%ROI)
 
 df = pd.read_csv(join(dir_csv, 'SMC_IDs.csv'), sep=',', index_col=None)
 
