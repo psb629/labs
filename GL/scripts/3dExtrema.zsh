@@ -92,13 +92,15 @@ dir_output=$dir_stat
 ##############################################################
 ## make temparal masks
 mask=$dir_output/"mask.tmp.$ROI.$area.nii"
-3dcalc												\
-	-a $dir_mask/"mask.TTatlas.$ROI.resampled.nii"	\
-	-expr "equals(a,$vv)"							\
-	-prefix $mask									\
+if [ ! -f $mask ]; then
+	3dcalc												\
+		-a $dir_mask/"mask.TTatlas.$ROI.resampled.nii"	\
+		-expr "equals(a,$vv)"							\
+		-prefix $mask
+fi
 
 fname=$dir_stat/stats.$subj+tlrc.HEAD'[Rew#1_Tstat]'
-pname=$dir_output/"mask.3dExtrema.$ROI.$area.$subj.nii"
+pname=$dir_output/"mask.3dExtrema.$ROI.$area.$subj.$pb.nii"
 3dExtrema						\
 	-volume -closure			\
 	-mask_file $mask			\
