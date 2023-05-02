@@ -20,6 +20,9 @@ while (( $# )); do
 		-R | --ROI)
 			ROI="$2"
 		;;
+		--pb )
+			pp="$2"
+		;;
 	esac
 	shift ##takes one argument
 done
@@ -72,6 +75,15 @@ if [ $vv = false ]; then
 	exit
 fi
 ##############################################################
+case $pp in
+	04 | '04' | 'pb04')
+		pb='scale'
+	;;
+	*)
+		pb='volreg'
+	;;
+esac
+##############################################################
 dir_root="/mnt/ext4/GL/fmri_data"
 dir_mask="$dir_root/masks"
 dir_preproc="$dir_root/preproc_data.SSKim/$subj"
@@ -101,9 +113,9 @@ rm $mask
 mask=$pname
 ##############################################################
 ## extract the entire BOLD signal across all runs from the voxel
-fname=$dir_preproc/"tproject.errts.$subj.volreg.r02_05.nii"
+fname=$dir_preproc/"tproject.errts.$subj.$pb.r02_05.nii"
 3dmaskave											\
 	-quiet											\
 	-mask $mask										\
-	$fname >$dir_output/"ts.$ROI.$area.$subj.1D"
+	$fname >$dir_output/"ts.$ROI.$area.$subj.$pb.1D"
 rm $mask

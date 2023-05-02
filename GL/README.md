@@ -11,9 +11,6 @@
 
 ## fMRI_data
 
-### preprocessing
-- [3dTproject.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dTproject.zsh) -s subject
-
 ### making a group full mask
 - [mk.mask.group.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/mk.mask.group.zsh) -f fraction (default=0.7)
 
@@ -24,5 +21,6 @@
 - [extract.Rew#1_Coef.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/extract.Rew#1_Coef.shifted.zsh)  -s subject -t time_shift (default=0s) -c condition (default='On')
 
 ### extracting a BOLD signal from a voxel which has maximux beta value
-- [3dExtrema.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dExtrema.zsh) -s subject -a area -R ROI
+- [3dTproject.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dTproject.zsh) -s subject --pb source_file (default=pb02)
+- [3dExtrema.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dExtrema.zsh) -s subject -a area -R ROI --pb source_file (default=pb02)
 

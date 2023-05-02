@@ -11,9 +11,23 @@ while (( $# )); do
 		-s | --subject)
 			subj="$2"
 		;;
+		--pb )
+			pp="$2"
+		;;
 	esac
 	shift ##takes one argument
 done
+##############################################################
+case $pp in
+	04 | '04' | 'pb04')
+		pp=04
+		pb='scale'
+	;;
+	*)
+		pp=02
+		pb='volreg'
+	;;
+esac
 ##############################################################
 dir_root="/mnt/ext4/GL/fmri_data/preproc_data.SSKim/$subj"
 ##############################################################
@@ -23,12 +37,12 @@ cd $dir_root
 3dTproject									\
 	-polort 0								\
 	-input									\
-		pb02.$subj.r02.volreg+tlrc.HEAD		\
-		pb02.$subj.r03.volreg+tlrc.HEAD		\
-		pb02.$subj.r04.volreg+tlrc.HEAD		\
-		pb02.$subj.r05.volreg+tlrc.HEAD		\
+		pb$pp.$subj.r02.$pb+tlrc.HEAD		\
+		pb$pp.$subj.r03.$pb+tlrc.HEAD		\
+		pb$pp.$subj.r04.$pb+tlrc.HEAD		\
+		pb$pp.$subj.r05.$pb+tlrc.HEAD		\
 	-mask full_mask.$subj+tlrc.HEAD			\
 	-censor motion_$subj.r02_05.censor.1D	\
 	-cenmode ZERO							\
 	-ort motion_demean.$subj.r02_05.1D		\
-	-prefix $dir_output/tproject.errts.$subj.volreg.r02_05.nii
+	-prefix $dir_output/tproject.errts.$subj.$pb.r02_05.nii
