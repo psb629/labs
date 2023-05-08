@@ -1,4 +1,6 @@
 [subjects list](https://docs.google.com/spreadsheets/d/1ZvJCnk1qB8B8aktyndHkCmmA336e17J_/edit?usp=sharing&ouid=113558884998217828683&rtpof=true&sd=true)
+[Target locations](https://github.com/psb629/labs/blob/master/SMC/SMC_Targets.xlsx)
+[TMS_로그지_220614.xlsx](https://github.com/psb629/labs/blob/master/SMC/TMS_%EB%A1%9C%EA%B7%B8%EC%A7%80_220614.xlsx) Password: 1102
 
 =========================================================
 
