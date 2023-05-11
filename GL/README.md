@@ -2,6 +2,13 @@
 
 =========================================================
 
+## Importing the Anaconda virtual environment package to run Jupyter notebook.
+```
+conda env create -f GP.yaml
+```
+
+=========================================================
+
 ## Behav_data
 
 ### extracting reward AM2 regressors with a time shift

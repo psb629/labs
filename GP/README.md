@@ -2,6 +2,13 @@
 
 =========================================================
 
+## Importing the Anaconda virtual environment package to run Jupyter notebook.
+```
+conda env create -f GP.yaml
+```
+
+=========================================================
+
 ## Behav_data
 
 ### day1 (r00)
