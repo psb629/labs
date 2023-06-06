@@ -79,6 +79,7 @@
 - [mk.mask.group.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/mk.mask.group.zsh)
 
 ### GLM
+- [GLM.value_function.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/GLM.value_function.zsh) -s subject
 
 ### Encoding Model
 Calculate the correlation between the precomputed voxel-wise BOLD raw signal and the predicted signal.
