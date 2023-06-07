@@ -63,7 +63,7 @@
 ## Behav_data
 
 ### resize screen shots for use as input data to ML-agent
-- [resize_images.py](https://github.com/psb629/labs/blob/master/DRN/scripts/resize_images.py) -s subject
+- [resize_images.py](https://github.com/psb629/labs/blob/master/DRN/scripts/resize_images.py) -s subject -p resolution (default: (128,72))
 
 =========================================================
 
