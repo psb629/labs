@@ -15,6 +15,9 @@ dir_root="/mnt/ext5/DRN/fmri_data"
 dir_preproc="$dir_root/preproc_data/$subj"
 ## ================================================ ##
 cd $dir_preproc
+3dAFNItoNIFTI	\
+	-prefix $dir_preproc/errts.DRN04.scale.tproject.nii	\
+	$dir_preproc/errts.DRN04.tproject+tlrc.HEAD
 3dTproject									\
 	-polort 0								\
 	-input pb0?.$subj.r0?.volreg+tlrc.HEAD	\
