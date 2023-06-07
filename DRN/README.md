@@ -59,6 +59,11 @@
 	```
 
 =========================================================
+## Importing the Anaconda virtual environment package to run Jupyter notebook.
+```
+conda env create -f DRN.yaml
+```
+=========================================================
 
 ## Behav_data
 
