@@ -39,15 +39,22 @@ aff1D = np.loadtxt(
             dtype='float', delimiter=None
         )
 aff2D = np.vstack([aff1D.reshape(3,4), [0, 0, 0, 1]])
-for ii, oo in enumerate(order):
-    if (oo=='L')|(oo=='P')|(oo=='S'):
-        aff2D[:,ii] *= -1
-        
 aff2D_inverted = np.linalg.inv(aff2D)
-## ========================================================= ##
 if master=='orig':
-    res = np.matmul(aff2D_inverted,xyz)
+    G = aff2D_inverted
 elif master=='mni':
-    res = np.matmul(aff2D,xyz)
+    G = aff2D
+## ========================================================= ##
+M = np.zeros((4,4))
+M[3,3] = 1
+for ii, oo in enumerate(order):
+    if (oo=='R')|(oo=='A')|(oo=='I'):
+        M[ii,ii] = 1
+    elif (oo=='L')|(oo=='P')|(oo=='S'):
+        M[ii,ii] = -1       
+G = np.matmul(np.linalg.inv(M),G)
+G = np.matmul(G,M)
+## ========================================================= ##
+res = np.matmul(G,xyz)
 
 print(res[:3])
