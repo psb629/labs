@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-##############################################################
+## ==================================================== ##
 ## $# = the number of arguments
 while (( $# )); do
 	key="$1"
@@ -14,7 +14,7 @@ while (( $# )); do
 	esac
 	shift ##takes one argument
 done
-##############################################################
+## ==================================================== ##
 dir_root="/mnt/ext5/DRN/fmri_data"
 dir_raw="$dir_root/raw_data/$subj"
 dir_preproc="$dir_root/preproc_data/$subj"
@@ -27,7 +27,9 @@ dir_output=$dir_preproc
  #if [ ! -d $dir_output ]; then
  #	mkdir -p -m 755 $dir_output
  #fi
-##############################################################
+## ==================================================== ##
+dsets=(`find $dir_raw -type f -name "func.r??.$subj.nii" | sort -t ' ' -k 1`)
+## ==================================================== ##
 cd $dir_script
 afni_proc.py																			\
 	-subj_id				$subj														\
@@ -37,13 +39,7 @@ afni_proc.py																			\
 	-anat_has_skull			yes															\
 	-anat_uniform_method	unifize														\
 	-anat_unif_GM			yes															\
-	-dsets																				\
-							$dir_raw/func.r01.$subj.nii									\
-							$dir_raw/func.r02.$subj.nii									\
-							$dir_raw/func.r03.$subj.nii									\
-							$dir_raw/func.r04.$subj.nii									\
-							$dir_raw/func.r05.$subj.nii									\
-							$dir_raw/func.r06.$subj.nii									\
+	-dsets					$dsets														\
 	-radial_correlate_blocks															\
 							tcat volreg													\
 	-tcat_remove_first_trs	12															\
