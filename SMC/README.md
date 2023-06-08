@@ -14,7 +14,12 @@ conda env create -f SMC.yaml
 
 ## fMRI_data
 
-### preprocessing
+### Search the target
+[preproc.to_search.target.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/preproc.to_search.target.zsh) --help
+
+[affine_tranformator.py](https://github.com/psb629/labs/blob/master/SMC/scripts/affine_tranformator.py) --help
+
+### Preprocessing
 [s1.convert.dcm2nifti.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/s1.convert.dcm2nifti.zsh) -s subject -p phase
 
 [s2-i.create.proc.anaticor_without_FreeSurfer.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/s2-i.create.proc.anaticor_without_FreeSurfer.zsh) -s subject -p phase
@@ -30,7 +35,7 @@ conda env create -f SMC.yaml
 
 ---
 
-### Whole Brain Correlation
+### Whole brain correlation
 
 - Make a group mask
 

@@ -12,7 +12,8 @@ while (( $# )); do
 			subj="$2"
 		;;
 		-h | --help)
-			echo "-s, --subject:\n\t-s S06"
+			echo "-s, --subject:\n\te.g.) -s S06"
+			exit
 		;;
 	esac
 	shift ##takes one argument
