@@ -14,8 +14,8 @@ parser = argparse.ArgumentParser()
 
 ## 옵션 목록
 parser.add_argument('-s','--subject', help="Subject ID")
-parser.add_argument('-o','--order', help="RAI vs. LPI")
-parser.add_argument('-m','--master', help="Orig vs. MNI")
+parser.add_argument('-o','--order', default='lpi', help="RAI vs. LPI (default)")
+parser.add_argument('-m','--master', default='orig', help="Orig (default) vs. MNI")
 parser.add_argument('--xyz', help="coordinate, e.g.) '(0,0,0)'")
 ## ========================================================= ##
 ## 명령줄 인자 파싱
