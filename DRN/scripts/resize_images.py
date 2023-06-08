@@ -46,8 +46,11 @@ for dir_run in list_dir_run:
     ## resize image files
     list_fname = glob(join(dir_run, '*.png'))
     for fname in list_fname:
+        step = int(fname.split('/')[-1].split('.')[0])
+        output = join(dir_output, '%05d.png'%step)
+        if exists(output):
+            continue
         img = Image.open(fname)
 #         print(img.size)
-        step = int(fname.split('/')[-1].split('.')[0])
         img_resized = img.resize((w,h))
-        img_resized.save(join(dir_output, '%05d.png'%step))
+        img_resized.save(output)
