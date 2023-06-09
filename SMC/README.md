@@ -17,7 +17,7 @@ conda env create -f SMC.yaml
 ### Search the target
 [preproc.to_search.target.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/preproc.to_search.target.zsh) --help
 
-[affine_tranformator.py](https://github.com/psb629/labs/blob/master/SMC/scripts/affine_tranformator.py) --help
+[affine_transformator.py](https://github.com/psb629/labs/blob/master/SMC/scripts/affine_transformator.py) --help
 
 ### Preprocessing
 [s1.convert.dcm2nifti.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/s1.convert.dcm2nifti.zsh) -s subject -p phase
