@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-s','--subject', help="Subject ID")
 parser.add_argument('-o','--order', default='lpi', help="RAI vs. LPI (default)")
 parser.add_argument('-m','--master', default='orig', help="Orig (default) vs. MNI")
-parser.add_argument('--xyz', help="coordinate, e.g.) '(0,0,0)'")
+parser.add_argument('--xyz', help="coordinate, e.g.) '-15.241 18.516 9.663'")
 ## ========================================================= ##
 ## 명령줄 인자 파싱
 args = parser.parse_args()
