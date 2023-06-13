@@ -30,27 +30,27 @@ if [[ ! -d $dir_FreeSurfer ]]; then
 	mkdir -p -m 755 $dir_FreeSurfer
 fi
 
-source /usr/local/freesurfer/7.2.0/SetUpFreeSurfer.sh
+if [[ ! -d $dir_FreeSurfer/$subj ]]; then
+	source /usr/local/freesurfer/7.2.0/SetUpFreeSurfer.sh
+	
+	## FS function
+	recon-all								\
+		-sid		$subj					\
+		-sd			$dir_FreeSurfer			\
+		-i			$dir_raw/T1.$subj.nii	\
+		-all								\
+	
+	## AFNI-SUMA function: convert FS output
+	@SUMA_Make_Spec_FS						\
+		-NIFTI								\
+		-fspath		$dir_FreeSurfer/$subj	\
+		-sid		$subj
 
-## FS function
-recon-all								\
-	-sid		$subj					\
-	-sd			$dir_FreeSurfer			\
-	-i			$dir_raw/T1.$subj.nii	\
-	-all								\
-
-## AFNI-SUMA function: convert FS output
-@SUMA_Make_Spec_FS						\
-	-NIFTI								\
-	-fspath		$dir_FreeSurfer/$subj	\
-	-sid		$subj
-
-## ======================================= ##
-
-3dQwarp -allineate -blur 0 3 										\
-	-base "/usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz"	\
-	-source "$dir_FreeSurfer/$subj/SUMA/brain.nii.gz" 					\
-	-prefix "$dir_FreeSurfer/$subj/SUMA/brain_qw.nii"
+	3dQwarp -allineate -blur 0 3 										\
+		-base "/usr/local/afni/abin/MNI152_2009_template_SSW.nii.gz"	\
+		-source "$dir_FreeSurfer/$subj/SUMA/brain.nii.gz" 				\
+		-prefix "$dir_FreeSurfer/$subj/SUMA/brain_qw.nii"
+fi
 
 ## ======================================= ##
  
@@ -85,6 +85,7 @@ afni_proc.py\
 	-align_opts_aea				\
 	-cost						lpc+ZZ			\
 	-giant_move					\
+	-resample					'off'			\
 	-check_flip					\
 	-tlrc_base					MNI152_2009_template_SSW.nii.gz		\
 	-tlrc_NL_warp				\
@@ -101,10 +102,10 @@ afni_proc.py\
 	-regress_anaticor_label		FSWe			\
 	-regress_censor_motion		0.4				\
 	-regress_censor_outliers	0.05			\
-	-regress_apply_mot_types	demean deriv	\
-	-regress_est_blur_epits		\
-	-regress_est_blur_errts		\
-	-html_review_style			pythonic
+	-regress_apply_mot_types	demean deriv
+ #	-regress_est_blur_epits		\
+ #	-regress_est_blur_errts		\
+ #	-html_review_style			pythonic
  #	-tlrc_NL_warped_dsets		"$dir_FreeSurfer/$subj/SUMA/T1qw.nii" 						\
  #								"$dir_FreeSurfer/$subj/SUMA/T1qw_Allin.aff12.1D"			\
  #								"$dir_FreeSurfer/$subj/SUMA/T1qw_WARP.nii"					\
