@@ -20,7 +20,7 @@ mask=`find $dir_fmri/masks -type f -name "mask.group.n*.frac=0.7.nii"`
 cd $dir_stat
 
 setA=()
-list_fname=(`find DRN?? -type f -name "stats.Val.DRN??.nii"`)
+list_fname=(`find DRN?? -type f -name "stats.DRN??.nii"`)
 for fname in $list_fname
 {
 	setA=($setA "${fname}[Val#1_Coef]")
