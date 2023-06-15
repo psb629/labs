@@ -28,7 +28,11 @@ fi
 reg=$dir_output/reg.txt
 for run in `seq -f 'r%02g' 1 6`
 {
-	cat $dir_reg/$subj.$run.value.txt >> $reg
+	fname=$dir_reg/$subj.$run.value.txt
+	if [[ ! -f $fname ]]; then
+		continue
+	fi
+	cat $fname >> $reg
 	echo "" >> $reg
 }
 ## ============================================================ ##
@@ -49,9 +53,10 @@ cd $dir_output
     -ortvec		$dir_preproc/mot_demean.r04.1D mot_demean_r04		\
     -ortvec		$dir_preproc/mot_demean.r05.1D mot_demean_r05		\
     -ortvec		$dir_preproc/mot_demean.r06.1D mot_demean_r06		\
-    -polort		5		-float	\
-	-allzero_OK			\
-    -num_stimts	1		\
+    -polort		5
+	-float		\
+	-allzero_OK	\
+    -num_stimts	1	\
 	-stim_times_AM2		1 $reg 'BLOCK(1,1)' -stim_label 1 'Val'		\
     -jobs 1 -fout -tout	\
 	-x1D "X.xmat.1D"	-xjpeg "X.jpg"	\
