@@ -26,15 +26,17 @@ fi
 ## ============================================================ ##
 ## concatenating regressors
 reg=$dir_output/reg.txt
-for run in `seq -f 'r%02g' 1 6`
-{
-	fname=$dir_reg/$subj.$run.value.txt
-	if [[ ! -f $fname ]]; then
-		continue
-	fi
-	cat $fname >> $reg
-	echo "" >> $reg
-}
+if [[ ! -f $reg ]]; then
+	for run in `seq -f 'r%02g' 1 6`
+	{
+		fname=$dir_reg/$subj.$run.value.txt
+		if [[ ! -f $fname ]]; then
+			continue
+		fi
+		cat $fname >> $reg
+		echo "" >> $reg
+	}
+fi
 ## ============================================================ ##
 cd $dir_output
 3dDeconvolve	\
@@ -46,22 +48,22 @@ cd $dir_output
     -ortvec		$dir_preproc/ROIPC.FSvent.r03.1D ROIPC.FSvent.r03	\
     -ortvec		$dir_preproc/ROIPC.FSvent.r04.1D ROIPC.FSvent.r04	\
     -ortvec		$dir_preproc/ROIPC.FSvent.r05.1D ROIPC.FSvent.r05	\
-    -ortvec		$dir_preproc/ROIPC.FSvent.r06.1D ROIPC.FSvent.r06	\
+    -ortvec		$dir_preproc/ROIPC.FSvent.r05.1D ROIPC.FSvent.r06	\
     -ortvec		$dir_preproc/mot_demean.r01.1D mot_demean_r01		\
     -ortvec		$dir_preproc/mot_demean.r02.1D mot_demean_r02		\
     -ortvec		$dir_preproc/mot_demean.r03.1D mot_demean_r03		\
     -ortvec		$dir_preproc/mot_demean.r04.1D mot_demean_r04		\
     -ortvec		$dir_preproc/mot_demean.r05.1D mot_demean_r05		\
-    -ortvec		$dir_preproc/mot_demean.r06.1D mot_demean_r06		\
-    -polort		5
+    -ortvec		$dir_preproc/mot_demean.r05.1D mot_demean_r06		\
+    -polort		5	\
 	-float		\
 	-allzero_OK	\
-    -num_stimts	1	\
-	-stim_times_AM2		1 $reg 'BLOCK(1,1)' -stim_label 1 'Val'		\
-    -jobs 1 -fout -tout	\
+	-num_stimts	1	\
+	-stim_times_AM2	1 $reg 'BLOCK(1,1)' -stim_label 1 'Val'	\
+	-jobs 1 -fout -tout	\
 	-x1D "X.xmat.1D"	-xjpeg "X.jpg"	\
-    -x1D_uncensored "X.nocensor.xmat.1D"\
-    -bucket stats.$subj.nii
+	-x1D_uncensored "X.nocensor.xmat.1D"\
+	-bucket stats.$subj.nii
  #    -fitts fitts.$subj.nii
  #    -errts errts.$subj.nii
 
