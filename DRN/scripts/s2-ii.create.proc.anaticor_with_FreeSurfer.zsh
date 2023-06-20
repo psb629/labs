@@ -65,43 +65,45 @@ dsets=(`find $dir_raw -type f -name "func.r??.$subj.nii" | sort -t ' ' -k 1`)
 
 cd $dir_script
 afni_proc.py\
-	-subj_id					$subj		\
+	-subj_id					$subj	\
 	-out_dir					$dir_output	\
 	-blocks						despike tshift align tlrc volreg blur mask scale regress	\
-	-radial_correlate_blocks	tcat volreg		\
+	-radial_correlate_blocks	tcat volreg	\
 	-copy_anat					"$dir_FreeSurfer/$subj/SUMA/brain.nii.gz"		\
-	-anat_has_skull				'no'		\
+	-anat_has_skull				'no'	\
 	-anat_follower				anat_w_skull anat "$dir_FreeSurfer/$subj/SUMA/T1.nii.gz"	\
-	-anat_follower_ROI			aaseg anat		\
+	-anat_follower_ROI			aaseg anat	\
 								"$dir_FreeSurfer/$subj/SUMA/aparc.a2009s+aseg_REN_all.nii.gz"	\
-	-anat_follower_ROI			aeseg epi		\
+	-anat_follower_ROI			aeseg epi	\
 								"$dir_FreeSurfer/$subj/SUMA/aparc.a2009s+aseg_REN_all.nii.gz"	\
 	-anat_follower_ROI			FSvent epi "$dir_FreeSurfer/$subj/SUMA/fs_ap_latvent.nii.gz"	\
 	-anat_follower_ROI			FSWe epi "$dir_FreeSurfer/$subj/SUMA/fs_ap_wm.nii.gz"		\
-	-anat_follower_erode		FSvent FSWe		\
-	-dsets						$dsets			\
-	-tcat_remove_first_trs		2				\
-	-align_unifize_epi			'yes'			\
+	-anat_follower_erode		FSvent FSWe	\
+	-dsets						$dsets	\
+	-tcat_remove_first_trs		0	\
+	-blip_forward_dset			$dir_raw/func.r01.$subj.nii'[12]'	\
+	-blip_reverse_dset			$dir_raw/dist_PA.$subj.nii			\
+	-align_unifize_epi			'yes'	\
 	-align_opts_aea				\
-	-cost						lpc+ZZ			\
+	-cost						lpc+ZZ	\
 	-giant_move					\
-	-resample					'off'			\
+	-resample					'off'	\
 	-check_flip					\
 	-tlrc_base					MNI152_2009_template_SSW.nii.gz		\
 	-tlrc_NL_warp				\
-	-volreg_align_to			MIN_OUTLIER		\
+	-volreg_align_to			MIN_OUTLIER	\
 	-volreg_align_e2a			\
 	-volreg_tlrc_warp			\
-	-blur_size					4				\
-	-mask_epi_anat				'yes'			\
+	-blur_size					4	\
+	-mask_epi_anat				'yes'	\
 	-regress_motion_per_run		\
-	-regress_ROI_PC				FSvent 3		\
-	-regress_ROI_PC_per_run		FSvent			\
-	-regress_make_corr_vols		aeseg FSvent	\
+	-regress_ROI_PC				FSvent 3	\
+	-regress_ROI_PC_per_run		FSvent		\
+	-regress_make_corr_vols		aeseg FSvent\
 	-regress_anaticor_fast		\
-	-regress_anaticor_label		FSWe			\
-	-regress_censor_motion		0.4				\
-	-regress_censor_outliers	0.05			\
+	-regress_anaticor_label		FSWe\
+	-regress_censor_motion		0.4	\
+	-regress_censor_outliers	0.05\
 	-regress_apply_mot_types	demean deriv
  #	-regress_est_blur_epits		\
  #	-regress_est_blur_errts		\

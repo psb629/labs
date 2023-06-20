@@ -77,7 +77,8 @@ conda env create -f DRN.yaml
 ### preprocessing
 
 - [s1.convert_DICOM.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/s1.convert_DICOM.zsh) -s subject
-- [s2.create_proc.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/s2.create_proc.zsh) -s subject
+- [s2-i.create_proc.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/s2-i.create_proc.zsh) -s subject
+- [s2-ii.create.proc.anaticor_with_FreeSurfer.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/s2-ii.create.proc.anaticor_with_FreeSurfer.zsh) -s subject
 
 - [s3.3dTproject.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/s3.3dTproject.zsh) -s subject
 
