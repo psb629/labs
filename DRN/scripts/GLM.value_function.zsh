@@ -48,13 +48,13 @@ cd $dir_output
     -ortvec		$dir_preproc/ROIPC.FSvent.r03.1D ROIPC.FSvent.r03	\
     -ortvec		$dir_preproc/ROIPC.FSvent.r04.1D ROIPC.FSvent.r04	\
     -ortvec		$dir_preproc/ROIPC.FSvent.r05.1D ROIPC.FSvent.r05	\
-    -ortvec		$dir_preproc/ROIPC.FSvent.r06.1D ROIPC.FSvent.r06	\
+    -ortvec		$dir_preproc/ROIPC.FSvent.r05.1D ROIPC.FSvent.r06	\
     -ortvec		$dir_preproc/mot_demean.r01.1D mot_demean_r01		\
     -ortvec		$dir_preproc/mot_demean.r02.1D mot_demean_r02		\
     -ortvec		$dir_preproc/mot_demean.r03.1D mot_demean_r03		\
     -ortvec		$dir_preproc/mot_demean.r04.1D mot_demean_r04		\
     -ortvec		$dir_preproc/mot_demean.r05.1D mot_demean_r05		\
-    -ortvec		$dir_preproc/mot_demean.r06.1D mot_demean_r06		\
+    -ortvec		$dir_preproc/mot_demean.r05.1D mot_demean_r06		\
     -polort		5	\
 	-float		\
 	-allzero_OK	\
