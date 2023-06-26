@@ -7,9 +7,14 @@ while (( $# )); do
 		-s | --subject)
 			subj="$2"
 		;;
+		-t | --time_shift)
+			tt="$2"
+		;;
 	esac
 	shift ##takes one argument
 done
+## ============================================================ ##
+time_shift=`printf "%1.1f" $tt`
 ## ============================================================ ##
 dir_root="/mnt/ext5/DRN"
 
@@ -19,7 +24,7 @@ dir_reg="$dir_behav/regressors/AM/value"
 dir_fmri="$dir_root/fmri_data"
 dir_preproc="$dir_fmri/preproc_data/$subj"
 ## ============================================================ ##
-dir_output="$dir_fmri/stats/GLM/AM/value_function/$subj"
+dir_output="$dir_fmri/stats/GLM/AM/value_function/shift=${time_shift}s/$subj"
 if [ ! -d $dir_output ]; then
 	mkdir -p -m 755 $dir_output
 fi
@@ -29,7 +34,7 @@ reg=$dir_output/reg.txt
 if [[ ! -f $reg ]]; then
 	for run in `seq -f 'r%02g' 1 6`
 	{
-		fname=$dir_reg/$subj.$run.value.txt
+		fname="$dir_reg/$subj.$run.value.shift=${time_shift}s.txt"
 		if [[ ! -f $fname ]]; then
 			continue
 		fi
