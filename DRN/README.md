@@ -85,7 +85,7 @@ conda env create -f DRN.yaml
 - [mk.mask.group.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/mk.mask.group.zsh)
 
 ### GLM
-- [GLM.value_function.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/GLM.value_function.zsh) -s subject
+- [GLM.value_function.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/GLM.value_function.zsh) -s subject -t time_shift (default: 0.0s)
 
 ### Encoding Model
 Calculate the correlation between the precomputed voxel-wise BOLD raw signal and the predicted signal.
