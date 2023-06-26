@@ -61,5 +61,6 @@ conda env create -f SMC.yaml
 
 ### Precuneus
 
-Firstly, compute the correlation between the whole brain map and lHP for each subject (`a3.3dTcorr1D.zsh`), and perform 3dttest++ (`a4.3dttest++.zsh`) to create a precuneus cluster mask corresponding to p=0.05.
+Firstly, compute the correlation between the whole brain map and lHP for each subject (`a3.3dTcorr1D.zsh`), and perform 3dttest++ (`a4.3dttest++.zsh`) to create a precuneus cluster mask corresponding to p=0.05. However, this approach carries the risk of double-dipping.
 
+To mitigate the risk of double-dipping, I recommend using the precuneus mask from the masks directory. By utilizing this mask, you can execute the a4.3dttest++.zsh code and perform small volume correction.

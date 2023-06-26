@@ -49,7 +49,8 @@ case $mm in
 		mask="$dir_mask/mask.group.n56.frac=$frac.nii"
 	;;
 	'precuneus' | 'Precuneus')
-		mask="$dir_mask/mask.Harvard-Oxford.precuneus.nii"
+ #		mask="$dir_mask/mask.Harvard-Oxford.precuneus.nii"
+		mask="$dir_mask/mask.Precuneus_z_3.29.nii"
 	;;
 esac
 ##############################################################
