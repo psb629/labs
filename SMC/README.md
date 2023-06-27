@@ -47,7 +47,7 @@ conda env create -f SMC.yaml
 
 - Calculate Pearson's correlation
 
-[a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -o phase -r radius (default=3) -G RemoveGlobalSignal (default=false)
+[a3.3dTcorr1D.zsh](https://github.com/psb629/labs/blob/master/SMC/scripts/a3.3dTcorr1D.zsh) -R ROI -s subject -p phase -r radius (default=3) -G RemoveGlobalSignal (default=false)
 
 - Post-Pre changes were calculated for 12 participants in the stim group and 8 participants in the sham group using 3dttest++
 

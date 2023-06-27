@@ -58,14 +58,14 @@ fi
 fname="$dir_preproc/errts.$subj.fanaticor+tlrc"
 if [[ $RGS = true ]]; then
 	## use 3dTproject to project out GS(global signal) which make errts like 3dDeconvolve, but more quickly.
-	pname="$dir_preproc/errts.$subj.fanaticor.GlobalSignalRemoved.nii"
-	3dTproject												\
-		-polort 0											\
-		-input $fname										\
-		-mask "$dir_preproc/full_mask.$subj+tlrc"			\
+	pname="$dir_preproc/errts.$subj.fanaticor.GlobalSignalRemoved=$RGS.nii"
+	3dTproject	\
+		-polort 0	\
+		-input $fname	\
+		-mask "$dir_preproc/full_mask.$subj+tlrc"	\
 		-censor "$dir_preproc/censor_${subj}_combined_2.1D"	\
-		-cenmode ZERO										\
-		-ort "$dir_preproc/mean.errts.1D"					\
+		-cenmode ZERO	\
+		-ort "$dir_preproc/mean.errts.1D"	\
 		-prefix $pname
 	fname=$pname
 fi
@@ -73,14 +73,20 @@ tmp=`3dinfo "$fname" | grep "Number of time steps"`
 timestep=`printf "%d" $tmp[24,26]`
 ##############################################################
 output="$dir_output/3dmaskave.$ROI.$subj.$phase.GlobalSignalRemoved=$RGS.t$timestep.1D"
-## calculate the average BOLD response in the ROI
-3dmaskave											\
-	-quiet											\
-	-mask "$dir_mask/3dUndump.$ROI.r=$radius.nii"	\
-	$fname > $output
+if [[ ! -f $output ]]; then
+	## calculate the average BOLD response in the ROI
+	3dmaskave	\
+		-quiet	\
+		-mask "$dir_mask/3dUndump.$ROI.r=$radius.nii"	\
+		$fname > $output
+fi
 
-## calculate the whole-brain correlation
-3dTcorr1D																			\
-	-prefix "$dir_output/3dTcorr1D.$ROI.$subj.$phase.GlobalSignalRemoved=$RGS.nii"	\
-	-mask "$dir_mask/mask.group.n56.frac=0.7.nii"									\
-	$fname $output
+pname="$dir_output/3dTcorr1D.$ROI.$subj.$phase.GlobalSignalRemoved=$RGS.Fisher.nii"
+if [[ ! -f $pname ]]; then
+	## calculate the whole-brain correlation
+	3dTcorr1D	\
+		-Fisher	\
+		-mask "$dir_mask/mask.group.n56.frac=0.7.nii"	\
+		-prefix $pname	\
+		$fname $output
+fi
