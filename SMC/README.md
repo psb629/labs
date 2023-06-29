@@ -4,6 +4,8 @@
 
 [TMS_로그지_220614.xlsx](https://github.com/psb629/labs/blob/master/SMC/TMS_%EB%A1%9C%EA%B7%B8%EC%A7%80_220614.xlsx) Password: 1102
 
+[TMS좌표_임민제.xlsx](https://github.com/psb629/labs/blob/master/SMC/TMS좌표_임민제.xlsx)
+
 =========================================================
 
 ## Importing the Anaconda virtual environment package to run Jupyter notebook.
