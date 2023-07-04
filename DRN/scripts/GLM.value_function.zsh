@@ -46,6 +46,10 @@ if [[ ! -f $reg ]]; then
 	}
 fi
 ## ============================================================ ##
+## The resoponse model
+ #model='BLOCK(1,1)'
+model='SPMG3(4)'
+## ============================================================ ##
 cd $dir_output
 3dDeconvolve	\
 	-input		$dir_preproc/pb0?.$subj.r0?.scale+tlrc.HEAD	\
@@ -67,7 +71,7 @@ cd $dir_output
 	-float		\
 	-allzero_OK	\
 	-num_stimts	1	\
-	-stim_times_AM2	1 $reg 'BLOCK(1,1)' -stim_label 1 'Val'	\
+	-stim_times_AM2	1 $reg $model -stim_label 1 'Val'	\
 	-jobs 1 -fout -tout	\
 	-x1D "X.xmat.1D"	-xjpeg "X.jpg"	\
 	-x1D_uncensored "X.nocensor.xmat.1D"\
