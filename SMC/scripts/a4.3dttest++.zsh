@@ -50,7 +50,8 @@ case $mm in
 	;;
 	'precuneus' | 'Precuneus')
  #		mask="$dir_mask/mask.Harvard-Oxford.precuneus.nii"
-		mask="$dir_mask/mask.Precuneus_z_3.29.nii"
+ #		mask="$dir_mask/mask.Precuneus_z_3.29.nii"
+		mask="$dir_root/stats/SSKim/mask.Prec.z7.nii"
 	;;
 esac
 ## ======================================= ##
