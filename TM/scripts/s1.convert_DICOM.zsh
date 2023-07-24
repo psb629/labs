@@ -25,16 +25,22 @@ fi
 ##############################################################
 ## T1
 dname=`find $dir_raw -type d -name "T1_MPRAGE_SAG_1_0ISO_00??"`
-dcm2niix_afni						\
-	-a y -o $dir_output -f T1.$subj	\
-	$dname
+fname="T1.$subj"
+if [ ! -f $dir_output/$fname ]; then
+	dcm2niix_afni	\
+		-a y -o $dir_output -f $fname	\
+		$dname
+fi
 
 ## EPI
 for rr in {1..5..1}
 {
 	dname=`find $dir_raw -type d -name "RUN${rr}_MB3_2ISO__00??"`
 	run=`printf "r%02d" $rr`
-	dcm2niix_afni								\
-		-a y -o $dir_output -f func.$run.$subj	\
-		$dname
+	fname="func.$run.$subj"
+	if [ ! -f $dir_output/$fname ]; then
+		dcm2niix_afni	\
+			-a y -o $dir_output -f $fname	\
+			$dname
+	fi
 }
