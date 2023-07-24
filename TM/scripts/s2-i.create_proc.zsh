@@ -11,6 +11,18 @@ while (( $# )); do
 		-s | --subject)
 			subj="$2"
 		;;
+		-p | --phase)
+			pp="$2"
+		;;
+		-h | --help)
+			echo "-s, --subject:"
+			echo "\tsubject ID. e.g.) TM04"
+
+			echo "-p, --phase:"
+			echo "\t1 = Discrimination Task\n\t2 = Hidden Target Task"
+
+			exit
+		;;
 	esac
 	shift ##takes one argument
 done
@@ -23,14 +35,28 @@ dir_script="/home/sungbeenpark/Github/labs/TM/scripts/afni_proc.py"
 if [ ! -d $dir_script ]; then
 	mkdir -p -m 755 $dir_script
 fi
-
-dir_output=$dir_preproc
 ## ==================================================== ##
-dsets=(`find $dir_raw -type f -name "func.r??.$subj.nii" | sort -t ' ' -k 1`)
+case $pp in
+	1)
+		## Task 1. Discrimination
+		dir_output="$dir_preproc/Dis"
+		dsets=(`seq -f "$dir_raw/func.r%02g.$subj.nii" 1 1 3`)
+		phase="Dis"
+	;;
+	2)
+		## Task 2. Hidden Target
+		dir_output="$dir_preproc/HT"
+		dsets=(`seq -f "$dir_raw/func.r%02g.$subj.nii" 4 1 5`)
+		phase="HT"
+	;;
+	*)
+		exit
+	;;
+esac
 ## ==================================================== ##
 cd $dir_script
 afni_proc.py	\
-	-subj_id				$subj	\
+	-subj_id				$subj.$phase	\
 	-out_dir				$dir_output		\
 	-blocks					despike tshift align tlrc volreg blur mask scale regress	\
 	-copy_anat				$dir_raw/T1.$subj.nii										\
