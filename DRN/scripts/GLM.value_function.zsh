@@ -10,7 +10,7 @@ while (( $# )); do
 		-s | --subject)
 			subj="$2"
 		;;
-		-t | --time_shift)
+		-t | --time)
 			tt="$2"
 		;;
 	esac
@@ -27,7 +27,12 @@ dir_reg="$dir_behav/regressors/AM/value"
 dir_fmri="$dir_root/fmri_data"
 dir_preproc="$dir_fmri/preproc_data/$subj"
 ## ============================================================ ##
-dir_output="$dir_fmri/stats/GLM/AM/value_function/shift=${time_shift}s/$subj"
+## The resoponse model
+ #model='BLOCK(0.5,1)'
+model='TENT(2,10,5)'	# TR = (10-2)/(5-1)
+ #model='SPMG3(20)'
+## ============================================================ ##
+dir_output="$dir_fmri/stats/GLM/AM/value_function/$model/shift=${time_shift}s/$subj"
 if [ ! -d $dir_output ]; then
 	mkdir -p -m 755 $dir_output
 fi
@@ -45,10 +50,6 @@ if [[ ! -f $reg ]]; then
 		echo "" >> $reg
 	}
 fi
-## ============================================================ ##
-## The resoponse model
- #model='BLOCK(1,1)'
-model='SPMG3(4)'
 ## ============================================================ ##
 cd $dir_output
 3dDeconvolve	\
