@@ -29,7 +29,7 @@ dir_preproc="$dir_fmri/preproc_data/$subj"
 ## ============================================================ ##
 ## The resoponse model
  #model='BLOCK(0.5,1)'
-model='TENT(2,10,5)'	# TR = (10-2)/(5-1)
+model='TENT(2,10,9)'	# Time step = (10-2)/(9-1) = 1s
  #model='SPMG3(20)'
 ## ============================================================ ##
 dir_output="$dir_fmri/stats/GLM/AM/value_function/$model/shift=${time_shift}s/$subj"
