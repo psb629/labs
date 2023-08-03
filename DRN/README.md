@@ -89,6 +89,7 @@ conda env create -f DRN.yaml
 
 ### Encoding Model
 - [fmri.Encoding_model.py](https://github.com/psb629/labs/blob/master/DRN/scripts/fmri.Encoding_model.py) -s subject
+
 Calculate the correlation between the precomputed voxel-wise BOLD raw signal and the predicted signal.
 - [calc_corr.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/calc_corr.zsh) -s subject -l layer -r run -p process
 - [calc_corr.3dttest++.zsh](https://github.com/psb629/labs/blob/master/DRN/scripts/calc_corr.3dttest++.zsh) -s subject -l layer -p process
