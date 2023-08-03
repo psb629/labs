@@ -26,10 +26,6 @@ from sklearn.model_selection import KFold
 
 from scipy import stats
 
-import matplotlib.pyplot as plt
-from matplotlib import cm, colors
-from matplotlib.ticker import MultipleLocator, IndexLocator, FuncFormatter
-
 from nilearn import image, plotting, masking
 
 from joblib import Memory
@@ -222,7 +218,6 @@ del dict_X, tmp
 
 
 img_mask = glob(join(DRN.dir_mask,'mask.group.n*.frac=0.7.nii'))[-1]
-plotting.plot_roi(img_mask)
 
 
 # In[25]:
