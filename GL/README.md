@@ -23,6 +23,12 @@ conda env create -f GP.yaml
 
 ### 1st level analysis
 #### GLM
+1. Move-Stop:
+
+- [GLM.move-stop.SSKim.tcsh](https://github.com/psb629/labs/blob/master/GL/scripts/GLM.move-stop.SSKim.tcsh) subject
+
+2. Reward:
+
 - [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -c condition (default='On')
 - [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
 - [extract.Rew#1_Coef.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/extract.Rew#1_Coef.shifted.zsh)  -s subject -t time_shift (default=0s) -c condition (default='On')

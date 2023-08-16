@@ -3,17 +3,17 @@
 if ( $#argv > 0 ) then
     set subj = $argv[1]
 else
-    set subj = GL03
+    set subj = GL00
 endif
 
 ## Source file
-set dir_preproc = /mnt/sda2/GL/fmri_data/$subj/preprocessed
+set dir_preproc = /mnt/ext4/GL/fmri_data/preproc_data
 
 ## set regressor
 set dir_reg = /home/sungbeenpark/Github/labs/GL/behav_data/regressors/MoveStop
 
 ## assign output directory name
-set dir_output = /mnt/ext6/GL/fmri_data/stats/GLM.Move-Stop.SSKim/$subj
+set dir_output = /mnt/ext4/GL/fmri_data/stats/BLOCK/GLM.Move-Stop.SSKim/$subj
 if ( ! -d $dir_output ) then
 	mkdir -p -m 755 $dir_output
 endif
