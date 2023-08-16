@@ -51,7 +51,7 @@ case $cond in
 	'test')
 		list_run=(`seq -f "r%02g" 6 1 7`)
 	;;
-	'main')
+	'all')
 		list_run=(`seq -f "r%02g" 2 1 7`)
 	;;
 	*)
