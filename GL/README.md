@@ -18,6 +18,10 @@ conda env create -f GP.yaml
 
 	- [mk.regressor.reward.py](https://github.com/psb629/labs/blob/master/GL/scripts/mk.regressor.reward.py) -h
 
+2. Creating cursor length-modulated regressors (AM2):
+
+	- [mk.regressor.cursor_length.py](https://github.com/psb629/labs/blob/master/GL/scripts/mk.regressor.cursor_length.py) -h
+
 =========================================================
 
 ## fMRI_data
@@ -36,6 +40,10 @@ conda env create -f GP.yaml
 	- [GLM.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/GLM.reward_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -c condition (default='On')
 	- [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s)
 	- [extract.Rew#1_Coef.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/extract.Rew#1_Coef.shifted.zsh)  -s subject -t time_shift (default=0s) -c condition (default='On')
+
+2. Cursor Length:
+
+	- [GLM.cursor_length_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/GLM.cursor_length_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -c condition (default='main')
 
 ### Extracting a BOLD signal from a voxel which has maximux beta value
 - [3dTproject.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dTproject.zsh) -s subject --pb source_file (default=pb02)
