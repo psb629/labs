@@ -17,6 +17,7 @@ conda env create -f GP.yaml
 1. Creating reward-modulated regressors (AM2):
 
 	- [mk.regressor.reward.py](https://github.com/psb629/labs/blob/master/GL/scripts/mk.regressor.reward.py) -h
+
 =========================================================
 
 ## fMRI_data
