@@ -3,7 +3,7 @@
 ## ============================================================ ##
 ## default
 tt=0
-cc='On'
+cc='main'
 ## ============================================================ ##
 while (( $# )); do
 	key="$1"
@@ -21,10 +21,10 @@ while (( $# )); do
 	shift ##takes one argument
 done
 ## ============================================================ ##
-time_shift=`printf "%.1f\n" $tt`
+time_shift=`printf "%1d\n" $tt`
 ## ============================================================ ##
 dir_behav="/home/sungbeenpark/Github/labs/GL/behav_data"
-dir_reg="$dir_behav/regressors/AM"
+dir_reg="$dir_behav/regressors/AM/reward/shift=$time_shift"
 
 dir_root="/mnt/ext4/GL"
 dir_fmri="$dir_root/fmri_data"
@@ -32,27 +32,34 @@ dir_preproc="$dir_fmri/preproc_data.SSKim/$subj"
 ## ============================================================ ##
 case $cc in
 	'on' | 'On')
-		cond='On'
+		cond='on'
 	;;
 	'off' | 'Off')
-		cond='Off'
+		cond='off'
 	;;
 	'test' | 'Test')
-		cond='Test'
+		cond='test'
+	;;
+	'main' | 'Main')
+		cond='main'
+	;;
+	'all' | 'All')
+		cond='all'
 	;;
 esac
 case $cond in
-	'Test')
-		task='test'
-		runs=(`seq -f "r%02g" 6 1 7`)
-		reg="$dir_reg/$subj.reward.$task.shift=${time_shift}.txt"
+	'test')
+		list_run=(`seq -f "r%02g" 6 1 7`)
+	;;
+	'all')
+		list_run=(`seq -f "r%02g" 2 1 7`)
 	;;
 	*)
-		task='main'
-		runs=(`seq -f "r%02g" 2 1 5`)
-		reg="$dir_reg/$subj.reward.${task}_${cond}.shift=${time_shift}.txt"
+		list_run=(`seq -f "r%02g" 2 1 5`)
 	;;
 esac
+## ============================================================ ##
+reg="$dir_reg/$subj.reward.shift=$time_shift.$cond.rall.txt"
 ## ============================================================ ##
 MD="$dir_preproc/motion.demean.$task.1D"
 if [ -f $MD ]; then
@@ -63,7 +70,7 @@ if [ -f $MC ]; then
 	rm $MC
 fi
 input=()
-for run in $runs
+for run in $list_run
 {
 	cat "$dir_preproc/motion_demean.$subj.$run.1D" >> $MD
 
