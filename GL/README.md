@@ -44,6 +44,7 @@ conda env create -f GP.yaml
 2. Cursor Length:
 
 	- [GLM.cursor_length_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/GLM.cursor_length_per_trial.shifted.zsh) -s subject -t time_shift (default=0s) -c condition (default='main')
+	- [3dttest++.cursor_length_per_trial.shifted.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dttest++.cursor_length_per_trial.shifted.zsh) -t time_shift (default=0s)
 
 ### Extracting a BOLD signal from a voxel which has maximux beta value
 - [3dTproject.zsh](https://github.com/psb629/labs/blob/master/GL/scripts/3dTproject.zsh) -s subject --pb source_file (default=pb02)
