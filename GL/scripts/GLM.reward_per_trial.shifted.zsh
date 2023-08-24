@@ -31,11 +31,8 @@ dir_fmri="$dir_root/fmri_data"
 dir_preproc="$dir_fmri/preproc_data.SSKim/$subj"
 ## ============================================================ ##
 case $cc in
-	'on' | 'On')
-		cond='on'
-	;;
-	'off' | 'Off')
-		cond='off'
+	'on_off' | 'On_Off')
+		cond='on_off'
 	;;
 	'test' | 'Test')
 		cond='test'
@@ -43,23 +40,15 @@ case $cc in
 	'main' | 'Main')
 		cond='main'
 	;;
-	'all' | 'All')
-		cond='all'
-	;;
 esac
 case $cond in
 	'test')
 		list_run=(`seq -f "r%02g" 6 1 7`)
 	;;
-	'all')
-		list_run=(`seq -f "r%02g" 2 1 7`)
-	;;
 	*)
 		list_run=(`seq -f "r%02g" 2 1 5`)
 	;;
 esac
-## ============================================================ ##
-reg="$dir_reg/$subj.reward.shift=$time_shift.$cond.rall.txt"
 ## ============================================================ ##
 MD="$dir_preproc/motion.demean.$task.1D"
 if [ -f $MD ]; then
@@ -85,18 +74,44 @@ if [ ! -d $dir_output ]; then
 fi
 ## ============================================================ ##
 cd $dir_output
-3dDeconvolve														\
-	-input		$input												\
-	-mask		"$dir_preproc/full_mask.$subj+tlrc.HEAD"			\
-	-censor		$MC													\
-    -ortvec		$MD 'motion_demean'									\
-	-polort A -float												\
-	-allzero_OK														\
-	-num_stimts 1													\
-	-stim_times_AM2 1 $reg 'BLOCK(1,1)' -stim_label 1 'Rew'			\
-	-jobs 1 -fout -tout												\
-	-x1D "X.xmat.$subj.$cond.1D" -xjpeg "X.$subj.$cond.jpg"			\
-	-x1D_uncensored "X.xmat.uncensored.$subj.$cond.1D"				\
-	-bucket "stats.Rew.$subj.$cond.nii"
+case $cond in
+	'on_off')
+		regon="$dir_reg/$subj.reward.shift=$time_shift.on.rall.txt"
+		regoff="$dir_reg/$subj.reward.shift=$time_shift.off.rall.txt"
+		3dDeconvolve													\
+			-input		$input											\
+			-mask		"$dir_preproc/full_mask.$subj+tlrc.HEAD"		\
+			-censor		$MC												\
+		    -ortvec		$MD 'motion_demean'								\
+			-polort A -float											\
+			-allzero_OK													\
+			-num_stimts 2												\
+			-stim_times_AM2 1 $regon 'BLOCK(1,1)' -stim_label 1 'On'	\
+			-stim_times_AM2 2 $regoff 'BLOCK(1,1)' -stim_label 2 'Off'	\
+			-num_glt 2													\
+			-gltsym 'SYM: On +Off' -glt_label 1 On+Off					\
+			-gltsym 'SYM: On -Off' -glt_label 2 On-Off					\
+			-jobs 1 -fout -tout											\
+			-x1D "X.xmat.$subj.$cond.1D" -xjpeg "X.$subj.$cond.jpg"		\
+			-x1D_uncensored "X.xmat.uncensored.$subj.$cond.1D"			\
+			-bucket "stats.Rew.$subj.$cond.nii"
+	;;
+	*)
+		reg="$dir_reg/$subj.reward.shift=$time_shift.$cond.rall.txt"
+		3dDeconvolve														\
+			-input		$input												\
+			-mask		"$dir_preproc/full_mask.$subj+tlrc.HEAD"			\
+			-censor		$MC													\
+		    -ortvec		$MD 'motion_demean'									\
+			-polort A -float												\
+			-allzero_OK														\
+			-num_stimts 1													\
+			-stim_times_AM2 1 $reg 'BLOCK(1,1)' -stim_label 1 'Rew'			\
+			-jobs 1 -fout -tout												\
+			-x1D "X.xmat.$subj.$cond.1D" -xjpeg "X.$subj.$cond.jpg"			\
+			-x1D_uncensored "X.xmat.uncensored.$subj.$cond.1D"				\
+			-bucket "stats.Rew.$subj.$cond.nii"
+	;;
+esac
 
 echo " Calculating GLM for subject $subj completed"

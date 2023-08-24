@@ -26,15 +26,15 @@ mask="$dir_fmri/masks/mask.group.n24.frac=0.7.nii"
 ## ============================================================ ##
 list_subj=(`ls $dir_stat | grep "GL[0-9][0-9]"`)
 ## ============================================================ ##
-## on - off
+## on/off
 cd $dir_stat
 
 setA=()
 for subj in $list_subj
-	setA=($setA "$subj/on/stats.Rew.$subj.on.nii[Rew#1_Coef]")
+	setA=($setA "$subj/on_off/stats.Rew.$subj.on_off.nii[On#1_Coef]")
 setB=()
 for subj in $list_subj
-	setB=($setB "$subj/off/stats.Rew.$subj.off.nii[Rew#1_Coef]")
+	setB=($setB "$subj/on_off/stats.Rew.$subj.on_off.nii[Off#1_Coef]")
 
 pname="3dttest++.paired.reward.on-off.n$#list_subj.nii"
 if [ ! -f $pname ]; then
