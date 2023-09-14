@@ -138,51 +138,6 @@ class _MLAgent(BaseEnv):
         self.env.close()
 
 
-class HopperMLAgent(_MLAgent):
-    def __init__(self, **kwargs):
-        env_name = "Hopper"
-        super(HopperMLAgent, self).__init__(env_name, **kwargs)
-
-        self.state_size = 19 * 4
-        self.action_size = 3
-        self.action_type = "continuous"
-
-
-class PongMLAgent(_MLAgent):
-    def __init__(self, **kwargs):
-        env_name = "Pong"
-        super(PongMLAgent, self).__init__(env_name, **kwargs)
-
-        self.state_size = 8 * 1
-        self.action_size = 3
-        self.action_type = "discrete"
-
-
-class DroneDeliveryMLAgent(_MLAgent):
-    def __init__(self, **kwargs):
-        env_name = "DroneDelivery"
-        super(DroneDeliveryMLAgent, self).__init__(env_name, **kwargs)
-
-        self.state_size = [[15, 72, 128], 95]
-        self.action_size = 3
-        self.action_type = "continuous"
-        
-    def state_processing(self, obs):
-        vis_obs = []
-
-        for _obs in obs:
-            if len(_obs.shape) == 2:  # vector observation
-                vec_obs = _obs
-            else:  # visual observation
-                vis_obs.append(_obs)
-
-        # vis obs processing
-        vis_obs = np.concatenate(vis_obs, axis=-1)
-        vis_obs = np.transpose(vis_obs, (0, 3, 1, 2))
-        vis_obs = (vis_obs * 255).astype(np.uint8)
-                
-        return [vis_obs, vec_obs]
-
 class DroneHanyangMLAgent(_MLAgent):
     def __init__(self, **kwargs):
         env_name = "DroneHanyang"
