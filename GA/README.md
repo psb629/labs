@@ -9,7 +9,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 # Behavioral Analysis
 
-[extract.regressor.reward_per_trial.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.reward_per_trial.py) -s subject -t time_shift (default=0s)
+[extract.regressor.reward_per_trial.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.reward_per_trial.py) -h
 
 [extract.regressor.movement.py](https://github.com/psb629/labs/tree/master/GA/scripts/extract.regressor.movement.py) -s subject -t time_shift (default=0s)
 
@@ -66,7 +66,7 @@ script_dir = https://github.com/psb629/labs/tree/master/GA/scripts
 
 - [extract.reward_per_trial.zsh](https://github.com/psb629/labs/blob/master/GP/scripts/extract.reward_per_trial.zsh) -s subject -t time_shift (default=0s) -a analysis (default='GLM') -r run (default='all')
 
-- [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -t time_shift (default=0s) -r run (default='all')
+- [3dttest++.reward_per_trial.shifted.zsh](https://github.com/psb629/labs/tree/master/GA/scripts/3dttest++.reward_per_trial.shifted.zsh) -p phase ('GA' or 'GB') -t time_shift (default=0s) -r run (default='all')
 
 6. cursor trajectory
 

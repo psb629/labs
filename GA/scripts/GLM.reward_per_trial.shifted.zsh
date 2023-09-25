@@ -31,7 +31,8 @@ dir_script="/home/sungbeenpark/Github/labs/GA/scripts"
 
 dir_root="/mnt/ext5/GA"
 
-dir_behav="$dir_root/behav_data"
+ #dir_behav="$dir_root/behav_data"
+dir_behav="/home/sungbeenpark/Github/labs/GA/behav_data"
 dir_reg="$dir_behav/regressors/AM/$stat"
 
 dir_fmri="$dir_root/fmri_data"
@@ -56,6 +57,18 @@ case $run in
 	3 | 'r03')
 		run='r03'
 		rr=3
+	;;
+	4 | 'r04')
+		run='r04'
+		rr=4
+	;;
+	5 | 'r05')
+		run='r05'
+		rr=5
+	;;
+	6 | 'r06')
+		run='r06'
+		rr=6
 	;;
 	*)
 		run='rall'

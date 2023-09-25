@@ -17,23 +17,25 @@ from random import random as rand
 from datetime import date
 from tqdm import tqdm
 import sys
+import argparse
 ## ==================================================== ##
-## arg #1: subject ID
-if ('-s' in sys.argv):
-    idx = sys.argv.index('-s')
-elif ('--subj' in sys.argv):
-    idx = sys.argv.index('--subj')
-subj = sys.argv[idx+1]
+## ArgumentParser 객체 생성
+parser = argparse.ArgumentParser()
 
-## arg #2: time shift
-if ('-t' in sys.argv):
-    idx = sys.argv.index('-t')
-elif ('--time_shift' in sys.argv):
-    idx = sys.argv.index('--time_shift')
-shift = float(sys.argv[idx+1])
-gg, nn = subj[:2], subj[2:]
+## 옵션 목록
+parser.add_argument('-s','--subject', type=str, help="Subject ID")
+parser.add_argument('-t','--time', type=float, default=0, help="time delay (sec), default=0")
 ## ==================================================== ##
-dir_root = '/mnt/ext5/GA'
+## 명령줄 인자 파싱
+args = parser.parse_args()
+
+subj = args.subject
+gg, nn = subj[:2], subj[2:]
+
+shift = args.time
+## ==================================================== ##
+ #dir_root = '/mnt/ext5/GA'
+dir_root = '/home/sungbeenpark/Github/labs/GA'
 dir_behav = join(dir_root, 'behav_data')
 
 dir_reg = join(dir_behav, 'regressors/AM/%.1fs_shifted'%shift)
@@ -52,7 +54,7 @@ fpt = 60*spt
 spr = spt*tpr
 
 ## the number of runs
-nrun = 3
+nrun = 6
 ## ==================================================== ##
 def convert_ID(ID):
     ##################   ##################
@@ -115,7 +117,7 @@ else:
 onsettime, cnt_hit = func_AMregressor(datum)
 reward = cnt_hit/fpt
 
-AM2 = [[],[],[]]
+AM2 = [[],[],[],[],[],[]]
 for run in range(nrun):
     AM2[run] = ['%.1f*%.3f'%(o,r) for o,r in zip(onsettime[run]+shift, reward[run])]
 

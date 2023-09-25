@@ -5,6 +5,9 @@
 while (( $# )); do
 	key="$1"
 	case $key in
+		-p | --phase)
+			pp=$2
+		;;
 		-t | --time_shift)
 			tt="$2"
 		;;
@@ -14,6 +17,16 @@ while (( $# )); do
 	esac
 	shift ##takes one argument
 done
+## ============================================================ ##
+case $pp in
+	'A' | 'GA')
+		phase='GA'
+	;;
+	'B' | 'GB')
+		phase='GB'
+	;;
+esac
+ #print $phase
 ## ============================================================ ##
 if [ ! $tt ]; then
 	tt=0
@@ -44,7 +57,8 @@ dir_stat="$dir_fmri/stats/AM/GLM.reward_per_trial/$stat"
 
 dir_output=$dir_stat
 ## ============================================================ ##
-list_subj=(`ls $dir_stat | grep "GA[0-9][0-9]"`)
+list_subj=(`ls $dir_stat | grep -o $phase"[0-9][0-9]"`)
+ #print $list_subj
 ## ============================================================ ##
 mask="$dir_mask/mask.group.GA.n30.frac=0.7.nii"
 ## ============================================================ ##
@@ -54,7 +68,7 @@ for subj in $list_subj
 {
 	setA=($setA "$dir_stat/$subj/stats.Rew.$subj.$run.nii[Rew#1_Coef]")
 }
-pname="$dir_output/$run.prac.n$#list_subj.nii"
+pname="$dir_output/$phase.$run.prac.n$#list_subj.nii"
 3dttest++ -mask $mask	\
 	-setA $setA			\
 	-prefix $pname
@@ -68,12 +82,12 @@ for pp in 'mean' 'Tstat'
 	if [ $pp = 'mean' ]; then
 		prop='Coef'
 	fi
-	pname="$dir_output/$prop.$run.prac.n$#list_subj.nii"
+	pname="$dir_output/$phase.$prop.$run.prac.n$#list_subj.nii"
 	3dcalc -a "${fname}[SetA_$pp]" -expr 'a' -prefix $pname
 	if [ $pp = 'Tstat' ]; then
 		dof=`3dinfo -verb $pname | grep -o -E 'statpar = [0-9]+' | grep -o -E '[0-9]+'`
 		TtoZ --t_stat_map=$pname --dof=$dof \
-			--output_nii="$dir_output/Zstat.$run.prac.n$#list_subj.nii"
+			--output_nii="$dir_output/$phase.Zstat.$run.prac.n$#list_subj.nii"
 	fi
 }
 ## ============================================================ ##
