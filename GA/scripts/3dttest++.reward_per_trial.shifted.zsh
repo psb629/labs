@@ -31,8 +31,8 @@ esac
 if [ ! $tt ]; then
 	tt=0
 fi
-time_shift=`printf "%.1f\n" $tt`
-stat="${time_shift}s_shifted"
+tmp=`printf "%.1f\n" $tt`
+time_shift="${tmp}s_shifted"
 ## ============================================================ ##
 case $run in
 	1 | 'r01')
@@ -53,7 +53,7 @@ dir_root="/mnt/ext5/GA"
 
 dir_fmri="$dir_root/fmri_data"
 dir_mask="$dir_fmri/masks"
-dir_stat="$dir_fmri/stats/AM/GLM.reward_per_trial/$stat"
+dir_stat="$dir_fmri/stats/AM/GLM.reward_per_trial/$time_shift"
 
 dir_output=$dir_stat
 ## ============================================================ ##

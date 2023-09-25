@@ -24,8 +24,8 @@ done
 if [ ! $tt ]; then
 	tt=0
 fi
-time_shift=`printf "%.1f\n" $tt`
-stat="${time_shift}s_shifted"
+tmp=`printf "%.1f\n" $tt`
+time_shift="${tmp}s_shifted"
 ## ============================================================ ##
 dir_script="/home/sungbeenpark/Github/labs/GA/scripts"
 
@@ -33,7 +33,8 @@ dir_root="/mnt/ext5/GA"
 
  #dir_behav="$dir_root/behav_data"
 dir_behav="/home/sungbeenpark/Github/labs/GA/behav_data"
-dir_reg="$dir_behav/regressors/AM/$stat"
+dir_reg="$dir_behav/regressors/AM/$time_shift"
+ #ls "$dir_reg/$subj.reward.txt"
 
 dir_fmri="$dir_root/fmri_data"
 dir_preproc="$dir_fmri/preproc_data/$subj/prac"
@@ -100,7 +101,7 @@ if [ $run != 'rall' ]; then
 	head=$fname
 
 	## regressor
-	fname=$dir_tmp/$subj.$run.reward.1D
+	fname=$dir_tmp/$subj.$run.reward.$time_shift.1D
 	$dir_script/extract.lines.from_txt.py	\
 		-i $dir_reg/$subj.reward.txt		\
 		-o $fname							\
@@ -109,7 +110,7 @@ if [ $run != 'rall' ]; then
 	regressor=$fname
 fi
 ## ============================================================ ##
-dir_output="$dir_fmri/stats/AM/GLM.reward_per_trial/$stat/$subj"
+dir_output="$dir_fmri/stats/AM/GLM.reward_per_trial/$time_shift/$subj"
 if [ ! -d $dir_output ]; then
 	mkdir -p -m 755 $dir_output
 fi
@@ -135,4 +136,5 @@ cd $dir_output
 	-x1D_uncensored "X_uncensored.xmat.$subj.$run.1D"									\
 	-bucket "stats.Rew.$subj.$run.nii"
 
+rm $censor $head $regressor
 echo " Calculating GLM for subject $subj completed"
