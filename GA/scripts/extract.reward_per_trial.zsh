@@ -27,8 +27,8 @@ done
 if [ ! $tt ]; then
 	tt=0
 fi
-time_shift=`printf "%.1f\n" $tt`
-stat="${time_shift}s_shifted"
+tmp=`printf "%.1f\n" $tt`
+time_shift="${tmp}s_shifted"
 ## ============================================================ ##
 case $analysis in
 	'GLM' | 'glm')
@@ -42,26 +42,8 @@ case $analysis in
 	;;
 esac
 ## ============================================================ ##
-case $run in
-	1 | 'r01')
-		run='r01'
-		rr=1
-	;;
-	2 | 'r02')
-		run='r02'
-		rr=2
-	;;
-	3 | 'r03')
-		run='r03'
-		rr=3
-	;;
-	*)
-		run='rall'
-	;;
-esac
-## ============================================================ ##
 dir_root="/mnt/ext5/GA/fmri_data/stats"
-dir_stat="$dir_root/AM/$analysis.reward_per_trial/$stat/$subj"
+dir_stat="$dir_root/AM/$analysis.reward_per_trial/$time_shift/$subj"
 
 dir_output=$dir_stat
 ## ============================================================ ##
